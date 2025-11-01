@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数学计算流程比较器 - 简化版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-group {
+            display: inline-block;
+            margin: 10px;
+        }
+
+        label {
+            font-size: 1.2em;
+            color: #555;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            padding: 10px 15px;
+            font-size: 1.1em;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            width: 120px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .processes-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .process-box {
+            flex: 1;
+            padding: 25px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid;
+            transition: transform 0.3s ease;
+        }
+
+        .process-box:hover {
+            transform: translateY(-5px);
+        }
+
+        .process1 {
+            border-top-color: #e74c3c;
+        }
+
+        .process2 {
+            border-top-color: #3498db;
+        }
+
+        .process-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .process1 .process-title {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }
+
+        .process2 .process-title {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+        }
+
+        .process-formula {
+            text-align: center;
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        .result {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .result-label {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .result-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison {
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-radius: 15px;
+            margin-top: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison h2 {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+
+        .comparison-result {
+            font-size: 1.4em;
+            font-weight: bold;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .equal {
+            color: #27ae60;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        }
+
+        .different {
+            color: #e74c3c;
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+        }
+
+        @media (max-width: 768px) {
+            .processes-container {
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .result-value {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧮 数学计算流程比较器</h1>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label for="variable-a">变量 a =</label>
+                <input type="number" id="variable-a" value="5" step="any">
+            </div>
+            <button onclick="calculate()">计算</button>
+            <button onclick="clearResults()">清除结果</button>
+        </div>
+
+        <div class="processes-container">
+            <div class="process-box process1">
+                <div class="process-title">流程 1</div>
+                <div class="process-formula">(a + 2) × (-1)</div>
+                <div class="result">
+                    <div class="result-label">最终结果:</div>
+                    <div class="result-value" id="result1">-</div>
+                </div>
+            </div>
+
+            <div class="process-box process2">
+                <div class="process-title">流程 2</div>
+                <div class="process-formula">(a × (-1)) + 2</div>
+                <div class="result">
+                    <div class="result-label">最终结果:</div>
+                    <div class="result-value" id="result2">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison">
+            <h2>🔍 结果比较</h2>
+            <div class="comparison-result" id="comparison-result">
+                请设置变量 a 的值并点击"计算"按钮
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            const a = parseFloat(document.getElementById('variable-a').value);
+
+            if (isNaN(a)) {
+                showComparison('请输入有效的数字！', false);
+                return;
+            }
+
+            // 流程1: 先加2，后乘-1
+            const result1 = (a + 2) * (-1);
+
+            // 流程2: 先乘-1，后加2
+            const result2 = (a * (-1)) + 2;
+
+            // 更新结果显示
+            document.getElementById('result1').textContent = result1;
+            document.getElementById('result2').textContent = result2;
+
+            // 比较结果
+            const isEqual = Math.abs(result1 - result2) < 0.0001;
+            if (isEqual) {
+                showComparison(`✅ 两个流程结果相同：${result1}`, true);
+            } else {
+                showComparison(`❌ 两个流程结果不同：<br>流程1结果：${result1}<br>流程2结果：${result2}<br>差值：${(result1 - result2).toFixed(4)}`, false);
+            }
+        }
+
+        function showComparison(message, isEqual) {
+            const comparisonElement = document.getElementById('comparison-result');
+            comparisonElement.innerHTML = message;
+            comparisonElement.className = 'comparison-result ' + (isEqual ? 'equal' : 'different');
+        }
+
+        function clearResults() {
+            document.getElementById('variable-a').value = '5';
+            document.getElementById('result1').textContent = '-';
+            document.getElementById('result2').textContent = '-';
+            showComparison('请设置变量 a 的值并点击"计算"按钮', false);
+        }
+
+        // 支持回车键计算
+        document.getElementById('variable-a').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                calculate();
+            }
+        });
+
+        // 页面加载时自动计算一次
+        window.onload = function() {
+            calculate();
+        };
+    </script>
+</body>
+</html>

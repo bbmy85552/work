@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数值转换机</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.2s; }
+        .section:nth-child(4) { animation-delay: 0.3s; }
+        .section:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            width: 100%;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .button.secondary {
+            background: #6c757d;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        .button.secondary:hover {
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+        }
+
+        .variables-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 60px;
+            transition: all 0.3s ease;
+        }
+
+        .variables-container.has-variables {
+            background: white;
+            border: 2px solid #e1e5e9;
+        }
+
+        .variable-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            opacity: 0;
+            animation: slideIn 0.3s ease-out forwards;
+        }
+
+        .variable-item:last-child {
+            margin-bottom: 0;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .variable-label {
+            min-width: 40px;
+            font-weight: 600;
+            color: #667eea;
+            margin-right: 10px;
+            font-size: 1.1em;
+        }
+
+        .variable-input {
+            flex: 1;
+        }
+
+        .result-container {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #e1e5e9;
+        }
+
+        .result-text {
+            font-size: 2em;
+            font-weight: 700;
+            color: #333;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .formula-text {
+            font-size: 1.3em;
+            font-weight: 500;
+            color: #555;
+            opacity: 0;
+            transition: all 0.5s ease;
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #e1e5e9;
+            margin-bottom: 10px;
+        }
+
+        .formula-text.show {
+            opacity: 1;
+            animation: resultPop 0.6s ease-out;
+        }
+
+        .result-text.show {
+            opacity: 1;
+            animation: resultPop 0.6s ease-out;
+        }
+
+        @keyframes resultPop {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .result-label {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .empty-state {
+            color: #999;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            opacity: 0;
+            animation: shake 0.5s ease-out forwards;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .button-row .button {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .info-text {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>数值转换机</h1>
+
+        <div class="section">
+            <div class="input-group">
+                <label for="expression">代数式 (输入)</label>
+                <input type="text" id="expression" value="a + b + c" placeholder="请输入代数式，如 a + b + c">
+                <div class="button-row">
+                    <button class="button secondary" onclick="generateRandomExpression()" style="width: auto; padding: 12px 20px; margin-right: 10px;">
+                        🎲 随机生成
+                    </button>
+                    <button class="button secondary" onclick="clearExpression()" style="width: auto; padding: 12px 20px;">
+                        🗑️ 清空
+                    </button>
+                </div>
+                <div class="info-text">支持变量、基本运算符 (+, -, *, /, ^)，开方 (sqrt(a))，支持括号前省略乘号 (如 5(b+c))，变量支持分数输入 (如 1/2)</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <button class="button secondary" onclick="generateVariableInputs()">
+                生成变量输入按钮
+            </button>
+
+            <div class="variables-container" id="variablesContainer">
+                <div class="empty-state">点击上方按钮生成变量输入框</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <button class="button" onclick="calculateResult()">
+                计算结果
+            </button>
+        </div>
+
+        <div class="section">
+            <div class="result-container">
+                <div>
+                    <div class="result-label">计算公式</div>
+                    <div class="formula-text" id="formula">-</div>
+                    <div class="result-label" style="margin-top: 15px;">计算结果</div>
+                    <div class="result-text" id="result">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="errorContainer"></div>
+    </div>
+
+    <script>
+        let variables = {};
+        let generatedVariables = [];
+
+        // 分数解析和运算函数
+        function parseValue(value) {
+            if (!value || value.trim() === '') {
+                return 0;
+            }
+
+            const trimmedValue = value.trim();
+
+            // 检查是否为分数格式
+            const fractionMatch = trimmedValue.match(/^(-?\d+)\s*\/\s*(\d+)$/);
+            if (fractionMatch) {
+                const numerator = parseInt(fractionMatch[1]);
+                const denominator = parseInt(fractionMatch[2]);
+                if (denominator === 0) {
+                    return 0; // 避免除零错误
+                }
+                return numerator / denominator;
+            }
+
+            // 检查是否为带分数格式（如 1 1/2）
+            const mixedFractionMatch = trimmedValue.match(/^(-?\d+)\s+(\d+)\s*\/\s*(\d+)$/);
+            if (mixedFractionMatch) {
+                const wholePart = parseInt(mixedFractionMatch[1]);
+                const numerator = parseInt(mixedFractionMatch[2]);
+                const denominator = parseInt(mixedFractionMatch[3]);
+                if (denominator === 0) {
+                    return 0;
+                }
+                return wholePart + (numerator / denominator);
+            }
+
+            // 尝试解析为普通数字
+            const parsedFloat = parseFloat(trimmedValue);
+            if (!isNaN(parsedFloat)) {
+                return parsedFloat;
+            }
+
+            return 0; // 默认返回0
+        }
+
+        // 分数运算函数
+        function addFractions(frac1, frac2) {
+            const result = frac1 + frac2;
+            return result;
+        }
+
+        function subtractFractions(frac1, frac2) {
+            const result = frac1 - frac2;
+            return result;
+        }
+
+        function multiplyFractions(frac1, frac2) {
+            const result = frac1 * frac2;
+            return result;
+        }
+
+        function divideFractions(frac1, frac2) {
+            if (frac2 === 0) {
+                return 0; // 避免除零
+            }
+            const result = frac1 / frac2;
+            return result;
+        }
+
+        // 小数转分数（用于显示）
+        function decimalToFraction(decimal) {
+            if (decimal === Math.floor(decimal)) {
+                return decimal.toString();
+            }
+
+            const tolerance = 1.0E-9;
+            let h1 = 1, h2 = 0, k1 = 0, k2 = 1;
+            let b = decimal;
+
+            do {
+                const a = Math.floor(b);
+                const aux = h1;
+                h1 = a * h1 + h2;
+                h2 = aux;
+                aux = k1;
+                k1 = a * k1 + k2;
+                k2 = aux;
+                b = 1 / (b - a);
+            } while (Math.abs(decimal - h1/k1) > decimal * tolerance && k1 < 1000); // 限制分母大小
+
+            if (k1 === 1) {
+                return h1.toString();
+            } else {
+                return `${h1}/${k1}`;
+            }
+        }
+
+        // 简化开方结果的函数
+        function simplifySqrt(value) {
+            if (value < 0) {
+                return {
+                    value: NaN,
+                    display: '√(负数)',
+                    isPerfectSquare: false
+                };
+            }
+
+            if (value === 0 || value === 1) {
+                return {
+                    value: value.toString(),
+                    display: value.toString(),
+                    isPerfectSquare: true
+                };
+            }
+
+            // 检查是否为完全平方数
+            const sqrt = Math.sqrt(value);
+            if (Number.isInteger(sqrt)) {
+                return {
+                    value: sqrt.toString(),
+                    display: sqrt.toString(),
+                    isPerfectSquare: true
+                };
+            }
+
+            // 如果不是完全平方数，尝试简化根号
+            // 例如：sqrt(12) = 2√3, sqrt(18) = 3√2, sqrt(8) = 2√2
+            let remaining = value;
+            let coefficient = 1;
+
+            // 检查 2-100 的平方因子
+            for (let i = 2; i <= Math.sqrt(value); i++) {
+                if (remaining % (i * i) === 0) {
+                    coefficient *= i;
+                    remaining /= (i * i);
+                    i--; // 重新检查当前因子
+                }
+            }
+
+            if (remaining === 1) {
+                // 所有因子都被开出来了，说明是完全平方数
+                return {
+                    value: coefficient.toString(),
+                    display: coefficient.toString(),
+                    isPerfectSquare: true
+                };
+            } else if (coefficient === 1) {
+                // 无法简化，保持原样
+                return {
+                    value: `Math.sqrt(${value})`,
+                    display: `√${value}`,
+                    isPerfectSquare: false
+                };
+            } else {
+                // 可以部分简化，如 sqrt(12) = 2√3
+                return {
+                    value: `${coefficient} * Math.sqrt(${remaining})`,
+                    display: `${coefficient}√${remaining}`,
+                    isPerfectSquare: false
+                };
+            }
+        }
+
+        // 符号表达式计算函数
+        function calculateSymbolicExpression(expression, sqrtExpressions) {
+            try {
+                // 将表达式中的符号开方替换为实际计算值
+                let numericExpression = expression;
+
+                sqrtExpressions.forEach(sqrt => {
+                    if (!sqrt.isPerfectSquare) {
+                        const symbolicMarker = `##SYMBOLIC_SQRT_${sqrt.content}##`;
+                        // 使用简化后的数值进行计算
+                        numericExpression = numericExpression.replace(symbolicMarker, sqrt.simplifiedValue);
+                    }
+                });
+
+                // 计算数值结果
+                const numericResult = Function('"use strict"; return (' + numericExpression + ')')();
+
+                // 检查是否所有 sqrt 都是完全平方数
+                const hasSymbolicSqrt = sqrtExpressions.some(sqrt => !sqrt.isPerfectSquare);
+
+                if (!hasSymbolicSqrt) {
+                    // 如果没有符号开方，返回数值结果
+                    return numericResult;
+                }
+
+                // 构建符号结果
+                let symbolicResult = expression;
+
+                // 将符号标记替换回显示形式
+                sqrtExpressions.forEach(sqrt => {
+                    if (!sqrt.isPerfectSquare) {
+                        const symbolicMarker = `##SYMBOLIC_SQRT_${sqrt.content}##`;
+                        symbolicResult = symbolicResult.replace(symbolicMarker, sqrt.displayText);
+                    } else {
+                        // 对于完全平方数，替换为数值
+                        symbolicResult = symbolicResult.replace(sqrt.placeholder, sqrt.simplifiedValue);
+                    }
+                });
+
+                // 简化符号结果（去掉不必要的括号和乘号）
+                symbolicResult = simplifySymbolicResult(symbolicResult);
+
+                // 返回一个特殊对象，包含数值和符号表示
+                return {
+                    isSymbolic: true,
+                    numericValue: numericResult,
+                    symbolicDisplay: symbolicResult
+                };
+
+            } catch (error) {
+                console.error('Symbolic calculation error:', error);
+                return '计算错误';
+            }
+        }
+
+        // 简化符号结果
+        function simplifySymbolicResult(result) {
+            // 替换编程符号为数学符号
+            result = result.replace(/\*/g, '×');
+
+            // 处理一些常见的简化情况
+            // 例如：1×√2 → √2
+            result = result.replace(/1×√/g, '√');
+            result = result.replace(/×1√/g, '√');
+
+            // 处理括号前的系数
+            result = result.replace(/\(([^)]+)\)×([^×√\d])/g, '$1$2');
+
+            return result;
+        }
+
+        // 随机生成代数式的功能
+        function generateRandomExpression() {
+            const expressions = [
+                // 简单线性表达式
+                () => {
+                    const vars = getRandomVariables(2, 4);
+                    const ops = getRandomOperators(vars.length - 1);
+                    let expression = vars[0];
+                    for (let i = 1; i < vars.length; i++) {
+                        expression += ` ${ops[i-1]} ${vars[i]}`;
+                    }
+                    return expression;
+                },
+                // 带系数的表达式
+                () => {
+                    const vars = getRandomVariables(2, 3);
+                    const coeffs = vars.map(() => getRandomCoefficient());
+                    let expression = formatTerm(vars[0], coeffs[0]);
+                    for (let i = 1; i < vars.length; i++) {
+                        const op = getRandomOperators(1)[0];
+                        const term = formatTerm(vars[i], coeffs[i]);
+                        expression += ` ${op} ${term}`;
+                    }
+                    return expression;
+                },
+                // 带括号的表达式
+                () => {
+                    const vars = getRandomVariables(2, 3);
+                    const ops = getRandomOperators(vars.length - 1);
+                    const bracketIndex = Math.floor(Math.random() * vars.length);
+                    let expression = bracketIndex === 0 ? `(${vars[0]})` : vars[0];
+                    for (let i = 1; i < vars.length; i++) {
+                        const term = bracketIndex === i ? `(${vars[i]})` : vars[i];
+                        expression += ` ${ops[i-1]} ${term}`;
+                    }
+                    return expression;
+                },
+                // 乘法表达式
+                () => {
+                    const vars = getRandomVariables(2, 3);
+                    const coeffs = vars.map(() => getRandomCoefficient());
+                    const terms = vars.map((v, i) => formatTerm(v, coeffs[i]));
+                    return terms.join(' ');
+                },
+                // 幂运算表达式
+                () => {
+                    const vars = getRandomVariables(1, 2);
+                    const powers = vars.map(() => Math.floor(Math.random() * 3) + 2);
+                    let expression = `${vars[0]}^${powers[0]}`;
+                    for (let i = 1; i < vars.length; i++) {
+                        expression += ` + ${vars[i]}^${powers[i]}`;
+                    }
+                    return expression;
+                },
+                // 开方表达式
+                () => {
+                    const vars = getRandomVariables(1, 2);
+                    let expression = `sqrt(${vars[0]})`;
+                    for (let i = 1; i < vars.length; i++) {
+                        const op = getRandomOperators(1)[0];
+                        expression += ` ${op} sqrt(${vars[i]})`;
+                    }
+                    return expression;
+                },
+                // 复杂表达式
+                () => {
+                    const type = Math.floor(Math.random() * 5);
+                    const vars1 = getRandomVariables(3);
+                    const vars2 = getRandomVariables(3);
+                    const vars3 = getRandomVariables(2);
+                    const vars4 = getRandomVariables(3);
+                    const vars5 = getRandomVariables(2);
+
+                    switch(type) {
+                        case 0: // (a + b) * c
+                            return `(${vars1[0]} + ${vars1[1]})${vars1[2]}`;
+                        case 1: // a * (b + c)
+                            return `${vars2[0]}(${vars2[1]} + ${vars2[2]})`;
+                        case 2: // a^2 + b^2
+                            return `${vars3[0]}^2 + ${vars3[1]}^2`;
+                        case 3: // (a + b + c)^2
+                            return `(${vars4[0]} + ${vars4[1]} + ${vars4[2]})^2`;
+                        case 4: // sqrt(a) + sqrt(b)
+                            return `sqrt(${vars5[0]}) + sqrt(${vars5[1]})`;
+                        default:
+                            return 'a + b';
+                    }
+                }
+            ];
+
+            // 随机选择一种表达式类型
+            const expressionType = Math.floor(Math.random() * expressions.length);
+            let expression;
+
+            try {
+                expression = expressions[expressionType]();
+
+                // 验证生成的表达式
+                if (!expression || expression.trim() === '') {
+                    throw new Error('生成的表达式为空');
+                }
+
+                // 检查是否包含undefined
+                if (expression.includes('undefined')) {
+                    throw new Error('表达式包含undefined');
+                }
+
+            } catch (error) {
+                console.error('生成表达式时出错:', error);
+                // 如果出错，使用简单的默认表达式
+                expression = 'a + b';
+            }
+
+            // 设置到输入框
+            document.getElementById('expression').value = expression;
+
+            // 自动生成变量输入框
+            setTimeout(() => {
+                generateVariableInputs();
+            }, 300);
+        }
+
+        // 格式化项（处理系数和变量）
+        function formatTerm(variable, coefficient) {
+            if (coefficient === 1) {
+                return variable;
+            } else if (coefficient === -1) {
+                return `(-${variable})`;
+            } else if (coefficient < 0) {
+                return `(${coefficient}${variable})`;
+            } else {
+                return `${coefficient}${variable}`;
+            }
+        }
+
+        // 获取随机变量
+        function getRandomVariables(min, max) {
+            const allVars = ['a', 'b', 'c', 'x', 'y', 'z'];
+            const count = Math.floor(Math.random() * (max - min + 1)) + min;
+            const selected = [];
+
+            // 随机选择不重复的变量
+            const shuffled = allVars.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        // 获取随机运算符
+        function getRandomOperators(count) {
+            const operators = ['+', '-', '*', '/'];
+            const selected = [];
+
+            for (let i = 0; i < count; i++) {
+                // 加法和减法概率更高
+                const weights = [0.4, 0.3, 0.2, 0.1]; // +, -, *, /
+                const random = Math.random();
+                let cumulative = 0;
+                let selectedOp = '+';
+
+                for (let j = 0; j < operators.length; j++) {
+                    cumulative += weights[j];
+                    if (random < cumulative) {
+                        selectedOp = operators[j];
+                        break;
+                    }
+                }
+                selected.push(selectedOp);
+            }
+
+            return selected;
+        }
+
+        // 获取随机系数
+        function getRandomCoefficient() {
+            const coeffs = [-3, -2, -1, 1, 2, 3, 4, 5];
+            return coeffs[Math.floor(Math.random() * coeffs.length)];
+        }
+
+        // 清空表达式
+        function clearExpression() {
+            document.getElementById('expression').value = '';
+            // 清空变量输入框
+            document.getElementById('variablesContainer').innerHTML = '<div class="empty-state">点击上方按钮生成变量输入框</div>';
+            document.getElementById('variablesContainer').classList.remove('has-variables');
+            document.getElementById('formula').textContent = '-';
+            document.getElementById('result').textContent = '-';
+            document.getElementById('formula').classList.remove('show');
+            document.getElementById('result').classList.remove('show');
+            document.getElementById('errorContainer').innerHTML = '';
+
+            // 重置变量
+            variables = {};
+            generatedVariables = [];
+        }
+
+        function generateVariableInputs() {
+            const expression = document.getElementById('expression').value;
+            const container = document.getElementById('variablesContainer');
+            const errorContainer = document.getElementById('errorContainer');
+
+            // 清除之前的错误信息
+            errorContainer.innerHTML = '';
+
+            // 提取变量名（字母），但排除函数名中的字母
+            // 先移除函数名，然后提取单个字母变量
+            let expressionForVars = expression;
+            // 移除 sqrt 函数名
+            expressionForVars = expressionForVars.replace(/sqrt\(/g, '');
+            // 移除其他可能的函数名（为将来扩展做准备）
+            expressionForVars = expressionForVars.replace(/Math\./g, '');
+
+            const variableRegex = /[a-zA-Z]/g;
+            const foundVariables = [...new Set(expressionForVars.match(variableRegex) || [])];
+
+            if (foundVariables.length === 0) {
+                showError('请在代数式中输入至少一个变量字母！');
+                return;
+            }
+
+            // 清空容器
+            container.innerHTML = '';
+            container.classList.add('has-variables');
+
+            // 创建变量输入框
+            foundVariables.forEach((variable, index) => {
+                setTimeout(() => {
+                    const variableItem = document.createElement('div');
+                    variableItem.className = 'variable-item';
+                    variableItem.style.animationDelay = `${index * 0.1}s`;
+
+                    variableItem.innerHTML = `
+                        <span class="variable-label">${variable} =</span>
+                        <input type="text" class="variable-input" id="var_${variable}"
+                               placeholder="请输入 ${variable} 的值（支持整数、小数、分数，如 1/2）">
+                    `;
+
+                    container.appendChild(variableItem);
+
+                    // 添加输入事件监听
+                    const input = variableItem.querySelector('input');
+                    input.addEventListener('input', function() {
+                        variables[variable] = parseValue(this.value);
+                    });
+                }, index * 50);
+            });
+
+            generatedVariables = foundVariables;
+        }
+
+        function calculateResult() {
+            const expression = document.getElementById('expression').value;
+            const errorContainer = document.getElementById('errorContainer');
+
+            // 清除之前的错误信息
+            errorContainer.innerHTML = '';
+
+            if (!expression.trim()) {
+                showError('请输入代数式！');
+                return;
+            }
+
+            if (generatedVariables.length === 0) {
+                showError('请先生成变量输入框！');
+                return;
+            }
+
+            // 检查是否所有变量都有值
+            let allVariablesFilled = true;
+            let missingVariables = [];
+
+            generatedVariables.forEach(variable => {
+                const input = document.getElementById(`var_${variable}`);
+                if (!input.value) {
+                    allVariablesFilled = false;
+                    missingVariables.push(variable);
+                } else {
+                    variables[variable] = parseValue(input.value);
+                }
+            });
+
+            if (!allVariablesFilled) {
+                showError(`请为以下变量输入值: ${missingVariables.join(', ')}`);
+                return;
+            }
+
+            try {
+                // 创建安全的计算表达式
+                let safeExpression = expression;
+                let formulaExpression = expression; // 用于显示的计算公式
+
+                // 首先处理括号前省略乘号的情况
+                // 匹配数字后面跟着括号的情况，如 5(b+c)
+                safeExpression = safeExpression.replace(/(\d)(\()/g, '$1*$2');
+                // 匹配变量后面跟着括号的情况，如 a(b+c)，但排除函数名
+                // 先临时保护 sqrt( 函数，避免被错误处理
+                safeExpression = safeExpression.replace(/sqrt\(/g, '##SQRT_FUNCTION##(');
+                safeExpression = safeExpression.replace(/([a-zA-Z])(\()/g, '$1*$2');
+                // 恢复 sqrt( 函数
+                safeExpression = safeExpression.replace(/##SQRT_FUNCTION##\(/g, 'sqrt(');
+                // 匹配括号后面跟着数字的情况，如 (a+b)5
+                safeExpression = safeExpression.replace(/(\))(\d)/g, '$1*$2');
+                // 匹配括号后面跟着变量的情况，如 (a+b)c
+                safeExpression = safeExpression.replace(/(\))([a-zA-Z])/g, '$1*$2');
+                // 匹配括号后面跟着括号的情况，如 (a+b)(c+d)
+                safeExpression = safeExpression.replace(/(\))(\()/g, '$1*$2');
+                // 匹配数字后面跟着变量的情况，如 2a
+                safeExpression = safeExpression.replace(/(\d)([a-zA-Z])/g, '$1*$2');
+                // 匹配变量后面跟着数字的情况，如 a2
+                safeExpression = safeExpression.replace(/([a-zA-Z])(\d)/g, '$1*$2');
+
+                // 对公式显示也进行同样的处理，但保持原始格式
+                formulaExpression = safeExpression;
+
+                // 替换变量为实际值，正确处理负数和分数
+                generatedVariables.forEach(variable => {
+                    const value = variables[variable];
+                    const originalInput = document.getElementById(`var_${variable}`).value;
+
+                    // 用于计算的表达式（确保负数有括号）
+                    const valueStr = value < 0 ? `(${value})` : value.toString();
+
+                    // 用于显示的表达式（保持原始输入格式）
+                    const displayValue = originalInput && originalInput.trim() !== '' ? originalInput : value.toString();
+
+                    const regex = new RegExp(`\\b${variable}\\b`, 'g');
+                    safeExpression = safeExpression.replace(regex, valueStr);
+                    formulaExpression = formulaExpression.replace(regex, `${variable}(${displayValue})`);
+                });
+
+                // 处理开方函数 sqrt()
+                // 先识别并提取所有 sqrt 表达式，以便进行符号化处理
+                const sqrtExpressions = [];
+                let expressionForSqrt = safeExpression;
+                let sqrtIndex = 0;
+
+                // 找到所有 sqrt() 表达式并替换为占位符
+                while (expressionForSqrt.includes('sqrt(')) {
+                    const sqrtStart = expressionForSqrt.indexOf('sqrt(');
+                    let parenCount = 1;
+                    let sqrtEnd = sqrtStart + 5; // "sqrt(" 的长度
+
+                    // 找到匹配的右括号
+                    for (let i = sqrtEnd; i < expressionForSqrt.length; i++) {
+                        if (expressionForSqrt[i] === '(') parenCount++;
+                        else if (expressionForSqrt[i] === ')') parenCount--;
+                        if (parenCount === 0) {
+                            sqrtEnd = i;
+                            break;
+                        }
+                    }
+
+                    if (parenCount === 0) {
+                        const sqrtContent = expressionForSqrt.substring(sqrtStart + 5, sqrtEnd);
+                        const placeholder = `##SQRT_${sqrtIndex}##`;
+                        sqrtExpressions.push({
+                            placeholder: placeholder,
+                            content: sqrtContent,
+                            original: `sqrt(${sqrtContent})`
+                        });
+                        expressionForSqrt = expressionForSqrt.substring(0, sqrtStart) + placeholder + expressionForSqrt.substring(sqrtEnd + 1);
+                        sqrtIndex++;
+                    } else {
+                        break; // 括号不匹配，退出循环
+                    }
+                }
+
+                safeExpression = expressionForSqrt;
+
+                // 替换变量并计算 sqrt 表达式的值
+                sqrtExpressions.forEach(sqrt => {
+                    let sqrtContentValue = sqrt.content;
+
+                    // 替换 sqrt 内容中的变量
+                    generatedVariables.forEach(variable => {
+                        const value = variables[variable];
+                        const valueStr = value < 0 ? `(${value})` : value.toString();
+                        const regex = new RegExp(`\\b${variable}\\b`, 'g');
+                        sqrtContentValue = sqrtContentValue.replace(regex, valueStr);
+                    });
+
+                    // 处理 sqrt 内容中的幂运算
+                    sqrtContentValue = sqrtContentValue.replace(/\^/g, '**');
+
+                    // 处理 sqrt 内容中的省略乘号
+                    sqrtContentValue = sqrtContentValue.replace(/(\d)(\()/g, '$1*$2');
+                    sqrtContentValue = sqrtContentValue.replace(/([a-zA-Z])(\()/g, '$1*$2');
+                    sqrtContentValue = sqrtContentValue.replace(/(\))(\d)/g, '$1*$2');
+                    sqrtContentValue = sqrtContentValue.replace(/(\))([a-zA-Z])/g, '$1*$2');
+                    sqrtContentValue = sqrtContentValue.replace(/(\))(\()/g, '$1*$2');
+                    sqrtContentValue = sqrtContentValue.replace(/(\d)([a-zA-Z])/g, '$1*$2');
+                    sqrtContentValue = sqrtContentValue.replace(/([a-zA-Z])(\d)/g, '$1*$2');
+
+                    try {
+                        // 计算 sqrt 内容的值
+                        const contentValue = Function('"use strict"; return (' + sqrtContentValue + ')')();
+
+                        // 简化开方结果
+                        const simplified = simplifySqrt(contentValue);
+                        sqrt.simplifiedValue = simplified.value;
+                        sqrt.displayText = simplified.display;
+                        sqrt.isPerfectSquare = simplified.isPerfectSquare;
+
+                    } catch (error) {
+                        sqrt.simplifiedValue = 'NaN';
+                        sqrt.displayText = '√(计算错误)';
+                        sqrt.isPerfectSquare = false;
+                    }
+                });
+
+                // 将 sqrt 表达式替换为它们的计算值或符号表示
+                sqrtExpressions.forEach(sqrt => {
+                    if (sqrt.isPerfectSquare) {
+                        // 如果是完全平方数，替换为整数值
+                        safeExpression = safeExpression.replace(sqrt.placeholder, sqrt.simplifiedValue);
+                        formulaExpression = formulaExpression.replace(sqrt.original, sqrt.displayText);
+                    } else {
+                        // 如果不是完全平方数，我们需要进行符号计算
+                        // 创建一个特殊的标记，在结果处理时转换为符号形式
+                        safeExpression = safeExpression.replace(sqrt.placeholder, `##SYMBOLIC_SQRT_${sqrt.content}##`);
+                        formulaExpression = formulaExpression.replace(sqrt.original, sqrt.displayText);
+                    }
+                });
+
+                // 对 formulaExpression 进行最终的 sqrt 替换
+                formulaExpression = formulaExpression.replace(/sqrt\(/g, '√(');
+
+                // 处理幂运算
+                safeExpression = safeExpression.replace(/\^/g, '**');
+                formulaExpression = formulaExpression.replace(/\^/g, '^');
+
+                // 为公式显示保留乘号，用于后续转换为数学符号
+                const originalFormulaExpression = formulaExpression;
+
+                console.log('Safe expression for calculation:', safeExpression);
+
+                // 计算结果 - 需要处理符号表达式
+                let result;
+                let symbolicResult = null;
+
+                if (safeExpression.includes('##SYMBOLIC_SQRT_')) {
+                    // 如果包含符号开方，进行特殊处理
+                    result = calculateSymbolicExpression(safeExpression, sqrtExpressions);
+                } else {
+                    // 如果没有符号开方，正常计算
+                    result = Function('"use strict"; return (' + safeExpression + ')')();
+                }
+
+                console.log('Calculation result:', result);
+
+                // 显示结果和公式
+                displayFormula(originalFormulaExpression);
+                displayResult(result);
+
+            } catch (error) {
+                showError('计算出错：请检查代数式格式是否正确！');
+                console.error('Calculation error:', error);
+                console.error('Expression was:', expression);
+            }
+        }
+
+        function displayFormula(formula) {
+            const formulaElement = document.getElementById('formula');
+
+            // 将编程符号转换为数学符号
+            let displayFormula = formula
+                .replace(/\*/g, '×')
+                .replace(/\//g, '÷');
+
+            formulaElement.textContent = displayFormula;
+            formulaElement.classList.remove('show');
+
+            // 触发动画
+            setTimeout(() => {
+                formulaElement.classList.add('show');
+            }, 10);
+        }
+
+        function displayResult(result) {
+            const resultElement = document.getElementById('result');
+
+            console.log('Displaying result:', result, 'Type:', typeof result);
+
+            // 格式化结果显示
+            let formattedResult = result;
+
+            // 检查是否是符号化结果
+            if (result && typeof result === 'object' && result.isSymbolic) {
+                // 显示符号化结果
+                formattedResult = result.symbolicDisplay;
+                console.log('Displaying symbolic result:', formattedResult);
+            } else if (typeof result === 'number') {
+                if (Number.isInteger(result)) {
+                    formattedResult = result.toString();
+                } else {
+                    formattedResult = result.toFixed(4).replace(/\.?0+$/, '');
+                }
+            } else if (result === null || result === undefined) {
+                formattedResult = '计算错误';
+            } else if (isNaN(result)) {
+                formattedResult = '结果不是数字';
+            } else {
+                // 尝试转换为数字
+                const numResult = Number(result);
+                if (!isNaN(numResult)) {
+                    if (Number.isInteger(numResult)) {
+                        formattedResult = numResult.toString();
+                    } else {
+                        formattedResult = numResult.toFixed(4).replace(/\.?0+$/, '');
+                    }
+                } else {
+                    formattedResult = String(result);
+                }
+            }
+
+            console.log('Formatted result:', formattedResult);
+
+            resultElement.textContent = formattedResult;
+            resultElement.classList.remove('show');
+
+            // 触发动画
+            setTimeout(() => {
+                resultElement.classList.add('show');
+            }, 10);
+        }
+
+        function showError(message) {
+            const errorContainer = document.getElementById('errorContainer');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.textContent = message;
+            errorContainer.innerHTML = '';
+            errorContainer.appendChild(errorDiv);
+
+            // 3秒后自动清除错误信息
+            setTimeout(() => {
+                errorDiv.style.opacity = '0';
+                setTimeout(() => {
+                    if (errorContainer.contains(errorDiv)) {
+                        errorContainer.removeChild(errorDiv);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 回车键支持
+        document.getElementById('expression').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateVariableInputs();
+            }
+        });
+
+        // 为变量输入框添加回车键支持
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && e.target.classList.contains('variable-input')) {
+                calculateResult();
+            }
+        });
+    </script>
+</body>
+</html>

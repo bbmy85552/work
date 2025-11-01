@@ -1,0 +1,2590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数值转换机 - 灵活拖拽版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            max-width: 800px;
+            width: 100%;
+            min-height: 700px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-content {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 2.2em;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .input-section, .output-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #e1e5e9;
+            transition: all 0.3s ease;
+        }
+
+        .input-section:focus-within, .output-section:focus-within {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        /* 数字输入组件 */
+        .number-input-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .arrow-btn {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #667eea;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.5em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .arrow-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .arrow-btn:active {
+            transform: scale(0.95);
+        }
+
+        .arrow-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .number-display {
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 15px;
+            padding: 15px 30px;
+            font-size: 2em;
+            font-weight: 700;
+            color: #333;
+            min-width: 150px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .number-display:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-hint {
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .variable-badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        
+        /* 可拖拽步骤区域 */
+        .steps-container {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px dashed #e1e5e9;
+            min-height: 300px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .steps-container.drag-over {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .steps-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .steps-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .step-counter {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-height: 200px;
+            padding: 10px;
+        }
+
+        .step-item {
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: move;
+            transition: all 0.3s ease;
+            position: relative;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .step-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .step-item.dragging {
+            opacity: 0.5;
+            transform: rotate(2deg);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.1em;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-operator {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #667eea;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .step-value {
+            font-size: 1.2em;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .step-remove {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2em;
+        }
+
+        .step-remove:hover {
+            background: #c82333;
+            transform: scale(1.1);
+        }
+
+        .empty-steps {
+            text-align: center;
+            color: #999;
+            font-style: italic;
+            padding: 40px;
+            font-size: 1.1em;
+        }
+
+        .empty-steps::before {
+            content: '📋';
+            display: block;
+            font-size: 3em;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        /* 快速操作区域 */
+        .quick-operations {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #e1e5e9;
+        }
+
+        .operations-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .operation-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .op-btn {
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 15px 10px;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .op-btn:hover {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .op-btn:active {
+            transform: translateY(0);
+        }
+
+        .value-input-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: white;
+            border-radius: 12px;
+            border: 2px solid #e1e5e9;
+        }
+
+        .value-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1.1em;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .value-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .add-step-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .add-step-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .add-step-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 随机数字按钮 */
+        .random-btn {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .random-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        }
+
+        /* 语音播报按钮 */
+        .voice-btn {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+            color: white;
+            box-shadow: 0 4px 15px rgba(250, 112, 154, 0.3);
+        }
+
+        .voice-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(250, 112, 154, 0.4);
+        }
+
+        .voice-btn.speaking {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        
+        /* 控制按钮 */
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .control-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn.primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .control-btn.primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .control-btn.secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e1e5e9;
+        }
+
+        .control-btn.secondary:hover:not(:disabled) {
+            border-color: #667eea;
+            background: white;
+        }
+
+        .control-btn:disabled {
+            background: #ccc;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 结果显示 */
+        .result-display {
+            font-size: 2em;
+            font-weight: 700;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #e1e5e9;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .result-display.calculating {
+            animation: calculating 1s infinite;
+        }
+
+        @keyframes calculating {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .modal-input-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .modal-arrow {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #667eea;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .modal-arrow:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .modal-input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1.2em;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn.primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .modal-btn.secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e1e5e9;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 15px;
+            animation: shake 0.5s ease;
+            font-size: 0.9em;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        /* 变量输入样式 */
+        .variable-input-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .variable-label {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 1.1em;
+            min-width: 60px;
+        }
+
+        .variable-value-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1em;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .variable-value-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .variable-value-input.has-value {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+
+        .variable-hint {
+            font-size: 0.85em;
+            color: #666;
+            text-align: center;
+        }
+
+        .variable-status {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .variable-status.set {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .variable-status.unset {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+  
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-container {
+                max-width: 100%;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .operation-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .number-display {
+                font-size: 1.5em;
+                min-width: 120px;
+            }
+
+            .value-input-section {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .add-step-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="main-content">
+            <h1>数值转换机</h1>
+
+            <!-- 输入区 -->
+            <div class="input-section">
+                <div class="section-title">
+                    初始值设置
+                    <span class="variable-badge" id="inputTypeBadge" style="display: none;">变量</span>
+                </div>
+                <div class="number-input-container">
+                    <button class="arrow-btn" onclick="adjustValue(-1)" id="leftArrow">−</button>
+                    <div class="number-display" contenteditable="true" id="initialValue" placeholder="0">0</div>
+                    <button class="arrow-btn" onclick="adjustValue(1)" id="rightArrow">+</button>
+                </div>
+                <div class="input-hint" id="inputHint">
+                    支持数字、负数、分数（如 -5, 1/2, -3/4）或变量（如 a, x）
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="random-btn" onclick="generateRandomNumber()">
+                        🎲 随机数字
+                    </button>
+                </div>
+            </div>
+
+            <!-- 快速操作区域 -->
+            <div class="quick-operations">
+                <div class="operations-title">选择运算</div>
+                <div class="operation-buttons">
+                    <button class="op-btn" data-operation="add" onclick="selectOperation('add')">+</button>
+                    <button class="op-btn" data-operation="subtract" onclick="selectOperation('subtract')">−</button>
+                    <button class="op-btn" data-operation="multiply" onclick="selectOperation('multiply')">×</button>
+                    <button class="op-btn" data-operation="divide" onclick="selectOperation('divide')">÷</button>
+                </div>
+                <div class="value-input-section">
+                    <input type="text" class="value-input" id="quickValueInput" placeholder="输入数字或变量" value="1">
+                    <button class="add-step-btn" onclick="quickAddStep()" id="quickAddBtn" disabled>添加步骤</button>
+                </div>
+            </div>
+
+            <!-- 可拖拽步骤区域 -->
+            <div class="steps-container" id="stepsContainer">
+                <div class="steps-header">
+                    <div class="steps-title">运算步骤</div>
+                    <div class="step-counter" id="stepCounter">0 个步骤</div>
+                </div>
+                <div class="steps-list" id="stepsList">
+                    <div class="empty-steps">点击上方运算按钮添加步骤</div>
+                </div>
+            </div>
+
+            <!-- 控制按钮 -->
+            <div class="control-buttons">
+                <button class="control-btn secondary" onclick="clearAllSteps()">
+                    清空步骤
+                </button>
+                <button class="control-btn secondary" onclick="showVariableModal()" id="variableBtn" style="display: none;">
+                    设置变量值
+                </button>
+                <button class="control-btn primary" onclick="calculateResult()" id="calculateBtn" disabled>
+                    计算结果
+                </button>
+                <button class="control-btn voice-btn" onclick="speakResult()" id="voiceBtn" disabled>
+                    🔊 语音播报
+                </button>
+            </div>
+
+            <!-- 输出区 -->
+            <div class="output-section">
+                <div class="section-title">计算结果</div>
+                <div class="result-display" id="outputResult">
+                    <span style="color: #999;">等待计算结果...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框 -->
+    <div class="modal" id="operationModal">
+        <div class="modal-content">
+            <div class="modal-title" id="modalTitle">请输入操作数</div>
+            <div class="modal-input-container">
+                <button class="modal-arrow" onclick="adjustModalValue(-1)" id="modalLeftArrow">−</button>
+                <input type="text" class="modal-input" id="modalInput" placeholder="输入数字或变量" value="0">
+                <button class="modal-arrow" onclick="adjustModalValue(1)" id="modalRightArrow">+</button>
+            </div>
+            <div style="text-align: center; color: #666; font-size: 0.9em; margin-top: 10px;">
+                支持数字、负数、分数（如 -5, 1/2, -3/4）或变量（如 a, x）
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeModal()">取消</button>
+                <button class="modal-btn primary" onclick="confirmOperation()">确认</button>
+            </div>
+            <div id="modalError"></div>
+        </div>
+    </div>
+
+    <!-- 变量设置模态框 -->
+    <div class="modal" id="variableModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-title">设置变量值</div>
+            <div style="margin-bottom: 20px; color: #666;">
+                为表达式中出现的变量设置具体数值，留空则保持变量形式
+            </div>
+            <div id="variableInputs" style="max-height: 400px; overflow-y: auto;">
+                <!-- 变量输入将动态生成 -->
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="clearVariableValues()">清空所有</button>
+                <button class="modal-btn secondary" onclick="closeVariableModal()">取消</button>
+                <button class="modal-btn primary" onclick="confirmVariableValues()">确认</button>
+            </div>
+            <div id="variableError"></div>
+        </div>
+    </div>
+
+    <script>
+        // 全局状态管理
+        const state = {
+            initialValue: 0,
+            initialOriginalValue: '0',
+            initialValueType: 'number', // 'number' 或 'variable'
+            steps: [],
+            selectedOperation: null, // 当前选择的运算操作
+            currentDraggedOperation: null,
+            pendingStepIndex: null,
+            variableValues: {}, // 存储变量值的映射 {variableName: {value: number/fraction, type: 'number'/'fraction', originalValue: string}}
+            lastCalculationResult: null // 存储最后的计算结果用于语音播报
+        };
+
+        // 辅助函数：检测是否为变量
+        function isVariable(value) {
+            return /^[a-zA-Z][a-zA-Z0-9]*$/.test(value.trim());
+        }
+
+        // 收集表达式中所有的变量
+        function collectVariables() {
+            const variables = new Set();
+
+            // 检查初始值是否为变量
+            if (state.initialValueType === 'variable') {
+                variables.add(state.initialValue);
+            }
+
+            // 检查每个步骤中的变量
+            state.steps.forEach(step => {
+                if (step.valueType === 'variable') {
+                    variables.add(step.value);
+                }
+            });
+
+            return Array.from(variables).sort();
+        }
+
+        // 辅助函数：检测是否为数字（支持负号、小数、分数）
+        function isNumber(value) {
+            const trimmedValue = value.trim();
+
+            // 支持负号和小数
+            if (!isNaN(parseFloat(trimmedValue)) && isFinite(parseFloat(trimmedValue))) {
+                return true;
+            }
+
+            // 支持分数格式 (如 1/2, 3/4)
+            if (/^-?\d+\/-?\d+$/.test(trimmedValue)) {
+                return true;
+            }
+
+            return false;
+        }
+
+        // 辅助函数：解析数值或变量
+        function parseValue(value) {
+            const trimmedValue = value.trim();
+
+            if (isVariable(trimmedValue)) {
+                return { type: 'variable', value: trimmedValue };
+            } else if (isNumber(trimmedValue)) {
+                let originalValue = trimmedValue;
+
+                // 处理分数 - 保持分数形式不转换为小数
+                if (/^-?\d+\/-?\d+$/.test(trimmedValue)) {
+                    const parts = trimmedValue.split('/');
+                    let numerator = parseInt(parts[0]);
+                    let denominator = parseInt(parts[1]);
+
+                    // 确保分母不为零
+                    if (denominator === 0) {
+                        return { type: 'invalid', value: trimmedValue };
+                    }
+
+                    // 如果分母为负数，将负号移到分子
+                    if (denominator < 0) {
+                        numerator = -numerator;
+                        denominator = -denominator;
+                    }
+
+                    return { type: 'fraction', numerator: numerator, denominator: denominator, originalValue: originalValue };
+                } else {
+                    const numericValue = parseFloat(trimmedValue);
+                    return { type: 'number', value: numericValue, originalValue: originalValue };
+                }
+            } else {
+                return { type: 'invalid', value: trimmedValue };
+            }
+        }
+
+        // 辅助函数：判断值是否为负数
+        function isNegativeValue(value, type) {
+            if (type === 'number') {
+                return typeof value === 'number' && value < 0;
+            } else if (type === 'fraction') {
+                return value && value.numerator && value.numerator < 0;
+            } else if (type === 'variable') {
+                return false; // 变量本身不判断为负数
+            } else {
+                // 对于字符串形式的值
+                const strValue = value.toString().trim();
+                return strValue.startsWith('-') && strValue !== '-';
+            }
+        }
+
+        // 分数运算核心函数
+        // 计算最大公约数 (GCD)
+        function gcd(a, b) {
+            a = Math.abs(a);
+            b = Math.abs(b);
+            while (b !== 0) {
+                const temp = b;
+                b = a % b;
+                a = temp;
+            }
+            return a;
+        }
+
+        // 计算最小公倍数 (LCM)
+        function lcm(a, b) {
+            return Math.abs(a * b) / gcd(a, b);
+        }
+
+        // 分数化简
+        function simplifyFraction(numerator, denominator) {
+            if (denominator === 0) {
+                throw new Error("分母不能为零");
+            }
+
+            // 处理负数
+            if (denominator < 0) {
+                numerator = -numerator;
+                denominator = -denominator;
+            }
+
+            // 如果分子为0，返回 0/1
+            if (numerator === 0) {
+                return { numerator: 0, denominator: 1 };
+            }
+
+            // 化简分数
+            const commonDivisor = gcd(numerator, denominator);
+            return {
+                numerator: numerator / commonDivisor,
+                denominator: denominator / commonDivisor
+            };
+        }
+
+        // 分数加法
+        function addFractions(frac1, frac2) {
+            const commonDenominator = lcm(frac1.denominator, frac2.denominator);
+            const newNumerator = frac1.numerator * (commonDenominator / frac1.denominator) +
+                               frac2.numerator * (commonDenominator / frac2.denominator);
+            return simplifyFraction(newNumerator, commonDenominator);
+        }
+
+        // 分数减法
+        function subtractFractions(frac1, frac2) {
+            const commonDenominator = lcm(frac1.denominator, frac2.denominator);
+            const newNumerator = frac1.numerator * (commonDenominator / frac1.denominator) -
+                               frac2.numerator * (commonDenominator / frac2.denominator);
+            return simplifyFraction(newNumerator, commonDenominator);
+        }
+
+        // 分数乘法
+        function multiplyFractions(frac1, frac2) {
+            const newNumerator = frac1.numerator * frac2.numerator;
+            const newDenominator = frac1.denominator * frac2.denominator;
+            return simplifyFraction(newNumerator, newDenominator);
+        }
+
+        // 分数除法
+        function divideFractions(frac1, frac2) {
+            if (frac2.numerator === 0) {
+                throw new Error("除数不能为零");
+            }
+            const newNumerator = frac1.numerator * frac2.denominator;
+            const newDenominator = frac1.denominator * frac2.numerator;
+            return simplifyFraction(newNumerator, newDenominator);
+        }
+
+        // 数字转分数（将小数转换为分数）
+        function decimalToFraction(decimal) {
+            const tolerance = 1e-10;
+            const maxDenominator = 1000;
+
+            if (Math.abs(decimal) < tolerance) {
+                return { numerator: 0, denominator: 1 };
+            }
+
+            let numerator = 1;
+            let denominator = 1;
+
+            // 对于整数
+            if (Number.isInteger(decimal)) {
+                return { numerator: decimal, denominator: 1 };
+            }
+
+            // 连分数逼近
+            let h1 = 1, h2 = 0, k1 = 0, k2 = 1;
+            let b = decimal;
+
+            do {
+                const a = Math.floor(b);
+                const aux = h1;
+                h1 = a * h1 + h2;
+                h2 = aux;
+                const aux2 = k1;
+                k1 = a * k1 + k2;
+                k2 = aux2;
+
+                if (Math.abs(b - a) < tolerance) break;
+                b = 1 / (b - a);
+
+            } while (Math.abs(k1) <= maxDenominator && Math.abs(decimal - h1/k1) > tolerance);
+
+            return simplifyFraction(h1, k1);
+        }
+
+        // 格式化分数显示
+        function formatFraction(numerator, denominator) {
+            const simplified = simplifyFraction(numerator, denominator);
+
+            // 如果分母为1，显示为整数
+            if (simplified.denominator === 1) {
+                return simplified.numerator.toString();
+            }
+
+            // 对于初中数学教学，始终显示为假分数形式，不转换为带分数
+            // 这样能保持运算的精确性和教学的一致性
+            return `${simplified.numerator}/${simplified.denominator}`;
+        }
+
+        // 辅助函数：格式化数值显示（支持分数）
+        function formatNumber(value) {
+            if (typeof value !== 'number') return value;
+
+            // 对于整数，直接返回
+            if (Number.isInteger(value)) {
+                return value.toString();
+            }
+
+            // 对于小数，优先显示为小数格式，只有真正的简单分数才显示为分数
+            const tolerance = 1e-10;
+
+            // 检查常见的简单分数（1/2, 1/3, 2/3, 1/4, 3/4等）
+            const commonFractions = [
+                {num: 1, den: 2}, {num: 1, den: 3}, {num: 2, den: 3},
+                {num: 1, den: 4}, {num: 3, den: 4}, {num: 1, den: 5},
+                {num: 2, den: 5}, {num: 3, den: 5}, {num: 4, den: 5}
+            ];
+
+            for (let fraction of commonFractions) {
+                const fractionValue = fraction.num / fraction.den;
+                if (Math.abs(value - fractionValue) < tolerance) {
+                    return `${fraction.num}/${fraction.den}`;
+                }
+                if (Math.abs(value + fractionValue) < tolerance) {
+                    return `-${fraction.num}/${fraction.den}`;
+                }
+            }
+
+            // 其他情况显示为小数
+            return value.toFixed(4).replace(/\.?0+$/, '');
+        }
+
+        // 初始化新功能
+        function initQuickOperations() {
+            // 为快速输入框添加事件监听
+            const quickValueInput = document.getElementById('quickValueInput');
+
+            quickValueInput.addEventListener('input', function() {
+                // 可以在这里添加输入验证逻辑
+            });
+
+            quickValueInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    quickAddStep();
+                }
+            });
+
+            // 初始化添加按钮状态
+            updateAddButtonState();
+        }
+
+        // 操作拖拽开始
+        function handleDragStart(e) {
+            // 确保获取到正确的操作卡片
+            const card = e.target.closest('.operation-card');
+            if (card) {
+                state.currentDraggedOperation = {
+                    operation: card.dataset.operation,
+                    name: card.dataset.name
+                };
+                card.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'copy';
+                            }
+        }
+
+        // 操作拖拽结束
+        function handleDragEnd(e) {
+            const card = e.target.closest('.operation-card');
+            if (card) {
+                card.classList.remove('dragging');
+            }
+                        // 不在这里清理状态，让drop事件处理后再清理
+        }
+
+        // 拖拽经过
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+            document.getElementById('stepsContainer').classList.add('drag-over');
+        }
+
+        // 拖拽离开
+        function handleDragLeave(e) {
+            if (e.target.id === 'stepsContainer') {
+                document.getElementById('stepsContainer').classList.remove('drag-over');
+            }
+        }
+
+        // 放置
+        function handleDrop(e) {
+            e.preventDefault();
+            document.getElementById('stepsContainer').classList.remove('drag-over');
+
+            // 处理拖拽的操作
+            if (state.currentDraggedOperation) {
+                showOperationModal(state.currentDraggedOperation);
+            }
+        }
+
+        // 更新输入类型显示
+        function updateInputType(value) {
+            const parsed = parseValue(value);
+            const badge = document.getElementById('inputTypeBadge');
+            const hint = document.getElementById('inputHint');
+            const leftArrow = document.getElementById('leftArrow');
+            const rightArrow = document.getElementById('rightArrow');
+
+            if (parsed.type === 'variable') {
+                badge.style.display = 'inline-block';
+                badge.textContent = parsed.value;
+                hint.textContent = '变量模式：直接编辑变量名';
+                leftArrow.disabled = true;
+                rightArrow.disabled = true;
+                state.initialValueType = 'variable';
+                state.initialValue = parsed.value;
+                state.initialOriginalValue = parsed.value;
+            } else if (parsed.type === 'number') {
+                badge.style.display = 'none';
+                hint.textContent = '数字模式：直接输入数字或使用箭头调节';
+                leftArrow.disabled = false;
+                rightArrow.disabled = false;
+                state.initialValueType = 'number';
+                state.initialValue = parsed.value;
+                state.initialOriginalValue = parsed.originalValue || parsed.value;
+            } else if (parsed.type === 'fraction') {
+                badge.style.display = 'inline-block';
+                badge.textContent = '分数';
+                hint.textContent = '分数模式：分数将保持精确计算';
+                leftArrow.disabled = true;
+                rightArrow.disabled = true;
+                state.initialValueType = 'fraction';
+                state.initialValue = parsed;
+                // 确保 originalValue 正确保存
+                state.initialOriginalValue = parsed.originalValue || `${parsed.numerator}/${parsed.denominator}`;
+            } else {
+                badge.style.display = 'none';
+                hint.textContent = '无效输入，请输入数字、分数或变量名';
+                leftArrow.disabled = true;
+                rightArrow.disabled = true;
+                state.initialValueType = 'invalid';
+                state.initialValue = 0;
+                state.initialOriginalValue = '0';
+            }
+
+            // 更新变量按钮状态
+            updateVariableButton();
+        }
+
+        // 调节初始值
+        function adjustValue(delta) {
+            if (state.initialValueType !== 'number') return;
+
+            const display = document.getElementById('initialValue');
+            const currentValue = parseFloat(display.textContent) || 0;
+            const newValue = currentValue + delta;
+            display.textContent = newValue;
+            state.initialValue = newValue;
+        }
+
+        // 生成随机数字
+        function generateRandomNumber() {
+            const min = -10;
+            const max = 10;
+            const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+
+            const display = document.getElementById('initialValue');
+            display.textContent = randomNum;
+            updateInputType(randomNum.toString());
+
+            // 添加生成动画效果
+            display.style.animation = 'none';
+            setTimeout(() => {
+                display.style.animation = 'pulse 0.5s ease';
+            }, 10);
+        }
+
+        // 监听初始值输入
+        document.getElementById('initialValue').addEventListener('input', function(e) {
+            updateInputType(e.target.textContent);
+        });
+
+        // 处理焦点事件
+        document.getElementById('initialValue').addEventListener('focus', function(e) {
+            if (e.target.textContent === '0') {
+                e.target.textContent = '';
+            }
+        });
+
+        document.getElementById('initialValue').addEventListener('blur', function(e) {
+            if (e.target.textContent.trim() === '') {
+                e.target.textContent = '0';
+                updateInputType('0');
+            }
+        });
+
+        // 显示操作模态框
+        function showOperationModal(operation) {
+            const modal = document.getElementById('operationModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalInput = document.getElementById('modalInput');
+
+            modalTitle.textContent = `${operation.name} - 请输入操作数`;
+            modalInput.value = '0';
+            modalInput.focus();
+            modalInput.select();
+
+            // 清除之前的错误信息
+            document.getElementById('modalError').innerHTML = '';
+
+            modal.classList.add('show');
+            state.currentDraggedOperation = operation;
+        }
+
+        // 显示变量设置模态框
+        function showVariableModal() {
+            const variables = collectVariables();
+            if (variables.length === 0) {
+                showError('当前表达式中没有变量！');
+                return;
+            }
+
+            const modal = document.getElementById('variableModal');
+            const variableInputs = document.getElementById('variableInputs');
+
+            // 生成变量输入界面
+            variableInputs.innerHTML = variables.map(variable => {
+                const savedValue = state.variableValues[variable];
+                const inputValue = savedValue ? savedValue.originalValue : '';
+                const hasValue = inputValue !== '';
+
+                return `
+                    <div class="variable-input-group">
+                        <div class="variable-label">${variable} =</div>
+                        <input type="text"
+                               class="variable-value-input ${hasValue ? 'has-value' : ''}"
+                               id="var_${variable}"
+                               placeholder="输入数值或留空"
+                               value="${inputValue}"
+                               data-variable="${variable}">
+                        <div class="variable-status ${hasValue ? 'set' : 'unset'}">
+                            ${hasValue ? '已设置' : '未设置'}
+                        </div>
+                    </div>
+                    <div class="variable-hint">支持数字、负数、分数（如 -5, 1/2, -3/4）</div>
+                `;
+            }).join('');
+
+            // 添加输入事件监听
+            variables.forEach(variable => {
+                const input = document.getElementById(`var_${variable}`);
+                const status = input.nextElementSibling;
+
+                input.addEventListener('input', function() {
+                    const hasValue = this.value.trim() !== '';
+                    this.classList.toggle('has-value', hasValue);
+                    status.className = `variable-status ${hasValue ? 'set' : 'unset'}`;
+                    status.textContent = hasValue ? '已设置' : '未设置';
+                });
+            });
+
+            // 清除错误信息
+            document.getElementById('variableError').innerHTML = '';
+
+            modal.classList.add('show');
+        }
+
+        // 关闭变量模态框
+        function closeVariableModal() {
+            const modal = document.getElementById('variableModal');
+            modal.classList.remove('show');
+        }
+
+        // 清空所有变量值
+        function clearVariableValues() {
+            const variables = collectVariables();
+            variables.forEach(variable => {
+                const input = document.getElementById(`var_${variable}`);
+                const status = input.nextElementSibling;
+
+                if (input) {
+                    input.value = '';
+                    input.classList.remove('has-value');
+                    status.className = 'variable-status unset';
+                    status.textContent = '未设置';
+                }
+            });
+        }
+
+        // 确认变量值设置
+        function confirmVariableValues() {
+            const variables = collectVariables();
+            const newVariableValues = {};
+            let hasError = false;
+
+            // 验证并收集变量值
+            for (let variable of variables) {
+                const input = document.getElementById(`var_${variable}`);
+                const value = input.value.trim();
+
+                if (value === '') {
+                    // 留空则保持为变量
+                    delete newVariableValues[variable];
+                    continue;
+                }
+
+                const parsed = parseValue(value);
+                if (parsed.type === 'invalid') {
+                    document.getElementById('variableError').innerHTML =
+                        `<div class="error-message">变量 ${variable} 的值无效！请输入数字或分数。</div>`;
+                    hasError = true;
+                    break;
+                }
+
+                // 存储变量值
+                if (parsed.type === 'fraction') {
+                    newVariableValues[variable] = {
+                        numerator: parsed.numerator,
+                        denominator: parsed.denominator,
+                        type: 'fraction',
+                        originalValue: parsed.originalValue
+                    };
+                } else if (parsed.type === 'number') {
+                    newVariableValues[variable] = {
+                        value: parsed.value,
+                        type: 'number',
+                        originalValue: parsed.originalValue
+                    };
+                }
+            }
+
+            if (hasError) return;
+
+            // 更新状态
+            state.variableValues = newVariableValues;
+            closeVariableModal();
+
+            // 如果有步骤且所有变量都已设置值，自动计算结果
+            if (state.steps.length > 0 && Object.keys(newVariableValues).length === variables.length) {
+                calculateResult();
+            }
+        }
+
+        // 关闭模态框
+        function closeModal() {
+            const modal = document.getElementById('operationModal');
+            modal.classList.remove('show');
+                        state.currentDraggedOperation = null;
+            state.pendingStepIndex = null;
+        }
+
+        // 调节模态框中的值
+        function adjustModalValue(delta) {
+            const input = document.getElementById('modalInput');
+            const parsed = parseValue(input.value);
+
+            if (parsed.type === 'number') {
+                const newValue = parsed.value + delta;
+                input.value = newValue;
+            }
+        }
+
+        // 更新模态框输入类型
+        function updateModalInputType() {
+            const input = document.getElementById('modalInput');
+            const leftArrow = document.getElementById('modalLeftArrow');
+            const rightArrow = document.getElementById('modalRightArrow');
+            const parsed = parseValue(input.value);
+
+            if (parsed.type === 'number') {
+                leftArrow.disabled = false;
+                rightArrow.disabled = false;
+            } else {
+                leftArrow.disabled = true;
+                rightArrow.disabled = true;
+            }
+        }
+
+        // 确认操作
+        function confirmOperation() {
+            const modalInput = document.getElementById('modalInput');
+            const modalError = document.getElementById('modalError');
+            const value = modalInput.value.trim();
+
+            if (!value) {
+                modalError.innerHTML = '<div class="error-message">请输入数字或变量名！</div>';
+                return;
+            }
+
+            const parsed = parseValue(value);
+
+            if (parsed.type === 'invalid') {
+                modalError.innerHTML = '<div class="error-message">无效输入！请输入数字或有效的变量名。</div>';
+                return;
+            }
+
+            // 验证除法
+            if (state.currentDraggedOperation && state.currentDraggedOperation.operation === 'divide') {
+                let isZero = false;
+
+                if (parsed.type === 'number' && parsed.value === 0) {
+                    isZero = true;
+                } else if (parsed.type === 'fraction' && parsed.numerator === 0) {
+                    isZero = true;
+                }
+
+                if (isZero) {
+                    modalError.innerHTML = '<div class="error-message">除数不能为零！</div>';
+                    return;
+                }
+            }
+
+            // 确保有有效的操作
+            if (!state.currentDraggedOperation) {
+                modalError.innerHTML = '<div class="error-message">操作错误，请重新操作！</div>';
+                return;
+            }
+
+            // 添加步骤
+            addStep(state.currentDraggedOperation, parsed);
+            closeModal();
+        }
+
+        // 添加步骤
+        function addStep(operation, parsedValue) {
+            let stepValue;
+
+            // 根据类型处理值的存储
+            if (parsedValue.type === 'fraction') {
+                stepValue = {
+                    numerator: parsedValue.numerator,
+                    denominator: parsedValue.denominator
+                };
+            } else {
+                stepValue = parsedValue.value;
+            }
+
+            const step = {
+                id: Date.now(),
+                operation: operation.operation,
+                name: operation.name,
+                value: stepValue,
+                valueType: parsedValue.type,
+                originalValue: parsedValue.originalValue,
+                operator: getOperatorSymbol(operation.operation)
+            };
+
+            state.steps.push(step);
+            renderSteps();
+            updateStepCounter();
+            updateCalculateButton();
+            updateVariableButton();
+            updateVoiceButton(); // 添加步骤时更新语音按钮状态
+        }
+
+        // 获取运算符符号
+        function getOperatorSymbol(operation) {
+            const symbols = {
+                'add': '+',
+                'subtract': '−',
+                'multiply': '×',
+                'divide': '÷'
+            };
+            return symbols[operation] || operation;
+        }
+
+        // 渲染步骤列表
+        function renderSteps() {
+            const stepsList = document.getElementById('stepsList');
+
+            if (state.steps.length === 0) {
+                stepsList.innerHTML = '<div class="empty-steps">拖拽或点击右侧操作卡片添加步骤</div>';
+                return;
+            }
+
+            stepsList.innerHTML = state.steps.map((step, index) => {
+                let valueDisplay = step.originalValue || step.value;
+                if (step.valueType === 'variable') {
+                    valueDisplay = `<span style="color: #667eea; font-weight: 600;">${step.value}</span>`;
+                } else if (step.valueType === 'fraction') {
+                    valueDisplay = `<span style="color: #28a745; font-weight: 600;">${formatFraction(step.value.numerator, step.value.denominator)}</span>`;
+                }
+                return `
+                    <div class="step-item" data-step-id="${step.id}">
+                        <div class="step-number">${index + 1}</div>
+                        <div class="step-content">
+                            <div class="step-operator">${step.operator}</div>
+                            <div class="step-value">${valueDisplay}</div>
+                        </div>
+                        <button class="step-remove" onclick="removeStep(${step.id})">×</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 移除步骤
+        function removeStep(stepId) {
+            state.steps = state.steps.filter(step => step.id !== stepId);
+            renderSteps();
+            updateStepCounter();
+            updateCalculateButton();
+            updateVariableButton();
+            updateVoiceButton(); // 移除步骤时更新语音按钮状态
+        }
+
+        // 更新步骤计数器
+        function updateStepCounter() {
+            document.getElementById('stepCounter').textContent = `${state.steps.length} 个步骤`;
+        }
+
+        // 更新计算按钮状态
+        function updateCalculateButton() {
+            const calculateBtn = document.getElementById('calculateBtn');
+            calculateBtn.disabled = state.steps.length === 0;
+        }
+
+        // 更新语音播报按钮状态
+        function updateVoiceButton() {
+            const voiceBtn = document.getElementById('voiceBtn');
+            voiceBtn.disabled = state.steps.length === 0;
+        }
+
+        // 更新变量按钮状态
+        function updateVariableButton() {
+            const variables = collectVariables();
+            const variableBtn = document.getElementById('variableBtn');
+
+            if (variables.length > 0) {
+                variableBtn.style.display = 'block';
+                const setCount = Object.keys(state.variableValues).length;
+                variableBtn.textContent = setCount === variables.length ? '修改变量值' : '设置变量值';
+            } else {
+                variableBtn.style.display = 'none';
+            }
+        }
+
+        // 清空所有步骤
+        function clearAllSteps() {
+            if (state.steps.length === 0) return;
+
+            if (confirm('确定要清空所有步骤吗？')) {
+                state.steps = [];
+                state.variableValues = {}; // 同时清空变量值
+                state.lastCalculationResult = null; // 清空计算结果
+                renderSteps();
+                updateStepCounter();
+                updateCalculateButton();
+                updateVariableButton();
+                updateVoiceButton(); // 清空步骤时更新语音按钮状态
+
+                // 清空结果显示
+                document.getElementById('outputResult').innerHTML = '<span style="color: #999;">等待计算结果...</span>';
+            }
+        }
+
+        // 计算结果
+        function calculateResult() {
+            if (state.steps.length === 0) {
+                showError('没有可计算的步骤！');
+                return;
+            }
+
+            const outputResult = document.getElementById('outputResult');
+            outputResult.classList.add('calculating');
+            outputResult.innerHTML = '<span style="color: #667eea;">正在计算...</span>';
+
+            // 模拟计算过程
+            setTimeout(() => {
+                try {
+                    const result = performCalculation();
+                    displayResult(result);
+                } catch (error) {
+                    showError('计算出错：' + error.message);
+                }
+            }, 1000);
+        }
+
+        // 执行计算
+        function performCalculation() {
+            let formula = buildDisplayFormula();
+            let result = null;
+            let canCalculate = true;
+
+            // 构建表达式树进行计算
+            try {
+                result = buildAndCalculateExpression();
+                canCalculate = result !== null;
+            } catch (error) {
+                console.error('计算错误:', error);
+                canCalculate = false;
+            }
+
+            return { result: result, formula, canCalculate };
+        }
+
+        // 构建显示用的公式（使用原始值）
+        function buildDisplayFormula() {
+            // 确保使用正确的原始值，优先从DOM获取当前显示的值
+            let initialValue;
+            const displayElement = document.getElementById('initialValue');
+            if (displayElement && displayElement.textContent) {
+                const currentValue = displayElement.textContent.trim();
+                if (currentValue) {
+                    initialValue = currentValue;
+                } else {
+                    initialValue = state.initialOriginalValue || '0';
+                }
+            } else {
+                initialValue = state.initialOriginalValue || '0';
+            }
+
+            let formula;
+
+            // 对于分数类型，需要特殊处理
+            if (state.initialValueType === 'fraction') {
+                // 如果 initialValue 是字符串，说明是从备用机制来的，需要构造分数对象
+                if (typeof initialValue === 'string') {
+                    formula = initialValue; // 直接使用字符串形式的分数
+                } else {
+                    // 使用分数对象
+                    formula = formatForDisplay(state.initialValue, state.initialValueType);
+                }
+            } else {
+                // 对于其他类型，正常处理
+                formula = formatForDisplay(initialValue, state.initialValueType);
+            }
+
+            state.steps.forEach((step, index) => {
+                const operator = getOperatorSymbol(step.operation);
+                const value = formatForDisplay(step.originalValue || step.value, step.valueType);
+
+                // 检查后面是否有更高优先级的运算
+                const hasHigherPriorityLater = state.steps.slice(index + 1).some(laterStep =>
+                    laterStep.operation === 'multiply' || laterStep.operation === 'divide'
+                );
+
+                // 如果当前是加减法且后面有乘除法，需要给前面的表达式加括号
+                if ((step.operation === 'add' || step.operation === 'subtract') && hasHigherPriorityLater) {
+                    formula = `(${formula} ${operator} ${value})`;
+                } else {
+                    formula += ` ${operator} ${value}`;
+                }
+            });
+
+            return formula;
+        }
+
+        // 构建并计算表达式
+        function buildAndCalculateExpression() {
+            let currentValue = null;
+            let hasUnsetVariable = false;
+
+            // 优先从DOM获取当前显示的初始值，确保与显示一致
+            let initialValueForCalc;
+            const displayElement = document.getElementById('initialValue');
+            if (displayElement && displayElement.textContent) {
+                const currentValue = displayElement.textContent.trim();
+                if (currentValue) {
+                    initialValueForCalc = currentValue;
+                } else {
+                    initialValueForCalc = state.initialOriginalValue || '0';
+                }
+            } else {
+                initialValueForCalc = state.initialOriginalValue || '0';
+            }
+
+            // 处理初始值
+            if (state.initialValueType === 'number') {
+                // 将小数转换为分数进行精确计算
+                currentValue = decimalToFraction(parseFloat(initialValueForCalc));
+            } else if (state.initialValueType === 'fraction') {
+                // 对于分数类型，解析DOM中的值
+                const parsed = parseValue(initialValueForCalc);
+                if (parsed.type === 'fraction') {
+                    currentValue = {
+                        numerator: parsed.numerator,
+                        denominator: parsed.denominator
+                    };
+                } else {
+                    currentValue = {
+                        numerator: state.initialValue.numerator,
+                        denominator: state.initialValue.denominator
+                    };
+                }
+            } else if (state.initialValueType === 'variable') {
+                // 检查变量是否已设置值
+                if (state.variableValues[state.initialValue]) {
+                    const varValue = state.variableValues[state.initialValue];
+                    if (varValue.type === 'number') {
+                        currentValue = decimalToFraction(varValue.value);
+                    } else if (varValue.type === 'fraction') {
+                        currentValue = {
+                            numerator: varValue.numerator,
+                            denominator: varValue.denominator
+                        };
+                    }
+                } else {
+                    hasUnsetVariable = true;
+                }
+            } else {
+                hasUnsetVariable = true;
+            }
+
+            // 如果初始值有问题，直接返回
+            if (currentValue === null && !hasUnsetVariable) {
+                return null;
+            }
+
+            // 处理每个步骤
+            for (let step of state.steps) {
+                let stepValue = null;
+
+                if (step.valueType === 'number') {
+                    stepValue = decimalToFraction(step.value);
+                } else if (step.valueType === 'fraction') {
+                    stepValue = {
+                        numerator: step.value.numerator,
+                        denominator: step.value.denominator
+                    };
+                } else if (step.valueType === 'variable') {
+                    // 检查变量是否已设置值
+                    if (state.variableValues[step.value]) {
+                        const varValue = state.variableValues[step.value];
+                        if (varValue.type === 'number') {
+                            stepValue = decimalToFraction(varValue.value);
+                        } else if (varValue.type === 'fraction') {
+                            stepValue = {
+                                numerator: varValue.numerator,
+                                denominator: varValue.denominator
+                            };
+                        }
+                    } else {
+                        hasUnsetVariable = true;
+                        break;
+                    }
+                }
+
+                if (stepValue !== null && currentValue !== null) {
+                    currentValue = applyFractionOperation(currentValue, stepValue, step.operation);
+                }
+            }
+
+            // 如果有未设置的变量，返回null表示只能显示代数表达式
+            return hasUnsetVariable ? null : currentValue;
+        }
+
+        // 应用分数运算
+        function applyFractionOperation(frac1, frac2, operation) {
+            try {
+                switch (operation) {
+                    case 'add':
+                        return addFractions(frac1, frac2);
+                    case 'subtract':
+                        return subtractFractions(frac1, frac2);
+                    case 'multiply':
+                        return multiplyFractions(frac1, frac2);
+                    case 'divide':
+                        return divideFractions(frac1, frac2);
+                    default:
+                        return frac1;
+                }
+            } catch (error) {
+                console.error('分数运算错误:', error);
+                return frac1;
+            }
+        }
+
+        // 应用运算操作
+        function applyOperation(terms, current, stepExpression, operation) {
+            switch (operation) {
+                case 'add':
+                    terms.push({...stepExpression});
+                    break;
+                case 'subtract':
+                    if (stepExpression.isNumber) {
+                        stepExpression.number = -stepExpression.number;
+                    } else {
+                        stepExpression.coefficient = -stepExpression.coefficient;
+                    }
+                    terms.push({...stepExpression});
+                    break;
+                case 'multiply':
+                    // 对于乘法，需要将当前所有项都乘以stepExpression
+                    if (terms.length > 0) {
+                        terms.forEach(term => {
+                            if (term.isNumber && stepExpression.isNumber) {
+                                // 数值 × 数值
+                                term.number *= stepExpression.number;
+                            } else if (term.isNumber && stepExpression.variable) {
+                                // 数值 × 变量
+                                term.variable = stepExpression.variable;
+                                term.coefficient = term.number * stepExpression.coefficient;
+                                term.isNumber = false;
+                                term.number = 0;
+                            } else if (term.variable && stepExpression.isNumber) {
+                                // 变量 × 数值
+                                term.coefficient *= stepExpression.number;
+                            } else if (term.variable && stepExpression.variable) {
+                                // 变量 × 变量
+                                term.variable += stepExpression.variable;
+                                term.coefficient *= stepExpression.coefficient;
+                            }
+                        });
+                    } else {
+                        // 如果没有现有项，直接添加
+                        terms.push({...stepExpression});
+                    }
+                    break;
+                case 'divide':
+                    // 对于除法，需要将当前所有项都除以stepExpression
+                    if (terms.length > 0 && stepExpression.isNumber) {
+                        terms.forEach(term => {
+                            if (term.isNumber) {
+                                // 数值 ÷ 数值
+                                term.number /= stepExpression.number;
+                            } else if (term.variable) {
+                                // 变量 ÷ 数值
+                                term.coefficient /= stepExpression.number;
+                            }
+                        });
+                    }
+                    break;
+            }
+        }
+
+        // 选择运算操作
+        function selectOperation(operation) {
+            // 清除之前的选择状态
+            document.querySelectorAll('.op-btn').forEach(btn => {
+                btn.style.background = 'white';
+                btn.style.color = '#667eea';
+            });
+
+            // 设置新的选择状态
+            const selectedBtn = document.querySelector(`[data-operation="${operation}"]`);
+            selectedBtn.style.background = '#667eea';
+            selectedBtn.style.color = 'white';
+
+            state.selectedOperation = operation;
+
+            // 启用添加按钮
+            updateAddButtonState();
+        }
+
+        // 快速添加步骤
+        function quickAddStep() {
+            if (!state.selectedOperation) {
+                showError('请先选择一个运算操作！');
+                return;
+            }
+
+            const valueInput = document.getElementById('quickValueInput');
+            const value = valueInput.value.trim();
+
+            if (!value) {
+                showError('请输入操作数！');
+                return;
+            }
+
+            const parsed = parseValue(value);
+
+            if (parsed.type === 'invalid') {
+                showError('无效输入！请输入数字或有效的变量名。');
+                return;
+            }
+
+            // 验证除法
+            if (state.selectedOperation === 'divide') {
+                let isZero = false;
+
+                if (parsed.type === 'number' && parsed.value === 0) {
+                    isZero = true;
+                } else if (parsed.type === 'fraction' && parsed.numerator === 0) {
+                    isZero = true;
+                }
+
+                if (isZero) {
+                    showError('除数不能为零！');
+                    return;
+                }
+            }
+
+            // 创建操作对象
+            const operation = {
+                operation: state.selectedOperation,
+                name: getOperationName(state.selectedOperation)
+            };
+
+            // 添加步骤
+            addStep(operation, parsed);
+
+            // 重置选择状态
+            resetOperationSelection();
+        }
+
+        // 获取操作名称
+        function getOperationName(operation) {
+            const names = {
+                'add': '加法',
+                'subtract': '减法',
+                'multiply': '乘法',
+                'divide': '除法'
+            };
+            return names[operation] || operation;
+        }
+
+        // 重置操作选择
+        function resetOperationSelection() {
+            state.selectedOperation = null;
+            document.querySelectorAll('.op-btn').forEach(btn => {
+                btn.style.background = 'white';
+                btn.style.color = '#667eea';
+            });
+            document.getElementById('quickValueInput').value = '1';
+            updateAddButtonState();
+        }
+
+        // 更新添加按钮状态
+        function updateAddButtonState() {
+            const addBtn = document.getElementById('quickAddBtn');
+            addBtn.disabled = state.selectedOperation === null;
+        }
+
+        // 简化并合并项
+        function simplifyAndCombineTerms(terms) {
+            let variableTerms = {};
+            let numberSum = 0;
+
+            terms.forEach(term => {
+                if (term.isNumber) {
+                    numberSum += term.number;
+                } else if (term.variable) {
+                    if (!variableTerms[term.variable]) {
+                        variableTerms[term.variable] = 0;
+                    }
+                    variableTerms[term.variable] += term.coefficient;
+                }
+            });
+
+            // 构建结果字符串
+            let resultParts = [];
+
+            // 处理变量项
+            Object.keys(variableTerms).forEach(variable => {
+                let coefficient = variableTerms[variable];
+                if (coefficient !== 0) {
+                    let termStr = '';
+                    if (coefficient === 1) {
+                        termStr = variable;
+                    } else if (coefficient === -1) {
+                        termStr = `-${variable}`;
+                    } else {
+                        termStr = `${coefficient}${variable}`;
+                    }
+                    resultParts.push(termStr);
+                }
+            });
+
+            // 处理数值项
+            if (numberSum !== 0) {
+                resultParts.push(formatNumber(numberSum));
+            }
+
+            if (resultParts.length === 0) {
+                return '0';
+            }
+
+            return resultParts.join(' + ').replace(/\+ -/g, '- ');
+        }
+
+        // 格式化值显示
+        function formatValue(value, type) {
+            if (type === 'variable') {
+                return value;
+            } else if (type === 'number') {
+                return value.toString();
+            } else {
+                return '0';
+            }
+        }
+
+        // 格式化显示（使用原始值）
+        function formatForDisplay(originalValue, type) {
+            // 处理 undefined 或 null 值
+            if (originalValue === undefined || originalValue === null) {
+                return '0';
+            }
+
+            if (type === 'variable') {
+                return originalValue;
+            } else if (type === 'number') {
+                // 对于数字类型，直接返回字符串形式
+                return originalValue.toString();
+            } else if (type === 'fraction') {
+                // 对于分数类型，优先使用 originalValue 属性
+                if (originalValue.originalValue) {
+                    return originalValue.originalValue;
+                } else if (originalValue.numerator !== undefined && originalValue.denominator !== undefined) {
+                    return `${originalValue.numerator}/${originalValue.denominator}`;
+                } else {
+                    // 如果分数对象结构不完整，返回默认值
+                    return '0';
+                }
+            } else {
+                return originalValue ? originalValue.toString() : '0';
+            }
+        }
+
+        // 给代数表达式中的负数添加括号
+        function addParenthesesForNegatives(expression) {
+            // 匹配表达式中的负数模式（包括负数、负分数）
+            return expression.replace(/(-\d+(?:\/\d+)?)(?![\d\/])/g, '($1)');
+        }
+
+        // 简化代数表达式
+        function simplifyAlgebraicExpression(expression) {
+            // 先简化，再给负数添加括号
+            const simplified = expression; // 简单的表达式简化，直接返回原表达式
+            return addParenthesesForNegatives(simplified);
+        }
+
+        // 显示结果
+        function displayResult(calculation) {
+            const outputResult = document.getElementById('outputResult');
+
+            outputResult.classList.remove('calculating');
+
+            let resultDisplay;
+
+            if (calculation.canCalculate && calculation.result !== null) {
+                // 可以进行数值计算
+                let formattedResult;
+                if (typeof calculation.result === 'number') {
+                    formattedResult = formatNumber(calculation.result);
+                } else if (typeof calculation.result === 'object' && calculation.result.numerator !== undefined) {
+                    // 分数结果
+                    formattedResult = formatFraction(calculation.result.numerator, calculation.result.denominator);
+                } else {
+                    formattedResult = calculation.result.toString();
+                }
+
+                // 存储计算结果用于语音播报
+                state.lastCalculationResult = {
+                    formula: calculation.formula,
+                    result: formattedResult,
+                    canCalculate: true
+                };
+
+                // 如果使用了变量值，显示变量值信息
+                const setVariables = Object.keys(state.variableValues);
+                let variableInfo = '';
+                if (setVariables.length > 0) {
+                    const varList = setVariables.map(varName => {
+                        const varValue = state.variableValues[varName];
+                        const displayValue = varValue.type === 'fraction'
+                            ? formatFraction(varValue.numerator, varValue.denominator)
+                            : varValue.value;
+                        return `${varName} = ${displayValue}`;
+                    }).join(', ');
+                    variableInfo = `<div style="font-size: 0.7em; color: #666; margin-top: 8px; font-style: italic;">
+                        其中：${varList}
+                    </div>`;
+                }
+
+                resultDisplay = `
+                    <div>
+                        <span style="color: #28a745; font-size: 1.2em;">${formattedResult}</span>
+                        ${variableInfo}
+                    </div>
+                `;
+            } else {
+                // 只能显示代数表达式
+                const simplifiedFormula = simplifyAlgebraicExpression(calculation.formula);
+
+                // 存储计算结果用于语音播报
+                state.lastCalculationResult = {
+                    formula: calculation.formula,
+                    result: simplifiedFormula,
+                    canCalculate: false
+                };
+
+                // 检查是否有未设置的变量
+                const variables = collectVariables();
+                const unsetVariables = variables.filter(v => !state.variableValues[v]);
+
+                let hint = '';
+                if (unsetVariables.length > 0) {
+                    hint = `<div style="font-size: 0.7em; color: #dc3545; margin-top: 8px; font-style: italic;">
+                        点击"设置变量值"为 ${unsetVariables.join(', ')} 赋值进行计算
+                    </div>`;
+                }
+
+                resultDisplay = `
+                    <div>
+                        <span style="color: #667eea; font-style: italic;">${simplifiedFormula}</span>
+                        ${hint}
+                    </div>
+                `;
+            }
+
+            outputResult.innerHTML = resultDisplay;
+        }
+
+        // 新的文本转语音函数
+        async function textToSpeech(text, voice = "Cherry", languageType = "Chinese") {
+            console.log('Sending TTS request:', { text, voice, languageType });
+
+            const response = await fetch('http://106.53.170.240:8890/tts', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer bobwork11012205BOB@@',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    text: text,
+                    voice: voice,
+                    language_type: languageType
+                })
+            });
+
+            console.log('Response status:', response.status);
+            console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Error response:', errorText);
+                throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+            }
+
+            return await response.json();
+        }
+
+        // 语音播报功能（自动计算并播报）
+        async function speakResult() {
+            if (state.steps.length === 0) {
+                showError('请先添加运算步骤！');
+                return;
+            }
+
+            const voiceBtn = document.getElementById('voiceBtn');
+            voiceBtn.classList.add('speaking');
+            voiceBtn.disabled = true;
+
+            try {
+                // 1. 首先执行计算（如果还没有计算结果）
+                let calculation;
+                if (!state.lastCalculationResult) {
+                    // 显示计算中状态
+                    const outputResult = document.getElementById('outputResult');
+                    outputResult.classList.add('calculating');
+                    outputResult.innerHTML = '<span style="color: #667eea;">正在计算并准备语音播报...</span>';
+
+                    calculation = performCalculation();
+                    // 暂时不显示结果，等音频开始播放时再显示
+                } else {
+                    // 使用已有的计算结果
+                    calculation = state.lastCalculationResult;
+                }
+
+                // 2. 构建播报文本
+                let speechText;
+                const initialValueElement = document.getElementById('initialValue');
+                const initialValue = initialValueElement.textContent.trim();
+
+                // 格式化初始值为语音播报格式
+                const parsedInitialValue = parseValue(initialValue);
+                const formattedInitialValue = formatValueForSpeech(
+                    parsedInitialValue.type === 'fraction' ? parsedInitialValue :
+                    parsedInitialValue.type === 'number' ? parsedInitialValue.value :
+                    parsedInitialValue.value,
+                    parsedInitialValue.type
+                );
+
+                // 构建步骤描述
+                let stepsDescription = '';
+                state.steps.forEach((step, index) => {
+                    const operator = formatOperatorForSpeech(step.operation);
+                    const formattedValue = formatValueForSpeech(step.value, step.valueType);
+
+                    if (index === 0) {
+                        stepsDescription = `${operator}${formattedValue}`;
+                    } else {
+                        stepsDescription += `，然后${operator}${formattedValue}`;
+                    }
+                });
+
+                if (calculation.canCalculate && calculation.result !== null) {
+                    console.log('Calculation result:', calculation.result, 'Type:', typeof calculation.result);
+                    const formattedResult = formatNumberForSpeech(calculation.result);
+                    console.log('Formatted result for speech:', formattedResult);
+                    speechText = `${formattedInitialValue}，经过${stepsDescription}的计算，结果是${formattedResult}`;
+                } else {
+                    speechText = `表达式${calculation.formula}需要设置变量值后才能计算具体结果`;
+                }
+
+                // 3. 调用文本转语音
+                console.log('Sending TTS request:', speechText);
+                const data = await textToSpeech(speechText);
+
+                if (data.output && data.output.audio && data.output.audio.url) {
+                    // 4. 播放音频
+                    const audio = new Audio(data.output.audio.url);
+
+                    // 在音频开始播放时显示计算结果
+                    audio.addEventListener('play', () => {
+                        // 如果是新的计算，现在才显示结果
+                        if (!state.lastCalculationResult) {
+                            state.lastCalculationResult = calculation;
+                            displayResult(calculation);
+                        }
+                        // 更新提示信息
+                        const outputResult = document.getElementById('outputResult');
+                        if (outputResult.classList.contains('calculating')) {
+                            outputResult.classList.remove('calculating');
+                        }
+                        console.log('音频开始播放，显示计算结果');
+                    });
+
+                    // 添加音频加载完成事件监听
+                    audio.addEventListener('canplay', () => {
+                        console.log('音频加载完成，准备播放');
+                    });
+
+                    // 添加音频播放失败事件监听
+                    audio.addEventListener('error', (e) => {
+                        console.error('音频播放失败:', e);
+                        // 如果音频播放失败，仍然显示计算结果
+                        if (!state.lastCalculationResult) {
+                            state.lastCalculationResult = calculation;
+                            displayResult(calculation);
+                        }
+                        const outputResult = document.getElementById('outputResult');
+                        if (outputResult.classList.contains('calculating')) {
+                            outputResult.classList.remove('calculating');
+                        }
+                    });
+
+                    await audio.play();
+
+                    // 5. 显示成功提示
+                    showSuccessMessage('语音播报完成');
+                } else {
+                    throw new Error('语音合成返回数据格式错误');
+                }
+
+            } catch (error) {
+                console.error('语音播报错误:', error);
+                showError('语音播报失败：' + error.message);
+
+                // 如果出现错误且还没有显示结果，则显示计算结果
+                if (!state.lastCalculationResult && calculation) {
+                    state.lastCalculationResult = calculation;
+                    displayResult(calculation);
+                }
+
+                // 清除计算状态
+                const outputResult = document.getElementById('outputResult');
+                if (outputResult.classList.contains('calculating')) {
+                    outputResult.classList.remove('calculating');
+                }
+            } finally {
+                voiceBtn.classList.remove('speaking');
+                voiceBtn.disabled = false;
+            }
+        }
+
+        // 格式化数字用于语音播报
+        function formatNumberForSpeech(result) {
+            if (typeof result === 'number') {
+                // 整数直接读，负数改为"负X"
+                if (Number.isInteger(result)) {
+                    return result < 0 ? `负${Math.abs(result)}` : result.toString();
+                }
+                // 小数读作"X点Y"，负数改为"负X点Y"
+                return result < 0 ?
+                    `负${Math.abs(result).toString().replace('.', '点')}` :
+                    result.toString().replace('.', '点');
+            } else if (typeof result === 'object' && result.numerator !== undefined) {
+                // 检查是否为整数（分母为1）
+                const numerator = result.numerator;
+                const denominator = result.denominator;
+
+                if (denominator === 1) {
+                    // 是整数，负数改为"负X"
+                    return numerator < 0 ? `负${Math.abs(numerator)}` : numerator.toString();
+                } else if (denominator === -1) {
+                    // 处理-1分母的情况
+                    const value = -numerator;
+                    return value < 0 ? `负${Math.abs(value)}` : value.toString();
+                } else {
+                    // 真正的分数
+                    if (numerator < 0) {
+                        return `负${Math.abs(numerator)}分之${denominator}`;
+                    } else {
+                        return `${numerator}分之${denominator}`;
+                    }
+                }
+            } else {
+                return result.toString();
+            }
+        }
+
+        // 格式化运算符为语音播报格式
+        function formatOperatorForSpeech(operator) {
+            const operatorMap = {
+                'add': '加',
+                'subtract': '减',
+                'multiply': '乘',
+                'divide': '除'
+            };
+            return operatorMap[operator] || operator;
+        }
+
+        // 格式化数值（处理负数符号）
+        function formatValueForSpeech(value, type) {
+            if (type === 'variable') {
+                return value;
+            } else if (type === 'number') {
+                return value < 0 ? `负${Math.abs(value)}` : value.toString();
+            } else if (type === 'fraction') {
+                if (value.numerator < 0) {
+                    return `负${Math.abs(value.numerator)}分之${value.denominator}`;
+                } else {
+                    return `${value.numerator}分之${value.denominator}`;
+                }
+            } else {
+                return value.toString();
+            }
+        }
+
+        // 显示成功消息
+        function showSuccessMessage(message) {
+            const successDiv = document.createElement('div');
+            successDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+                border-radius: 10px;
+                padding: 12px 20px;
+                z-index: 2000;
+                max-width: 400px;
+                font-size: 0.9em;
+                box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+                animation: slideInDown 0.3s ease;
+            `;
+            successDiv.textContent = message;
+            document.body.appendChild(successDiv);
+
+            setTimeout(() => {
+                successDiv.style.opacity = '0';
+                successDiv.style.transform = 'translateX(-50%) translateY(-20px)';
+                setTimeout(() => {
+                    if (document.body.contains(successDiv)) {
+                        document.body.removeChild(successDiv);
+                    }
+                }, 300);
+            }, 2000);
+        }
+
+        // 显示错误信息
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            errorDiv.style.position = 'fixed';
+            errorDiv.style.top = '20px';
+            errorDiv.style.left = '50%';
+            errorDiv.style.transform = 'translateX(-50%)';
+            errorDiv.style.zIndex = '2000';
+            errorDiv.style.maxWidth = '400px';
+
+            document.body.appendChild(errorDiv);
+
+            setTimeout(() => {
+                errorDiv.style.opacity = '0';
+                setTimeout(() => {
+                    if (document.body.contains(errorDiv)) {
+                        document.body.removeChild(errorDiv);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 键盘支持
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeVariableModal();
+            }
+
+            // 快捷键 Ctrl/Cmd + V 打开变量设置
+            if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
+                e.preventDefault();
+                const variables = collectVariables();
+                if (variables.length > 0) {
+                    showVariableModal();
+                }
+            }
+        });
+
+        document.getElementById('modalInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                confirmOperation();
+            }
+        });
+
+        // 模态框输入事件监听
+        document.getElementById('modalInput').addEventListener('input', function(e) {
+            updateModalInputType();
+        });
+
+        // 模态框焦点事件
+        document.getElementById('modalInput').addEventListener('focus', function(e) {
+            if (e.target.value === '0') {
+                e.target.value = '';
+            }
+        });
+
+        document.getElementById('modalInput').addEventListener('blur', function(e) {
+            if (e.target.value.trim() === '') {
+                e.target.value = '0';
+                updateModalInputType();
+            }
+        });
+
+        // 点击模态框外部关闭
+        document.getElementById('operationModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // 点击变量模态框外部关闭
+        document.getElementById('variableModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeVariableModal();
+            }
+        });
+
+        // 变量模态框键盘支持
+        document.getElementById('variableModal').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                confirmVariableValues();
+            }
+        });
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initQuickOperations();
+            updateStepCounter();
+            updateCalculateButton();
+            updateVariableButton();
+            updateVoiceButton(); // 初始化语音按钮状态
+            updateModalInputType();
+        });
+    </script>
+</body>
+</html>

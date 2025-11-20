@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>碳化硅外延层厚度测量结果</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body>
+    <h1>问题一：碳化硅外延层厚度测量结果</h1>
+
+    <div id="thicknessChart" style="width: 800px; height: 400px; margin: 20px auto;"></div>
+
+    <script>
+        // 初始化图表
+        var thicknessChart = echarts.init(document.getElementById('thicknessChart'));
+
+        // 数据准备
+        var categories = [];
+        var thicknessData = [];
+        var colors = [];
+
+        // 图表配置
+        var option = {
+            title: {
+                text: '外延层厚度测量结果对比',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                },
+                formatter: function(params) {
+                    return params[0].name + '<br/>厚度: ' + params[0].value + ' μm';
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: categories,
+                axisLabel: {
+                    rotate: 45
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: '厚度 (μm)'
+            },
+            series: [{
+                type: 'bar',
+                data: thicknessData.map((value, index) => ({
+                    value: value,
+                    itemStyle: {
+                        color: colors[index]
+                    }
+                })),
+                label: {
+                    show: true,
+                    position: 'top',
+                    formatter: '{c} μm'
+                }
+            }],
+            legend: {
+                data: ['碳化硅', '硅'],
+                top: 30
+            }
+        };
+
+        // 应用配置
+        thicknessChart.setOption(option);
+
+        // 响应式调整
+        window.addEventListener('resize', function() {
+            thicknessChart.resize();
+        });
+    </script>
+
+    <div style="text-align: center; margin: 20px;">
+        <h2>测量结果汇总</h2>
+        <table border="1" style="margin: 0 auto; border-collapse: collapse;">
+            <tr>
+                <th>样品</th>
+                <th>入射角</th>
+                <th>厚度 (μm)</th>
+                <th>状态</th>
+            </tr>
+
+            <tr>
+                <td>附件1-碳化硅10°</td>
+                <td>10.0°</td>
+                <td>N/A</td>
+                <td>✗ 失败</td>
+            </tr>
+
+            <tr>
+                <td>附件2-碳化硅15°</td>
+                <td>15.0°</td>
+                <td>N/A</td>
+                <td>✗ 失败</td>
+            </tr>
+
+            <tr>
+                <td>附件3-硅10°</td>
+                <td>10.0°</td>
+                <td>N/A</td>
+                <td>✗ 失败</td>
+            </tr>
+
+            <tr>
+                <td>附件4-硅15°</td>
+                <td>15.0°</td>
+                <td>N/A</td>
+                <td>✗ 失败</td>
+            </tr>
+
+        </table>
+    </div>
+</body>
+</html>

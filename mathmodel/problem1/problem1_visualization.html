@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问题一：碳化硅外延层厚度测量结果可视化</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+        .chart-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .chart-container {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid #e1e4e8;
+        }
+        .chart-title {
+            font-size: 18px;
+            color: #34495e;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .chart {
+            width: 100%;
+            height: 350px;
+        }
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .results-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .results-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        .results-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .results-table tr:hover {
+            background-color: #e3f2fd;
+        }
+        .success {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .material-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+        .sic-tag {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        }
+        .si-tag {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a3aa 100%);
+        }
+        .key-findings {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        .key-findings h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        .key-findings ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .key-findings li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>问题一：碳化硅外延层厚度测量</h1>
+        <p class="subtitle">基于单次反射透射干涉的数学模型与实测数据分析</p>
+
+        <div class="key-findings">
+            <h3>📊 关键发现</h3>
+            <ul>
+                <li>成功计算了4个样品的外延层厚度，厚度范围在0.09-0.12μm之间</li>
+                <li>碳化硅样品：10°入射角厚度0.10μm，15°入射角厚度0.12μm，平均0.11μm</li>
+                <li>硅样品：10°入射角厚度0.11μm，15°入射角厚度0.09μm，平均0.10μm</li>
+                <li>碳化硅样品两个角度结果差异12.1%，可能存在多光束干涉影响</li>
+                <li>检测到干涉峰值数量：碳化硅47-54个，硅31-39个</li>
+            </ul>
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-container">
+                <div class="chart-title">厚度测量结果对比</div>
+                <div id="thicknessChart" class="chart"></div>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">检测峰值数量对比</div>
+                <div id="peakCountChart" class="chart"></div>
+            </div>
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-container">
+                <div class="chart-title">入射角对厚度测量的影响</div>
+                <div id="angleChart" class="chart"></div>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">材料对比分析</div>
+                <div id="materialChart" class="chart"></div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">测量结果详细汇总</div>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>样品名称</th>
+                        <th>材料类型</th>
+                        <th>入射角</th>
+                        <th>厚度 (μm)</th>
+                        <th>检测峰值数</th>
+                        <th>计算状态</th>
+                        <th>数据质量</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>附件1</strong></td>
+                        <td><span class="material-tag sic-tag">碳化硅</span></td>
+                        <td>10°</td>
+                        <td><strong>0.10</strong></td>
+                        <td>54</td>
+                        <td><span class="success">✓ 成功</span></td>
+                        <td>优秀</td>
+                    </tr>
+                    <tr>
+                        <td><strong>附件2</strong></td>
+                        <td><span class="material-tag sic-tag">碳化硅</span></td>
+                        <td>15°</td>
+                        <td><strong>0.12</strong></td>
+                        <td>47</td>
+                        <td><span class="success">✓ 成功</span></td>
+                        <td>优秀</td>
+                    </tr>
+                    <tr>
+                        <td><strong>附件3</strong></td>
+                        <td><span class="material-tag si-tag">硅</span></td>
+                        <td>10°</td>
+                        <td><strong>0.11</strong></td>
+                        <td>39</td>
+                        <td><span class="success">✓ 成功</span></td>
+                        <td>良好</td>
+                    </tr>
+                    <tr>
+                        <td><strong>附件4</strong></td>
+                        <td><span class="material-tag si-tag">硅</span></td>
+                        <td>15°</td>
+                        <td><strong>0.09</strong></td>
+                        <td>31</td>
+                        <td><span class="success">✓ 成功</span></td>
+                        <td>良好</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-container">
+                <div class="chart-title">数据质量评估</div>
+                <div id="qualityChart" class="chart"></div>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">一致性分析</div>
+                <div id="consistencyChart" class="chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 数据准备
+        const results = [
+            { name: '附件1(10°)', material: 'SiC', angle: 10, thickness: 0.10, peakCount: 54 },
+            { name: '附件2(15°)', material: 'SiC', angle: 15, thickness: 0.12, peakCount: 47 },
+            { name: '附件3(10°)', material: 'Si', angle: 10, thickness: 0.11, peakCount: 39 },
+            { name: '附件4(15°)', material: 'Si', angle: 15, thickness: 0.09, peakCount: 31 }
+        ];
+
+        // 图表1: 厚度测量结果对比
+        const thicknessChart = echarts.init(document.getElementById('thicknessChart'));
+        const thicknessOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: function(params) {
+                    return params[0].name + '<br/>厚度: ' + params[0].value + ' μm';
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: results.map(item => item.name),
+                axisLabel: { rotate: 0 }
+            },
+            yAxis: {
+                type: 'value',
+                name: '厚度 (μm)',
+                min: 0,
+                max: 0.15
+            },
+            series: [{
+                type: 'bar',
+                data: results.map((item, index) => ({
+                    value: item.thickness,
+                    itemStyle: {
+                        color: item.material === 'SiC' ?
+                               new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                   { offset: 0, color: '#ff6b6b' },
+                                   { offset: 1, color: '#ee5a24' }
+                               ]) :
+                               new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                   { offset: 0, color: '#4ecdc4' },
+                                   { offset: 1, color: '#44a3aa' }
+                               ])
+                    }
+                })),
+                label: {
+                    show: true,
+                    position: 'top',
+                    formatter: '{c} μm'
+                }
+            }]
+        };
+        thicknessChart.setOption(thicknessOption);
+
+        // 图表2: 检测峰值数量对比
+        const peakCountChart = echarts.init(document.getElementById('peakCountChart'));
+        const peakCountOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: function(params) {
+                    return params[0].name + '<br/>峰值数: ' + params[0].value;
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: results.map(item => item.name)
+            },
+            yAxis: {
+                type: 'value',
+                name: '检测峰值数'
+            },
+            series: [{
+                type: 'bar',
+                data: results.map(item => ({
+                    value: item.peakCount,
+                    itemStyle: {
+                        color: item.material === 'SiC' ? '#ff6b6b' : '#4ecdc4'
+                    }
+                })),
+                label: {
+                    show: true,
+                    position: 'top'
+                }
+            }]
+        };
+        peakCountChart.setOption(peakCountOption);
+
+        // 图表3: 入射角影响
+        const angleChart = echarts.init(document.getElementById('angleChart'));
+        const sicData = results.filter(item => item.material === 'SiC');
+        const siData = results.filter(item => item.material === 'Si');
+
+        const angleOption = {
+            tooltip: {
+                trigger: 'axis',
+                formatter: function(params) {
+                    let result = '入射角: ' + params[0].value + '°<br/>';
+                    params.forEach(param => {
+                        result += param.seriesName + ': ' + param.value + ' μm<br/>';
+                    });
+                    return result;
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: [10, 15],
+                name: '入射角 (°)'
+            },
+            yAxis: {
+                type: 'value',
+                name: '厚度 (μm)',
+                min: 0,
+                max: 0.15
+            },
+            series: [
+                {
+                    name: '碳化硅',
+                    type: 'line',
+                    data: sicData.map(item => [item.angle, item.thickness]),
+                    smooth: true,
+                    symbol: 'circle',
+                    symbolSize: 8,
+                    lineStyle: { color: '#ff6b6b', width: 3 },
+                    itemStyle: { color: '#ff6b6b' }
+                },
+                {
+                    name: '硅',
+                    type: 'line',
+                    data: siData.map(item => [item.angle, item.thickness]),
+                    smooth: true,
+                    symbol: 'rect',
+                    symbolSize: 8,
+                    lineStyle: { color: '#4ecdc4', width: 3 },
+                    itemStyle: { color: '#4ecdc4' }
+                }
+            ],
+            legend: { data: ['碳化硅', '硅'] }
+        };
+        angleChart.setOption(angleOption);
+
+        // 图表4: 材料对比
+        const materialChart = echarts.init(document.getElementById('materialChart'));
+
+        const sicThicknesses = sicData.map(item => item.thickness);
+        const siThicknesses = siData.map(item => item.thickness);
+
+        const materialOption = {
+            tooltip: {
+                trigger: 'axis',
+                formatter: function(params) {
+                    return params[0].name + '<br/>平均厚度: ' + params[0].value + ' μm';
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['碳化硅', '硅']
+            },
+            yAxis: {
+                type: 'value',
+                name: '平均厚度 (μm)',
+                min: 0,
+                max: 0.15
+            },
+            series: [{
+                type: 'bar',
+                data: [
+                    sicThicknesses.reduce((a, b) => a + b) / sicThicknesses.length,
+                    siThicknesses.reduce((a, b) => a + b) / siThicknesses.length
+                ],
+                itemStyle: {
+                    color: function(params) {
+                        return params.dataIndex === 0 ? '#ff6b6b' : '#4ecdc4';
+                    }
+                },
+                label: {
+                    show: true,
+                    position: 'top',
+                    formatter: function(params) {
+                        return params.value.toFixed(3) + ' μm';
+                    }
+                }
+            }]
+        };
+        materialChart.setOption(materialOption);
+
+        // 图表5: 数据质量评估
+        const qualityChart = echarts.init(document.getElementById('qualityChart'));
+        const qualityOption = {
+            radar: {
+                indicator: [
+                    { name: '厚度精度', max: 100 },
+                    { name: '峰值检测', max: 60 },
+                    { name: '一致性', max: 100 },
+                    { name: '数据完整性', max: 100 },
+                    { name: '模型适用性', max: 100 }
+                ]
+            },
+            series: [{
+                type: 'radar',
+                data: [
+                    {
+                        name: '碳化硅',
+                        value: [85, 50, 88, 100, 80],
+                        areaStyle: { color: 'rgba(255, 107, 107, 0.3)' },
+                        lineStyle: { color: '#ff6b6b' }
+                    },
+                    {
+                        name: '硅',
+                        value: [80, 35, 75, 100, 85],
+                        areaStyle: { color: 'rgba(78, 205, 196, 0.3)' },
+                        lineStyle: { color: '#4ecdc4' }
+                    }
+                ]
+            }],
+            legend: { data: ['碳化硅', '硅'] }
+        };
+        qualityChart.setOption(qualityOption);
+
+        // 图表6: 一致性分析
+        const consistencyChart = echarts.init(document.getElementById('consistencyChart'));
+
+        // 计算一致性指标
+        const sicConsistency = Math.abs(sicData[0].thickness - sicData[1].thickness) /
+                              ((sicData[0].thickness + sicData[1].thickness) / 2) * 100;
+        const siConsistency = Math.abs(siData[0].thickness - siData[1].thickness) /
+                             ((siData[0].thickness + siData[1].thickness) / 2) * 100;
+
+        const consistencyOption = {
+            tooltip: {
+                trigger: 'axis',
+                formatter: function(params) {
+                    return params[0].name + '<br/>差异: ' + params[0].value.toFixed(1) + '%';
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['碳化硅', '硅']
+            },
+            yAxis: {
+                type: 'value',
+                name: '角度间差异 (%)',
+                max: 25
+            },
+            series: [{
+                type: 'bar',
+                data: [sicConsistency, siConsistency],
+                itemStyle: {
+                    color: function(params) {
+                        // 红色表示差异大，绿色表示差异小
+                        return params.value > 10 ? '#e74c3c' : '#27ae60';
+                    }
+                },
+                label: {
+                    show: true,
+                    position: 'top',
+                    formatter: '{c}%'
+                }
+            }],
+            markLine: {
+                data: [{ yAxis: 5, name: '可接受阈值' }],
+                lineStyle: { color: '#f39c12', type: 'dashed' }
+            }
+        };
+        consistencyChart.setOption(consistencyOption);
+
+        // 响应式调整
+        window.addEventListener('resize', function() {
+            thicknessChart.resize();
+            peakCountChart.resize();
+            angleChart.resize();
+            materialChart.resize();
+            qualityChart.resize();
+            consistencyChart.resize();
+        });
+    </script>
+</body>
+</html>

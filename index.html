@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多项式因式分解游戏</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <div class="title-container">多项式因式分解游戏</div>
+                <div class="score-container">
+                    <img src="img/金牌.png" alt="金牌" width="20" height="20">
+                    <span id="medals">0</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="menu-container">
+                    <div class="level-display" id="level-display">关卡 1 · 题目 0/10</div>
+                    <button class="menu-button" id="menu-button">菜单</button>
+                    <div class="menu-dropdown" id="menu-dropdown" style="display: none;"></div>
+                </div>
+                <div class="controls-container">
+                    <button id="view-report-btn">查看学习报告</button>
+                    <button id="random-problem-btn">随机出题</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <div class="left-column">
+                <div class="current-problem">
+                    <h2>将下列多项式因式分解</h2>
+                    <div class="problem-formula" id="problem-formula">a² + 3ab + 2b²</div>
+                </div>
+                
+                <div class="card-templates">
+                    <h2>卡片选择区</h2>
+                    <div class="templates-container">
+                        <div class="card red-square" data-type="a-square">
+                            <span>a²</span>
+                        </div>
+                        <div class="card yellow-rectangle" data-type="ab-rectangle">
+                            <span>ab</span>
+                        </div>
+                        <div class="card blue-square" data-type="b-square">
+                            <span>b²</span>
+                        </div>
+                        <div class="card yellow-rectangle vertical-rectangle" data-type="ab-rectangle">
+                            <span>ab</span>
+                        </div>
+                    </div>
+                    <div class="card-controls">
+                        <button id="rotate-btn">旋转卡片</button>
+                    </div>
+                    <div class="card-templates-footer">
+                        <button id="reset-btn">重置拼图</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="puzzle-area">
+                <h2>拼图区域</h2>
+                <div id="puzzle-container">
+                    <div id="trash-bin">
+                        <i class="trash-icon">🗑️</i>
+                    </div>
+                </div>
+                <div class="polynomial-display">
+                    <p>当前多项式: <span id="current-polynomial" class="polynomial-value">请摆放方块</span></p>
+                </div>
+                <div class="puzzle-footer">
+                    <!-- 已把随机出题按钮移到顶部 -->
+                </div>
+            </div>
+        </div>
+
+        <div class="answer-section">
+            <h2>填写因式分解结果</h2>
+            <div class="input-area">
+                <input type="text" id="answer-input" placeholder="例如: (a+b)(a+2b)">
+                <button id="submit-btn">提交答案</button>
+            </div>
+        </div>
+
+        <div id="result-modal" class="modal">
+            <div class="modal-content">
+                <div id="success-message" class="result-message">
+                    <h2>恭喜！答案正确！</h2>
+                    <img src="img/金牌.png" alt="金牌" class="medal-img">
+                    <p>你获得了一枚金牌！</p>
+                    <button id="next-level-btn">下一关</button>
+                </div>
+                <div id="error-message" class="result-message">
+                    <h2>需要再次尝试</h2>
+                    <p>请检查您的拼图和答案</p>
+                    <div id="video-container">
+                        <video id="explanation-video" controls autoplay muted style="width:100%; height:auto;">
+                            <!-- 优先使用本地视频源 -->
+                            <source src="videos/explanation.mp4" type="video/mp4">
+                            <source src="videos/explanation2.mp4" type="video/mp4">
+                            <!-- 备用CDN视频源 -->
+                            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                            <p>您的浏览器不支持HTML5视频。请更新浏览器或使用其他浏览器观看视频。</p>
+                        </video>
+                        <div class="video-controls">
+                            <button onclick="document.getElementById('explanation-video').play()">播放视频</button>
+                            <span class="video-status"></span>
+                        </div>
+                    </div>
+                    <div class="video-error-message" style="display:none;">
+                        <p>视频加载失败，请检查网络连接或刷新页面重试。</p>
+                    </div>
+                    <div class="error-actions">
+                        <button id="try-again-btn">再试一次</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="learning-report-modal" class="modal">
+            <div class="learning-report-modal">
+                <h2>学习报告 <span class="report-date"></span></h2>
+                <div class="report-content">
+                    <div class="report-summary"></div>
+                    <div class="report-charts">
+                        <div class="radar-chart"></div>
+                        <div class="progress-chart"></div>
+                    </div>
+                    <div class="report-details"></div>
+                    <div class="report-suggestions"></div>
+                </div>
+                <div class="report-actions">
+                    <button id="save-report-btn">保存报告</button>
+                    <button id="save-charts-btn">保存图表</button>
+                    <button id="continue-btn">继续学习</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="medal.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 

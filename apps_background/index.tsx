@@ -33,6 +33,7 @@ import {
   Lock,
   Check,
   MessageSquare,
+  Sparkles,
   MessageCircle,
   Smartphone
 } from 'lucide-react';
@@ -428,9 +429,49 @@ const MiniSparkline = ({ data, color = '#4F46E5', width = 120, height = 60 }: { 
 
 type DetailTab = 'health' | 'chat';
 
+const FEATURE_HIGHLIGHTS = [
+  {
+    id: 'ai',
+    title: 'AI 智慧陪伴',
+    description: '24/7 與長者互動、提醒與安撫情緒，亦能引導呼吸、講故事維持陪伴。',
+    icon: MessageCircle,
+    iconBg: 'bg-indigo-100',
+    iconColor: 'text-indigo-600',
+    points: ['對話中即時辨識情緒', '主動提醒血壓 / 用藥', '手機一鍵開啟陪聊']
+  },
+  {
+    id: 'input',
+    title: '多元資料錄入',
+    description: '支援語音、拍照 OCR 及手動輸入，照護者也能代為更新指標與生活紀錄。',
+    icon: FileText,
+    iconBg: 'bg-amber-100',
+    iconColor: 'text-amber-600',
+    points: ['語音輸入、文字即時轉檔', 'OCR 辨識儀器/處方', '自訂健康欄位與備註']
+  },
+  {
+    id: 'care',
+    title: '照護者協同',
+    description: '可邀請家屬或專業照護者加入，同步收到警示並留下照護紀錄。',
+    icon: Users,
+    iconBg: 'bg-emerald-100',
+    iconColor: 'text-emerald-600',
+    points: ['多帳號共用同一長者', '即時推播異常狀態', '完整照護操作日誌']
+  },
+  {
+    id: 'analytics',
+    title: '後台智慧分析',
+    description: '專屬儀表板彙整健康與聊天資料，輸出洞察與建議，協助決策。',
+    icon: LayoutDashboard,
+    iconBg: 'bg-sky-100',
+    iconColor: 'text-sky-600',
+    points: ['健康趨勢與用藥依從性', '聊天摘要 / 情緒走勢', '自動產生重點提醒']
+  }
+];
+
 // 2. Sidebar Navigation
 const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, setIsMobileOpen }: any) => {
   const menuItems = [
+    { id: 'features', label: '功能特點', icon: Sparkles },
     { id: 'dashboard', label: '儀表板', icon: LayoutDashboard },
     { id: 'users', label: '用戶管理', icon: Users },
     { id: 'health', label: '健康監測', icon: HeartPulse },
@@ -485,6 +526,112 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, setIsMobileOpen }: any
         </div>
       </div>
     </>
+  );
+};
+
+const FeatureHighlightsView = () => {
+  const slides = useMemo(() => ([
+    { id: 'feature-overview', type: 'content' },
+    ...Array.from({ length: 6 }).map((_, index) => ({
+      id: `feature-image-${index + 1}`,
+      type: 'image' as const,
+      src: `/${index + 1}.png`,
+      caption: `產品功能示意 ${index + 1}`
+    }))
+  ]), []);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const isFeatureSlide = currentSlide === 0;
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, isFeatureSlide ? 10000 : 5000);
+    return () => clearInterval(timer);
+  }, [slides.length, currentSlide]);
+
+  const featureContent = (
+    <div className="space-y-8">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">產品核心能力</h2>
+          <p className="text-gray-600 text-base md:text-lg">整合長者 App、照護者協作與後台 AI 分析，打造可視化的健康照護流程。</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {['長者手機即用', '照護者多人共管', 'AI 聊天 + 後台洞察'].map((tag) => (
+            <span key={tag} className="px-5 py-2 text-lg font-semibold text-indigo-600 bg-indigo-50 border border-indigo-100 rounded-full">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-14">
+        {FEATURE_HIGHLIGHTS.map((feature) => {
+          const Icon = feature.icon;
+          return (
+            <div key={feature.id} className="bg-white shadow-lg border border-white/80 rounded-3xl p-6 h-full flex flex-col hover:-translate-y-1 transition-all relative overflow-hidden">
+              <div className="absolute inset-0 opacity-5 bg-gradient-to-br from-indigo-500 via-white to-emerald-500 pointer-events-none"></div>
+              <div className="flex items-center justify-start gap-4 mb-4">
+                <div className={`p-4 rounded-2xl ${feature.iconBg}`}>
+                  <Icon className={`w-8 h-8 ${feature.iconColor}`} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-semibold text-gray-900">{feature.title}</h3>
+                  <span className="text-xs uppercase tracking-widest text-gray-400">for elders & carers</span>
+                </div>
+              </div>
+              <p className="text-base text-gray-700 leading-relaxed flex-1">{feature.description}</p>
+              <ul className="mt-5 space-y-3 text-base text-gray-700">
+                {feature.points.map((point, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <span className="mt-2 w-2 h-2 rounded-full bg-indigo-400 flex-shrink-0"></span>
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  const renderSlide = () => {
+    const slide = slides[currentSlide];
+    if (slide.type === 'content') {
+      return featureContent;
+    }
+    return (
+      <div className="relative min-h-[520px] rounded-[32px] overflow-hidden">
+        <img
+          src={slide.src}
+          alt={slide.caption}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+        <div className="absolute bottom-8 left-8 text-white space-y-2 drop-shadow-lg">
+          <p className="text-2xl font-semibold">AI 健康管家</p>
+          <p className="text-sm uppercase tracking-widest">{slide.caption}</p>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <div className="rounded-[32px] bg-gradient-to-b from-indigo-50/70 via-white to-emerald-50/50 p-6 border border-indigo-50 shadow-inner min-h-[520px]">
+        {renderSlide()}
+      </div>
+      <div className="flex justify-center gap-3">
+        {slides.map((slide, index) => (
+          <button
+            key={slide.id}
+            aria-label={`切換到第 ${index + 1} 張`}
+            onClick={() => setCurrentSlide(index)}
+            className={`w-3 h-3 rounded-full border transition-all ${currentSlide === index ? 'bg-indigo-600 border-indigo-600 scale-110' : 'bg-transparent border-gray-300 hover:border-indigo-400'}`}
+          />
+        ))}
+      </div>
+    </div>
   );
 };
 
@@ -2169,7 +2316,7 @@ const SettingsView = () => {
 
 // 9. Main App Component
 const App = () => {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('features');
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -2354,6 +2501,7 @@ const App = () => {
 
         <main className="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth">
           <div className="max-w-7xl mx-auto">
+            {activeTab === 'features' && <FeatureHighlightsView />}
             {activeTab === 'dashboard' && <DashboardView stats={stats} records={data.healthRecords} />}
             {activeTab === 'users' && <UsersView users={data.users} records={data.healthRecords} />}
             {activeTab === 'health' && <HealthView users={data.users} records={data.healthRecords} />}

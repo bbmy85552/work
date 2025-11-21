@@ -33,6 +33,7 @@ import {
   Lock,
   Check,
   MessageSquare,
+  MessageCircle,
   Smartphone
 } from 'lucide-react';
 import { generateData, getDashboardStats, MEDICATIONS, MED_FREQUENCIES, getHealthAnalysis, getUserHealthHistory } from './services/mockData';
@@ -353,6 +354,8 @@ const SimpleLineChart = ({ data, labels, color = "#10B981", height = 250 }: { da
     </div>
   );
 };
+
+type DetailTab = 'health' | 'chat';
 
 // 2. Sidebar Navigation
 const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, setIsMobileOpen }: any) => {
@@ -722,6 +725,7 @@ const UsersView = ({ users, records }: { users: User[], records: HealthRecord[] 
   // User Details Modal Component
   const UserDetailsModal = ({ user }: { user: User }) => {
     const { systolicData, diastolicData, glucoseData, labels } = getUserChartData(user.id);
+    const [detailTab, setDetailTab] = useState<DetailTab>('health');
 
     // AI健康分析数据
     const getHealthAnalysis = (userId: string) => {
@@ -792,7 +796,136 @@ const UsersView = ({ users, records }: { users: User[], records: HealthRecord[] 
       };
     };
 
+    const getChatAnalysis = (userId: string) => {
+      const chatAnalyses = {
+        "u-1": {
+          summary: "過去一週與AI互動14次，以血壓提醒與陪伴聊天為主，整體情緒穩定略偏正向。",
+          stats: {
+            sessions: 14,
+            avgDuration: "11 分鐘",
+            positiveRate: "68%",
+            focusTopic: "血壓/睡眠"
+          },
+          insights: [
+            "早上9-10點最常主動發起聊天，詢問血壓是否在安全值。",
+            "晚上睡前有輕微焦慮，需要被提醒呼吸放鬆才能入眠。",
+            "對孫子與家人話題有興趣，分享頻率增加帶來好情緒。"
+          ],
+          suggestions: [
+            "維持早晨關懷問候並即時回覆血壓紀錄，給予肯定。",
+            "睡前提供呼吸引導、放鬆音樂等訊息協助入睡。",
+            "適時延伸家人話題，讓長者覺得被傾聽。"
+          ],
+          sampleChats: [
+            { time: "03/12 09:18", speaker: "長者", role: "elder", content: "今天早上血壓135/82，可以放心嗎？", sentiment: "關注健康" },
+            { time: "03/12 09:19", speaker: "AI助理", role: "ai", content: "數值在可接受範圍，午餐記得減鹽並維持散步30分鐘喔。", sentiment: "回應與提醒" },
+            { time: "03/11 21:05", speaker: "長者", role: "elder", content: "最近睡前會緊張，你能陪我聊一下嗎？", sentiment: "情緒陪伴" }
+          ],
+          lastInteraction: "03/12 21:05"
+        },
+        "u-2": {
+          summary: "近七日互動22次，大多主動尋求血壓/血糖異常的協助，語氣焦慮，需要強化安撫。",
+          stats: {
+            sessions: 22,
+            avgDuration: "8 分鐘",
+            positiveRate: "42%",
+            focusTopic: "血壓警示"
+          },
+          insights: [
+            "晚上10點後頻繁回報頭暈與胸悶，需提醒即時就醫流程。",
+            "常質疑藥物效果，期待更具體的行動建議。",
+            "情緒波動大，回應太慢會再三追問。"
+          ],
+          suggestions: [
+            "回覆時採取分段式指引，列出下一步動作降低焦慮。",
+            "重複強調與醫師溝通的重要性，提供聯絡資訊。",
+            "主動確認症狀是否緩解，增加安全感。"
+          ],
+          sampleChats: [
+            { time: "03/10 22:41", speaker: "長者", role: "elder", content: "血壓飆到168/100，現在怎麼辦？", sentiment: "緊急警示" },
+            { time: "03/10 22:42", speaker: "AI助理", role: "ai", content: "請立即坐下深呼吸，同時通知家人準備就醫，我幫您整理注意事項。", sentiment: "行動指引" },
+            { time: "03/09 07:25", speaker: "長者", role: "elder", content: "今天還需要吃同樣的藥嗎？效果好像不大。", sentiment: "用藥疑惑" }
+          ],
+          lastInteraction: "03/11 22:48"
+        },
+        "u-3": {
+          summary: "與AI互動9次，以分享日常與問候為主，語氣輕鬆開朗，偶爾提醒復健進度。",
+          stats: {
+            sessions: 9,
+            avgDuration: "6 分鐘",
+            positiveRate: "82%",
+            focusTopic: "生活分享"
+          },
+          insights: [
+            "下午茶時間喜歡聊天，常分享社區活動。",
+            "對於復健運動會主動回報完成狀態。",
+            "希望得到語音陪伴，表示聽故事很放鬆。"
+          ],
+          suggestions: [
+            "維持愉快問候語氣，延伸話題到興趣與社交活動。",
+            "定期追蹤復健進度並給予鼓勵。",
+            "提供可以收聽的有聲內容或引導呼吸。"
+          ],
+          sampleChats: [
+            { time: "03/08 15:10", speaker: "長者", role: "elder", content: "我今天跟鄰居做了太極，覺得很舒服。", sentiment: "正向分享" },
+            { time: "03/08 15:12", speaker: "AI助理", role: "ai", content: "太棒了！保持溫和動作最適合妳，等下記得補充溫水喔。", sentiment: "肯定與提醒" },
+            { time: "03/07 20:30", speaker: "長者", role: "elder", content: "可以再講一個睡前故事嗎？昨天那個很好聽。", sentiment: "情緒需求" }
+          ],
+          lastInteraction: "03/08 21:03"
+        },
+        "u-4": {
+          summary: "過去7天互動12次，主題圍繞飲食與血糖控制，白天心情穩定，餐後容易擔心。",
+          stats: {
+            sessions: 12,
+            avgDuration: "7 分鐘",
+            positiveRate: "56%",
+            focusTopic: "飲食提醒"
+          },
+          insights: [
+            "午餐後30分鐘固定上線詢問血糖與飲食搭配。",
+            "晚餐前擔心吃太多，會主動詢問替代食物。",
+            "喜歡被給予具體菜單與運動提醒。"
+          ],
+          suggestions: [
+            "提供簡易菜單或份量提示，降低飲食壓力。",
+            "多鼓勵餐後散步與拉伸，建立正向回饋。",
+            "提醒記錄血糖後傳送照片，增加互動。"
+          ],
+          sampleChats: [
+            { time: "03/11 12:52", speaker: "長者", role: "elder", content: "今天便當有紅燒肉，我可以多吃嗎？", sentiment: "飲食猶豫" },
+            { time: "03/11 12:53", speaker: "AI助理", role: "ai", content: "建議先吃一半，搭配多一份青菜，飯後散步15分鐘。", sentiment: "具體建議" },
+            { time: "03/10 19:10", speaker: "長者", role: "elder", content: "血糖量到8.9，有點擔心。", sentiment: "血糖提醒" }
+          ],
+          lastInteraction: "03/11 19:42"
+        }
+      };
+
+      return chatAnalyses[userId] || {
+        summary: "最近互動紀錄穩定，AI持續提供陪伴與提醒。",
+        stats: {
+          sessions: 6,
+          avgDuration: "8 分鐘",
+          positiveRate: "60%",
+          focusTopic: "日常問候"
+        },
+        insights: ["持續觀察情緒變化。"],
+        suggestions: ["保持規律問候與健康提醒。"],
+        sampleChats: [
+          { time: "03/10 10:00", speaker: "長者", role: "elder", content: "感謝你的提醒，我會記得量血壓。", sentiment: "互動回饋" }
+        ],
+        lastInteraction: "03/10 10:00"
+      };
+    };
+
     const healthAnalysis = getHealthAnalysis(user.id);
+    const chatAnalysis = getChatAnalysis(user.id);
+    const detailToggleButtons: { id: DetailTab; label: string; icon: React.ElementType }[] = [
+      { id: 'health', label: '健康數據', icon: HeartPulse },
+      { id: 'chat', label: '聊天分析', icon: MessageCircle }
+    ];
+    const latestSystolic = systolicData.length ? systolicData[systolicData.length - 1] : null;
+    const latestDiastolic = diastolicData.length ? diastolicData[diastolicData.length - 1] : null;
+    const latestGlucose = glucoseData.length ? glucoseData[glucoseData.length - 1] : null;
     const joinedDate = new Date(user.joined_at).toLocaleDateString('zh-TW', {
       year: 'numeric',
       month: '2-digit',
@@ -803,11 +936,11 @@ const UsersView = ({ users, records }: { users: User[], records: HealthRecord[] 
 
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl w-full max-w-6xl max-h-[90vh] flex flex-col shadow-2xl animate-scale-in">
+        <div className="bg-white rounded-2xl w-full max-w-6xl h-[85vh] max-h-[90vh] flex flex-col shadow-2xl animate-scale-in overflow-hidden">
           {/* Header */}
           <div className="p-6 border-b border-gray-100">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-4">
+            <div className="flex flex-wrap justify-between gap-4 items-start">
+              <div className="flex items-center gap-4 flex-1 min-w-[240px]">
                 <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold ${user.avatar_color}`}>
                   {user.name.replace(' (長者)', '').charAt(0)}
                 </div>
@@ -836,97 +969,210 @@ const UsersView = ({ users, records }: { users: User[], records: HealthRecord[] 
                   </div>
                 </div>
               </div>
-              <button onClick={() => setSelectedUser(null)} className="p-2 hover:bg-gray-100 rounded-full">
-                <X className="w-5 h-5 text-gray-500" />
-              </button>
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex items-center gap-2 bg-gray-100 rounded-full p-1">
+                  {detailToggleButtons.map((tab) => {
+                    const Icon = tab.icon;
+                    const isActive = detailTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => setDetailTab(tab.id)}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition ${
+                          isActive ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                      >
+                        <Icon className="w-4 h-4" />
+                        {tab.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                <button onClick={() => setSelectedUser(null)} className="p-2 hover:bg-gray-100 rounded-full">
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-hidden flex flex-col lg:flex-row">
-            {/* Charts */}
-            <div className="lg:w-2/3 border-b lg:border-b-0 lg:border-r border-gray-100 p-6 space-y-8 overflow-y-auto bg-white">
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-800">血壓趨勢</h4>
-                    <p className="text-xs text-gray-500">過去14天收縮壓 / 舒張壓變化</p>
+          <div className="flex-1 min-h-0 bg-white overflow-hidden">
+            {detailTab === 'health' ? (
+              <div className="h-full overflow-y-auto bg-white p-6 space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <div className="lg:col-span-2 space-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4 text-emerald-800">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">最新血壓</p>
+                        <p className="text-2xl font-bold text-emerald-900 mt-1">{latestSystolic !== null && latestDiastolic !== null ? `${latestSystolic}/${latestDiastolic} mmHg` : '--'}</p>
+                        <p className="text-xs text-emerald-700 mt-1">維持規律紀錄以追蹤變化</p>
+                      </div>
+                      <div className="rounded-2xl border border-indigo-100 bg-indigo-50/70 p-4 text-indigo-800">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-indigo-600">最新血糖</p>
+                        <p className="text-2xl font-bold text-indigo-900 mt-1">{latestGlucose !== null ? `${latestGlucose} mmol/L` : '--'}</p>
+                        <p className="text-xs text-indigo-700 mt-1">飯後30分鐘測量</p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <h4 className="text-lg font-semibold text-gray-800">血壓趨勢</h4>
+                          <p className="text-xs text-gray-500">過去14天收縮壓 / 舒張壓變化</p>
+                        </div>
+                        <div className="inline-flex items-center gap-1 px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-xs font-medium">
+                          <HeartPulse className="w-3.5 h-3.5" />
+                          mmHg
+                        </div>
+                      </div>
+                      <BloodPressureChart
+                        systolicData={systolicData}
+                        diastolicData={diastolicData}
+                        labels={labels}
+                        height={280}
+                      />
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <h4 className="text-lg font-semibold text-gray-800">血糖趨勢</h4>
+                          <p className="text-xs text-gray-500">過去14天餐後血糖</p>
+                        </div>
+                        <div className="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-xs font-medium">
+                          <TrendingUp className="w-3.5 h-3.5" />
+                          mmol/L
+                        </div>
+                      </div>
+                      <SimpleLineChart
+                        data={glucoseData}
+                        labels={labels}
+                        color="#10B981"
+                        height={260}
+                      />
+                    </div>
                   </div>
-                  <div className="inline-flex items-center gap-1 px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-xs font-medium">
-                    <HeartPulse className="w-3.5 h-3.5" />
-                    mmHg
+
+                  <div className="space-y-6">
+                    <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-2xl p-6 border border-white/60 shadow-inner space-y-5">
+                      <div className="flex items-center gap-2 text-gray-800">
+                        <MessageSquare className="w-5 h-5 text-indigo-600" />
+                        <h4 className="text-lg font-semibold">AI健康分析</h4>
+                      </div>
+                      <p className="text-sm text-gray-600 leading-relaxed">{healthAnalysis.summary}</p>
+
+                      <div className="space-y-4">
+                        <div className="bg-white/80 border border-white/60 rounded-xl p-4">
+                          <h5 className="font-medium text-gray-800 mb-3 flex items-center gap-2 text-sm">
+                            <AlertCircle className="w-4 h-4 text-orange-500" />
+                            需注意項目
+                          </h5>
+                          <ul className="space-y-2">
+                            {healthAnalysis.concerns.map((concern, index) => (
+                              <li key={index} className="flex items-start gap-2 text-sm text-gray-600">
+                                <span className="w-1.5 h-1.5 bg-orange-400 rounded-full mt-2 flex-shrink-0"></span>
+                                {concern}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <div className="bg-green-50 border border-green-200 p-4 rounded-xl">
+                          <h5 className="font-medium text-green-800 mb-2 flex items-center gap-2 text-sm">
+                            <CheckCircle className="w-4 h-4" />
+                            建議措施
+                          </h5>
+                          <ul className="space-y-2">
+                            {healthAnalysis.recommendations.map((rec, index) => (
+                              <li key={index} className="flex items-start gap-2 text-green-700 text-sm">
+                                <span className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                                {rec}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <BloodPressureChart
-                  systolicData={systolicData}
-                  diastolicData={diastolicData}
-                  labels={labels}
-                  height={280}
-                />
               </div>
+            ) : (
+              <div className="h-full overflow-y-auto bg-white p-6">
+                <div className="max-w-3xl mx-auto space-y-5">
+                  <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm space-y-5">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                          <MessageCircle className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="text-lg font-semibold text-gray-800">聊天紀錄分析</h4>
+                          <p className="text-xs text-gray-500">AI助理與長者互動摘要</p>
+                        </div>
+                      </div>
+                      <span className="text-[11px] text-gray-400">更新：{chatAnalysis.lastInteraction}</span>
+                    </div>
 
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-800">血糖趨勢</h4>
-                    <p className="text-xs text-gray-500">過去14天餐後血糖</p>
-                  </div>
-                  <div className="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-xs font-medium">
-                    <TrendingUp className="w-3.5 h-3.5" />
-                    mmol/L
+                    <p className="text-sm text-gray-600 leading-relaxed">{chatAnalysis.summary}</p>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="p-3 rounded-xl border border-indigo-100 bg-indigo-50/50">
+                        <p className="text-[11px] text-indigo-500 font-semibold uppercase tracking-wide">過去7日互動</p>
+                        <p className="text-2xl font-bold text-indigo-700">{chatAnalysis.stats.sessions}</p>
+                        <p className="text-xs text-indigo-600">平均 {chatAnalysis.stats.avgDuration}</p>
+                      </div>
+                      <div className="p-3 rounded-xl border border-emerald-100 bg-emerald-50/70">
+                        <p className="text-[11px] text-emerald-500 font-semibold uppercase tracking-wide">情緒正向率</p>
+                        <p className="text-2xl font-bold text-emerald-700">{chatAnalysis.stats.positiveRate}</p>
+                        <p className="text-xs text-emerald-600">焦點：{chatAnalysis.stats.focusTopic}</p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h5 className="font-medium text-gray-800 mb-2 text-sm">關鍵觀察</h5>
+                      <ul className="space-y-2">
+                        {chatAnalysis.insights.map((insight, index) => (
+                          <li key={index} className="flex items-start gap-2 text-sm text-gray-600">
+                            <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 flex-shrink-0"></span>
+                            {insight}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-xl border border-gray-100 p-4">
+                      <h5 className="font-medium text-gray-800 mb-3 text-sm">近期對話摘錄</h5>
+                      <div className="space-y-3">
+                        {chatAnalysis.sampleChats.map((chat, index) => (
+                          <div key={index} className="rounded-xl bg-white border border-gray-100 p-3 shadow-sm">
+                            <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+                              <span className={`font-semibold ${chat.role === 'ai' ? 'text-indigo-600' : 'text-gray-600'}`}>{chat.speaker}</span>
+                              <span>{chat.time}</span>
+                            </div>
+                            <p className="text-sm text-gray-700 leading-relaxed">{chat.content}</p>
+                            <span className={`inline-flex mt-2 px-2 py-0.5 rounded-full text-[11px] font-medium ${
+                              chat.role === 'ai' ? 'bg-indigo-50 text-indigo-600' : 'bg-amber-50 text-amber-600'
+                            }`}>{chat.sentiment}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h5 className="font-medium text-gray-800 mb-2 text-sm">建議互動策略</h5>
+                      <ul className="space-y-2">
+                        {chatAnalysis.suggestions.map((suggestion, index) => (
+                          <li key={index} className="flex items-start gap-2 text-sm text-gray-600">
+                            <Check className="w-3.5 h-3.5 text-indigo-500 mt-0.5 flex-shrink-0" />
+                            {suggestion}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-                <SimpleLineChart
-                  data={glucoseData}
-                  labels={labels}
-                  color="#10B981"
-                  height={260}
-                />
               </div>
-            </div>
-
-            {/* Details + Analysis */}
-            <div className="lg:w-1/3 bg-gray-50 p-6 overflow-y-auto">
-              <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-2xl p-6 border border-white/60 shadow-inner space-y-5">
-                <div className="flex items-center gap-2 text-gray-800">
-                  <MessageSquare className="w-5 h-5 text-indigo-600" />
-                  <h4 className="text-lg font-semibold">AI健康分析</h4>
-                </div>
-                <p className="text-sm text-gray-600 leading-relaxed">{healthAnalysis.summary}</p>
-
-                <div className="space-y-4">
-                  <div className="bg-white/80 border border-white/60 rounded-xl p-4">
-                    <h5 className="font-medium text-gray-800 mb-3 flex items-center gap-2 text-sm">
-                      <AlertCircle className="w-4 h-4 text-orange-500" />
-                      需注意項目
-                    </h5>
-                    <ul className="space-y-2">
-                      {healthAnalysis.concerns.map((concern, index) => (
-                        <li key={index} className="flex items-start gap-2 text-sm text-gray-600">
-                          <span className="w-1.5 h-1.5 bg-orange-400 rounded-full mt-2 flex-shrink-0"></span>
-                          {concern}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="bg-green-50 border border-green-200 p-4 rounded-xl">
-                    <h5 className="font-medium text-green-800 mb-2 flex items-center gap-2 text-sm">
-                      <CheckCircle className="w-4 h-4" />
-                      建議措施
-                    </h5>
-                    <ul className="space-y-2">
-                      {healthAnalysis.recommendations.map((rec, index) => (
-                        <li key={index} className="flex items-start gap-2 text-green-700 text-sm">
-                          <span className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
-                          {rec}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Footer */}

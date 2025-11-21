@@ -476,6 +476,7 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, setIsMobileOpen }: any
     { id: 'users', label: '用戶管理', icon: Users },
     { id: 'health', label: '健康監測', icon: HeartPulse },
     { id: 'medications', label: '用藥管理', icon: Pill },
+    { id: 'contact', label: '聯絡我們', icon: Mail },
   ];
 
   return (
@@ -532,10 +533,10 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, setIsMobileOpen }: any
 const FeatureHighlightsView = () => {
   const slides = useMemo(() => ([
     { id: 'feature-overview', type: 'content' },
-    ...Array.from({ length: 6 }).map((_, index) => ({
+    ...Array.from({ length: 8 }).map((_, index) => ({
       id: `feature-image-${index + 1}`,
       type: 'image' as const,
-      src: `/${index + 1}.png`,
+      src: getPublicAsset(`${index + 1}.png`),
       caption: `產品功能示意 ${index + 1}`
     }))
   ]), []);
@@ -629,6 +630,49 @@ const FeatureHighlightsView = () => {
             onClick={() => setCurrentSlide(index)}
             className={`w-3 h-3 rounded-full border transition-all ${currentSlide === index ? 'bg-indigo-600 border-indigo-600 scale-110' : 'bg-transparent border-gray-300 hover:border-indigo-400'}`}
           />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const ContactView = () => {
+  const shots = [
+    { src: getPublicAsset('Image (1).jpeg'), title: 'wechat', description: '' },
+    { src: getPublicAsset('Image (2).jpeg'), title: 'whatsapp', description: '' }
+  ];
+
+  return (
+    <div className="space-y-8 animate-fade-in">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">聯絡我們</h2>
+          <p className="text-gray-500 text-base md:text-lg">展示長者端與照護者端的真實畫面，若需進一步合作或導入請與我們聯繫。</p>
+        </div>
+        <div className="bg-white border border-indigo-100 rounded-2xl px-5 py-3 shadow-sm">
+          <p className="text-sm text-gray-500">Email</p>
+          <p className="text-lg font-semibold text-gray-900">+852 3421 1861</p>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {shots.map((shot) => (
+          <div key={shot.src} className="bg-white border border-gray-100 rounded-[32px] shadow-lg p-6 flex flex-col gap-5">
+            <div className="space-y-1">
+              <h3 className="text-xl font-semibold text-gray-900">{shot.title}</h3>
+              <p className="text-sm text-gray-500">{shot.description}</p>
+            </div>
+            <div
+              className="w-full rounded-2xl border border-gray-200 shadow-inner bg-gray-50 overflow-hidden flex items-center justify-center p-3"
+              style={{ height: '60vh', minHeight: '360px' }}
+            >
+              <img
+                src={shot.src}
+                alt={shot.title}
+                className="w-full h-auto object-cover"
+                style={{ clipPath: 'inset(20% 0 20% 0)' }}
+              />
+            </div>
+          </div>
         ))}
       </div>
     </div>
@@ -2315,6 +2359,14 @@ const SettingsView = () => {
 }
 
 // 9. Main App Component
+const publicAssetCache: Record<string, string> = {};
+const getPublicAsset = (filename: string) => {
+  if (!publicAssetCache[filename]) {
+    publicAssetCache[filename] = new URL(`./public/${filename}`, import.meta.url).href;
+  }
+  return publicAssetCache[filename];
+};
+
 const App = () => {
   const [activeTab, setActiveTab] = useState('features');
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -2502,6 +2554,7 @@ const App = () => {
         <main className="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth">
           <div className="max-w-7xl mx-auto">
             {activeTab === 'features' && <FeatureHighlightsView />}
+            {activeTab === 'contact' && <ContactView />}
             {activeTab === 'dashboard' && <DashboardView stats={stats} records={data.healthRecords} />}
             {activeTab === 'users' && <UsersView users={data.users} records={data.healthRecords} />}
             {activeTab === 'health' && <HealthView users={data.users} records={data.healthRecords} />}

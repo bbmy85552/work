@@ -1,0 +1,5 @@
+{
+  "name": "HealthGuard Admin",
+  "description": "A comprehensive admin dashboard for monitoring elderly health data, medication adherence, and user management.",
+  "requestFramePermissions": []
+}

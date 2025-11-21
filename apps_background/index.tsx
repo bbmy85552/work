@@ -650,8 +650,8 @@ const ContactView = () => {
           <p className="text-gray-500 text-base md:text-lg">展示長者端與照護者端的真實畫面，若需進一步合作或導入請與我們聯繫。</p>
         </div>
         <div className="bg-white border border-indigo-100 rounded-2xl px-5 py-3 shadow-sm">
-          <p className="text-sm text-gray-500">Email</p>
-          <p className="text-lg font-semibold text-gray-900">+852 3421 1861</p>
+          <p className="text-sm text-gray-500">Phone Number</p>
+          <p className="text-lg font-semibold text-gray-900">+852 3426 2604</p>
         </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

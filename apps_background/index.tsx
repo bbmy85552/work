@@ -355,6 +355,77 @@ const SimpleLineChart = ({ data, labels, color = "#10B981", height = 250 }: { da
   );
 };
 
+const MiniSparkline = ({ data, color = '#4F46E5', width = 120, height = 60 }: { data: number[], color?: string, width?: number, height?: number }) => {
+  const uniqueId = useMemo(() => Math.random().toString(36).substr(2, 9), []);
+  if (!data || data.length === 0) {
+    return <div style={{ width, height }}></div>;
+  }
+
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const range = max - min || 1;
+
+  const points = data.map((val, idx) => {
+    const x = data.length <= 1 ? 50 : (idx / (data.length - 1)) * 100;
+    const y = 100 - ((val - min) / range) * 100;
+    return [x, y];
+  });
+
+  const generateSmoothPath = (pts: number[][]) => {
+    if (pts.length === 0) return "";
+    const getControlPoint = (current: number[], previous: number[], next: number[], reverse?: boolean) => {
+      const p = previous || current;
+      const n = next || current;
+      const smoothing = 0.2;
+      const line = [n[0] - p[0], n[1] - p[1]];
+      const length = Math.sqrt(Math.pow(line[0], 2) + Math.pow(line[1], 2));
+      const angle = Math.atan2(line[1], line[0]) + (reverse ? Math.PI : 0);
+      const controlLength = length * smoothing;
+      return [
+        current[0] + Math.cos(angle) * controlLength,
+        current[1] + Math.sin(angle) * controlLength
+      ];
+    };
+
+    return pts.reduce((acc, point, i, array) => {
+      if (i === 0) return `M ${point[0]},${point[1]}`;
+      const [cpsX, cpsY] = getControlPoint(array[i - 1], array[i - 2], point);
+      const [cpeX, cpeY] = getControlPoint(point, array[i - 1], array[i + 1], true);
+      return `${acc} C ${cpsX},${cpsY} ${cpeX},${cpeY} ${point[0]},${point[1]}`;
+    }, "");
+  };
+
+  const linePath = generateSmoothPath(points);
+
+  const firstPoint = points[0];
+  const lastPoint = points[points.length - 1];
+  const areaPath = `${linePath} L ${lastPoint[0]},100 L ${firstPoint[0]},100 Z`;
+
+  return (
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none" style={{ width: `${width}px`, height: `${height}px` }} className="shrink-0">
+      <defs>
+        <linearGradient id={`sparkline-stroke-${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor={color} stopOpacity="0.35" />
+          <stop offset="100%" stopColor={color} stopOpacity="0.9" />
+        </linearGradient>
+        <linearGradient id={`sparkline-fill-${uniqueId}`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor={color} stopOpacity="0.2" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path d={areaPath} fill={`url(#sparkline-fill-${uniqueId})`} />
+      <path
+        d={linePath}
+        fill="none"
+        stroke={`url(#sparkline-stroke-${uniqueId})`}
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
 type DetailTab = 'health' | 'chat';
 
 // 2. Sidebar Navigation
@@ -725,7 +796,7 @@ const UsersView = ({ users, records }: { users: User[], records: HealthRecord[] 
   // User Details Modal Component
   const UserDetailsModal = ({ user }: { user: User }) => {
     const { systolicData, diastolicData, glucoseData, labels } = getUserChartData(user.id);
-    const [detailTab, setDetailTab] = useState<DetailTab>('health');
+    const [detailTab, setDetailTab] = useState<DetailTab>('chat');
 
     // AI健康分析数据
     const getHealthAnalysis = (userId: string) => {
@@ -806,6 +877,10 @@ const UsersView = ({ users, records }: { users: User[], records: HealthRecord[] 
             positiveRate: "68%",
             focusTopic: "血壓/睡眠"
           },
+          trend: {
+            sessions: [10, 12, 11, 13, 14, 15, 14],
+            positive: [62, 64, 63, 66, 67, 68, 70]
+          },
           insights: [
             "早上9-10點最常主動發起聊天，詢問血壓是否在安全值。",
             "晚上睡前有輕微焦慮，需要被提醒呼吸放鬆才能入眠。",
@@ -830,6 +905,10 @@ const UsersView = ({ users, records }: { users: User[], records: HealthRecord[] 
             avgDuration: "8 分鐘",
             positiveRate: "42%",
             focusTopic: "血壓警示"
+          },
+          trend: {
+            sessions: [18, 19, 20, 21, 22, 24, 23],
+            positive: [38, 40, 37, 41, 39, 42, 43]
           },
           insights: [
             "晚上10點後頻繁回報頭暈與胸悶，需提醒即時就醫流程。",
@@ -856,6 +935,10 @@ const UsersView = ({ users, records }: { users: User[], records: HealthRecord[] 
             positiveRate: "82%",
             focusTopic: "生活分享"
           },
+          trend: {
+            sessions: [7, 8, 9, 10, 9, 8, 9],
+            positive: [78, 80, 81, 82, 83, 84, 82]
+          },
           insights: [
             "下午茶時間喜歡聊天，常分享社區活動。",
             "對於復健運動會主動回報完成狀態。",
@@ -880,6 +963,10 @@ const UsersView = ({ users, records }: { users: User[], records: HealthRecord[] 
             avgDuration: "7 分鐘",
             positiveRate: "56%",
             focusTopic: "飲食提醒"
+          },
+          trend: {
+            sessions: [9, 10, 11, 12, 11, 12, 12],
+            positive: [50, 51, 53, 55, 56, 57, 58]
           },
           insights: [
             "午餐後30分鐘固定上線詢問血糖與飲食搭配。",
@@ -907,6 +994,10 @@ const UsersView = ({ users, records }: { users: User[], records: HealthRecord[] 
           avgDuration: "8 分鐘",
           positiveRate: "60%",
           focusTopic: "日常問候"
+        },
+        trend: {
+          sessions: [5, 6, 6, 7, 6, 7, 6],
+          positive: [55, 57, 58, 59, 60, 61, 62]
         },
         insights: ["持續觀察情緒變化。"],
         suggestions: ["保持規律問候與健康提醒。"],
@@ -1115,17 +1206,23 @@ const UsersView = ({ users, records }: { users: User[], records: HealthRecord[] 
 
                     <p className="text-sm text-gray-600 leading-relaxed">{chatAnalysis.summary}</p>
 
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="p-3 rounded-xl border border-indigo-100 bg-indigo-50/50">
-                        <p className="text-[11px] text-indigo-500 font-semibold uppercase tracking-wide">過去7日互動</p>
-                        <p className="text-2xl font-bold text-indigo-700">{chatAnalysis.stats.sessions}</p>
-                        <p className="text-xs text-indigo-600">平均 {chatAnalysis.stats.avgDuration}</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="p-3 rounded-xl border border-indigo-100 bg-indigo-50/50 flex items-center justify-between gap-6">
+                        <div>
+                          <p className="text-[11px] text-indigo-500 font-semibold uppercase tracking-wide">過去7日互動</p>
+                          <p className="text-2xl font-bold text-indigo-700">{chatAnalysis.stats.sessions}</p>
+                          <p className="text-xs text-indigo-600">平均 {chatAnalysis.stats.avgDuration}</p>
+                        </div>
+                        <MiniSparkline data={chatAnalysis.trend?.sessions || []} color="#4F46E5" width={150} height={60} />
                       </div>
-                      <div className="p-3 rounded-xl border border-emerald-100 bg-emerald-50/70">
-                        <p className="text-[11px] text-emerald-500 font-semibold uppercase tracking-wide">情緒正向率</p>
-                        <p className="text-2xl font-bold text-emerald-700">{chatAnalysis.stats.positiveRate}</p>
-                        <p className="text-xs text-emerald-600">焦點：{chatAnalysis.stats.focusTopic}</p>
-                      </div>
+                      <div className="p-3 rounded-xl border border-emerald-100 bg-emerald-50/70 flex items-center justify-between gap-6">
+                        <div>
+                          <p className="text-[11px] text-emerald-500 font-semibold uppercase tracking-wide">情緒正向率</p>
+                          <p className="text-2xl font-bold text-emerald-700">{chatAnalysis.stats.positiveRate}</p>
+                          <p className="text-xs text-emerald-600">焦點：{chatAnalysis.stats.focusTopic}</p>
+                        </div>
+                        <MiniSparkline data={chatAnalysis.trend?.positive || []} color="#059669" width={150} height={60} />
+                    </div>
                     </div>
 
                     <div>

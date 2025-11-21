@@ -638,8 +638,8 @@ const FeatureHighlightsView = () => {
 
 const ContactView = () => {
   const shots = [
-    { src: getPublicAsset('Image (1).jpeg'), title: 'wechat', description: '' },
-    { src: getPublicAsset('Image (2).jpeg'), title: 'whatsapp', description: '' }
+    { src: getPublicAsset('wechat.jpg'), title: 'WeChat 官方帳號', description: '掃描 QRCode 或加入好友，可直接與專人客服取得聯繫。' },
+    { src: getPublicAsset('whatsapp.jpg'), title: 'WhatsApp 聯絡方式', description: '透過 WhatsApp 即時訊息，快速取得支援與導入資訊。' }
   ];
 
   return (
@@ -662,14 +662,13 @@ const ContactView = () => {
               <p className="text-sm text-gray-500">{shot.description}</p>
             </div>
             <div
-              className="w-full rounded-2xl border border-gray-200 shadow-inner bg-gray-50 overflow-hidden flex items-center justify-center p-3"
+              className="relative w-full rounded-2xl border border-gray-200 shadow-inner bg-gray-50 overflow-hidden"
               style={{ height: '60vh', minHeight: '360px' }}
             >
               <img
                 src={shot.src}
                 alt={shot.title}
-                className="w-full h-auto object-cover"
-                style={{ clipPath: 'inset(20% 0 20% 0)' }}
+                className="absolute inset-0 w-full h-full object-cover"
               />
             </div>
           </div>

@@ -1,0 +1,593 @@
+/* AI解决方案中心统一样式文件 */
+
+/* 全局样式重置和基础设置 */
+.ai-solution-center {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* 步骤导航样式 */
+.step-nav {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+.step-nav h2 {
+  margin: 0 0 20px 0;
+  color: #1890ff;
+}
+
+.progress-indicator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.progress-indicator::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #e8e8e8;
+  z-index: 1;
+  margin-top: -1px;
+}
+
+.step {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 10px 20px;
+  background: white;
+  border: 2px solid #e8e8e8;
+  border-radius: 20px;
+  min-width: 100px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.step.active {
+  background: #e6f7ff;
+  border-color: #1890ff;
+  color: #1890ff;
+}
+
+.step.current {
+  background: #1890ff;
+  color: white;
+  border-color: #1890ff;
+  font-weight: bold;
+  transform: scale(1.05);
+}
+
+/* 主内容区域布局 */
+.main-content {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-height: 600px;
+}
+
+.content-wrapper {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+/* 控制面板样式 */
+.control-panel {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-width: 300px;
+  max-width: 400px;
+}
+
+/* 按钮样式 */
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.action-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 100px;
+}
+
+.action-buttons button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.next-button {
+  background: #1890ff;
+  color: white;
+}
+
+.next-button:hover:not(:disabled) {
+  background: #40a9ff;
+  transform: translateY(-1px);
+}
+
+.back-button {
+  background: #f5f5f5;
+  color: #595959;
+}
+
+.back-button:hover:not(:disabled) {
+  background: #e8e8e8;
+  transform: translateY(-1px);
+}
+
+/* 预算规划器样式 */
+.budget-planner {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.budget-options {
+  flex: 1;
+  min-width: 300px;
+}
+
+.budget-preview {
+  flex: 1;
+  min-width: 300px;
+  background: #fafafa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+}
+
+.option-group {
+  margin-bottom: 20px;
+}
+
+.option-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #262626;
+}
+
+.option-group select,
+.option-group input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.option-group select:focus,
+.option-group input:focus {
+  outline: none;
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* 硬件配置中心样式 */
+.hardware-config {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.category-nav {
+  flex: 0 0 200px;
+  background: #fafafa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+}
+
+.category-item {
+  padding: 10px 15px;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.category-item:hover {
+  background: #e6f7ff;
+}
+
+.category-item.active {
+  background: #1890ff;
+  color: white;
+}
+
+.product-display {
+  flex: 1;
+  min-width: 300px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.product-card {
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.product-card.selected {
+  border-color: #1890ff;
+  background: #f0f9ff;
+}
+
+.config-summary {
+  flex: 0 0 300px;
+  background: #fafafa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+}
+
+/* 设计中心样式 */
+.design-center {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.design-content {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.scenario-selection,
+.template-selection {
+  margin-bottom: 24px;
+}
+
+.scenario-grid,
+.template-grid,
+.images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.scenario-card,
+.template-card,
+.image-card {
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.scenario-card:hover,
+.template-card:hover,
+.image-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.scenario-card.selected,
+.template-card.selected {
+  border-color: #1890ff;
+  background: #f0f9ff;
+}
+
+.scenario-placeholder,
+.template-placeholder,
+.image-placeholder,
+.render-placeholder {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.design-params {
+  margin-bottom: 24px;
+}
+
+.param-group {
+  margin-bottom: 16px;
+}
+
+.param-group select {
+  margin-left: 10px;
+  padding: 6px 10px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+}
+
+.preview-container {
+  min-height: 300px;
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #e8e8e8;
+}
+
+/* 方案生成器样式 */
+.proposal-generator {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.proposal-pages {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.proposal-page-preview {
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 150px;
+  background: #fafafa;
+}
+
+.page-number {
+  color: #8c8c8c;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.page-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #262626;
+}
+
+.page-content {
+  color: #595959;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 方案管理样式 */
+.solution-manager {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-filter {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.search-filter input,
+.search-filter select {
+  padding: 8px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+}
+
+.solution-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.solution-card {
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.solution-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.solution-thumbnail {
+  height: 150px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.solution-info h4 {
+  margin: 0 0 8px 0;
+  color: #262626;
+}
+
+.solution-meta {
+  color: #8c8c8c;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.solution-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.solution-actions button {
+  padding: 6px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.solution-actions button:hover {
+  color: #1890ff;
+  border-color: #1890ff;
+}
+
+/* 生成进度覆盖层 */
+.generation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.generation-progress {
+  background: white;
+  padding: 32px;
+  border-radius: 8px;
+  text-align: center;
+  min-width: 300px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e8e8e8;
+  border-radius: 4px;
+  margin: 20px 0;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #1890ff;
+  transition: width 0.3s ease;
+}
+
+/* 错误和加载状态 */
+.error-message {
+  background: #fff2f0;
+  border: 1px solid #ffccc7;
+  color: #ff4d4f;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .progress-indicator {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .progress-indicator::before {
+    display: none;
+  }
+  
+  .step {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .action-buttons button {
+    width: 100%;
+  }
+  
+  .product-grid,
+  .scenario-grid,
+  .template-grid,
+  .images-grid,
+  .proposal-pages,
+  .solution-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

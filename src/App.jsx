@@ -1,0 +1,191 @@
+import React from 'react'
+import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom'
+import { Layout, Menu, Avatar } from 'antd'
+import { PieChartOutlined, BookOutlined, ShopOutlined, BoxPlotOutlined, TeamOutlined, DollarOutlined, UserOutlined, BellOutlined, SettingOutlined, SearchOutlined, SolutionOutlined } from '@ant-design/icons'
+import './App.css'
+import DataCenter from './pages/DataCenter.jsx'
+import SchoolManagement from './pages/SchoolManagement'
+import OrderCenter from './pages/OrderCenter'
+import DeliveryTracking from './pages/DeliveryTracking'
+import SupplierManagement from './pages/SupplierManagement'
+import FinancialManagement from './pages/FinancialManagement'
+import TalentManagement from './pages/TalentManagement'
+import PlannerManagement from './pages/PlannerManagement'
+import DesignerManagement from './pages/DesignerManagement'
+import EngineerManagement from './pages/EngineerManagement'
+import PhotographerManagement from './pages/PhotographerManagement'
+import AISolutionCenter from './pages/AISolutionCenter.jsx'
+import CaseLibrary from './pages/CaseLibrary.jsx'
+
+const { Header, Content, Sider } = Layout
+
+function App() {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [selectedKeys, setSelectedKeys] = React.useState([location.pathname])
+
+  const handleMenuClick = (e) => {
+    setSelectedKeys([e.key])
+    navigate(e.key)
+  }
+  
+  // 导航菜单项
+  const menuItems = [
+    {
+      key: '/',
+      icon: <PieChartOutlined />,
+      label: '大数据中心',
+      children: [
+        {
+          key: '/dashboard',
+          label: '数据中心分析',
+        },
+        {
+          key: '/business',
+          label: '业务数据中心',
+        }
+      ]
+    },
+    {
+      key: '/school',
+      icon: <BookOutlined />,
+      label: '学校管理'
+    },
+    {
+      key: '/order',
+      icon: <ShopOutlined />,
+      label: '订单中心'
+    },
+    {
+      key: '/delivery',
+      icon: <BoxPlotOutlined />,
+      label: '交付跟踪'
+    },
+    {
+      key: '/supplier',
+      icon: <TeamOutlined />,
+      label: '供应商管理'
+    },
+    {
+      key: '/financial',
+      icon: <DollarOutlined />,
+      label: '财务管理'
+    },
+    {
+      key: '/ai-solution',
+      icon: <SolutionOutlined />,
+      label: 'AI方案中心'
+    },
+    {
+      key: '/case-library',
+      icon: <BookOutlined />,
+      label: '落地案例库'
+    },
+    {
+      key: '/talent',
+      icon: <UserOutlined />,
+      label: '人才管理',
+      children: [
+        {
+          key: '/talent-overview',
+          label: '人才概览'
+        },
+        {
+          key: '/planner-management',
+          label: '策划师管理'
+        },
+        {
+          key: '/designer-management',
+          label: '设计师管理'
+        },
+        {
+          key: '/engineer-management',
+          label: '工程师管理'
+        },
+        {
+          key: '/photographer-management',
+          label: '摄影师管理'
+        }
+      ]
+    }
+  ]
+
+  return (
+    <Layout className="app-layout">
+      <Header className="app-header macos-header">
+        <div className="header-left">
+          <div className="app-title">学智AI管理平台</div>
+        </div>
+        <div className="header-center">
+          {/* 快速统计数据已移除 */}
+        </div>
+        <div className="header-right">
+          <div className="search-bar">
+            <SearchOutlined className="transition-all" />
+            <input type="text" placeholder="搜索..." className="search-input" />
+          </div>
+          <div className="header-actions">
+            <button className="action-btn notification-btn transition-all">
+              <BellOutlined />
+              <span className="badge">3</span>
+            </button>
+            <button className="action-btn transition-all">
+              <SettingOutlined />
+            </button>
+            <div className="user-profile">
+              <Avatar size={32} className="transition-all">U</Avatar>
+              <span className="user-name transition-all">管理员</span>
+            </div>
+          </div>
+        </div>
+      </Header>
+      <Layout>
+        <Sider 
+          width={240}
+          className="app-sider macos-sider"
+          theme="light"
+          trigger={null}
+        >
+          {/* 侧边栏标题 */}
+          <div className="sidebar-header">
+            <h3 className="sidebar-title">导航菜单</h3>
+          </div>
+          <Menu
+            mode="inline"
+            selectedKeys={selectedKeys}
+            style={{ 
+              height: 'calc(100% - 60px)',
+              borderRight: 0,
+              backgroundColor: 'transparent'
+            }}
+            onClick={handleMenuClick}
+            items={menuItems}
+            className="macos-menu transition-all"
+            itemIcon={<span className="transition-all" />}
+          />
+        </Sider>
+        <Content className="app-content">
+          <Routes>
+            <Route path="/" element={<DataCenter />} />
+            <Route path="/dashboard" element={<DataCenter />} />
+            <Route path="/business" element={<DataCenter />} />
+            <Route path="/school" element={<SchoolManagement />} />
+            <Route path="/order" element={<OrderCenter />} />
+            <Route path="/delivery" element={<DeliveryTracking />} />
+            <Route path="/supplier" element={<SupplierManagement />} />
+            <Route path="/financial" element={<FinancialManagement />} />
+            <Route path="/ai-solution" element={<AISolutionCenter />} />
+            <Route path="/talent-overview" element={<TalentManagement />} />
+            <Route path="/planner-management" element={<PlannerManagement />} />
+            <Route path="/designer-management" element={<DesignerManagement />} />
+            <Route path="/engineer-management" element={<EngineerManagement />} />
+            <Route path="/photographer-management" element={<PhotographerManagement />} />
+            <Route path="/case-library" element={<CaseLibrary />} />
+          </Routes>
+        </Content>
+      </Layout>
+    </Layout>
+  )
+}
+
+export default App

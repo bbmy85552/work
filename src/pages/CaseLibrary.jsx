@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, Row, Col, Typography, Select, Input, Button, Tag, Empty, Spin, Modal, Image, Space } from 'antd';
 import { SearchOutlined, EyeOutlined, FilterOutlined, CalendarOutlined, UserOutlined, BookOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import caseData from '../mock/caseData.js';
+import { getImageUrl, getPlaceholderUrl, handleImageError } from '../utils/imageConfig.js';
 
 const { Title, Text, Paragraph } = Typography;
 const { Option } = Select;
@@ -245,9 +246,13 @@ const CaseLibrary = () => {
                 cover={
                   <div style={{ height: '180px', overflow: 'hidden' }}>
                     <Image
-                      src={item.coverImage || 'https://via.placeholder.com/400x200?text=暂无图片'}
+                      src={getImageUrl(item.coverImage)}
                       alt={item.projectName}
+                      placeholder={<img src={getPlaceholderUrl(400, 180)} alt="loading" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
+                      loading="lazy"
+                      onError={handleImageError}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      preview={false}
                     />
                   </div>
                 }
@@ -320,8 +325,11 @@ const CaseLibrary = () => {
           <div>
             <div style={{ marginBottom: '20px' }}>
               <Image
-                src={selectedCase.coverImage || 'https://via.placeholder.com/800x400?text=暂无图片'}
+                src={getImageUrl(selectedCase.coverImage)}
                 alt={selectedCase.projectName}
+                placeholder={<img src={getPlaceholderUrl(800, 400)} alt="loading" style={{ width: '100%', borderRadius: '8px' }} />}
+                loading="lazy"
+                onError={handleImageError}
                 style={{ width: '100%', borderRadius: '8px' }}
               />
             </div>
@@ -400,7 +408,7 @@ const CaseLibrary = () => {
                   {selectedCase.galleryImages.map((image, index) => (
                     <Col xs={24} sm={12} key={index}>
                       <Image
-                        src={image}
+                        src={getImageUrl(image)}
                         alt={`成果图片 ${index + 1}`}
                         style={{ width: '100%', borderRadius: '8px' }}
                       />

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Routes, Route, Navigate, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { Layout, Menu, Avatar } from 'antd'
-import { PieChartOutlined, BookOutlined, ShopOutlined, BoxPlotOutlined, TeamOutlined, DollarOutlined, UserOutlined, BellOutlined, SettingOutlined, SearchOutlined, SolutionOutlined } from '@ant-design/icons'
+import { PieChartOutlined, BookOutlined, ShopOutlined, BoxPlotOutlined, TeamOutlined, DollarOutlined, UserOutlined, BellOutlined, SettingOutlined, SearchOutlined, SolutionOutlined, AppstoreOutlined } from '@ant-design/icons'
 import './App.css'
 import DataCenter from './pages/DataCenter.jsx'
 import SchoolManagement from './pages/SchoolManagement'
@@ -16,6 +16,7 @@ import EngineerManagement from './pages/EngineerManagement'
 import PhotographerManagement from './pages/PhotographerManagement'
 import AISolutionCenter from './pages/AISolutionCenter.jsx'
 import CaseLibrary from './pages/CaseLibrary.jsx'
+import ProductLibrary from './pages/ProductLibrary.jsx'
 import Login from './pages/Login.jsx'
 import { isAuthed } from './utils/auth'
 
@@ -89,6 +90,11 @@ function AdminLayout() {
       key: '/ai-solution',
       icon: <SolutionOutlined />,
       label: 'AI方案中心'
+    },
+    {
+      key: '/product-library',
+      icon: <AppstoreOutlined />,
+      label: '学智产品库'
     },
     {
       key: '/case-library',
@@ -206,6 +212,9 @@ function App() {
           <Route path="/supplier" element={<SupplierManagement />} />
           <Route path="/financial" element={<FinancialManagement />} />
           <Route path="/ai-solution" element={<AISolutionCenter />} />
+          <Route path="/product-library" element={<ProductLibrary />} />
+          <Route path="/product-library/:categoryKey" element={<ProductLibrary />} />
+          <Route path="/product-library/:categoryKey/:productId" element={<ProductLibrary />} />
           <Route path="/talent-overview" element={<TalentManagement />} />
           <Route path="/planner-management" element={<PlannerManagement />} />
           <Route path="/designer-management" element={<DesignerManagement />} />

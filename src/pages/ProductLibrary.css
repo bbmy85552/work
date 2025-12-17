@@ -1,0 +1,89 @@
+.pl-page {
+  background-color: #ffffff;
+  min-height: 100vh;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* 顶部采用 case-library 的标题与统计卡风格，这里不需要 Banner 相关样式 */
+
+.pl-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.pl-header-row {
+  margin-top: 10px;
+}
+
+.pl-card {
+  border-radius: 12px;
+}
+
+.pl-card-title {
+  font-weight: 600;
+}
+
+.pl-card-desc {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.pl-card-footer {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pl-image-placeholder {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px dashed rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, rgba(22, 119, 255, 0.08), rgba(22, 119, 255, 0.02));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pl-image-placeholder-text {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 13px;
+}
+
+.pl-breadcrumb-link {
+  cursor: pointer;
+}
+
+.pl-detail-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pl-specs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pl-spec-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px;
+  padding: 8px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.01);
+}
+
+.pl-spec-key {
+  color: rgba(0, 0, 0, 0.65);
+  font-weight: 600;
+}
+
+.pl-spec-val {
+  color: rgba(0, 0, 0, 0.88);
+}
+
+

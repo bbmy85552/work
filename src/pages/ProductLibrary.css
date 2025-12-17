@@ -5,7 +5,27 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-/* 顶部采用 case-library 的标题与统计卡风格，这里不需要 Banner 相关样式 */
+/* 顶部横幅图：横向铺满 */
+.pl-banner {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: #ffffff;
+}
+
+.pl-banner-image {
+  width: 100%;
+  height: 320px;
+  display: block;
+  object-fit: cover;
+}
+
+@media (max-width: 640px) {
+  .pl-banner-image {
+    height: 160px;
+  }
+}
 
 .pl-header {
   display: flex;

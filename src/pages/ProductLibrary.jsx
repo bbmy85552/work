@@ -15,63 +15,22 @@ function ImagePlaceholder({ height = 140, label = '图片占位' }) {
   )
 }
 
-function CategoryOverview({ categories, stats, onEnterCategory }) {
+function CategoryOverview({ categories, onEnterCategory }) {
   return (
     <div className="pl-page">
-      {/* 标题区（参考 case-library 的标题与颜色） */}
-      <Title level={2} style={{ marginBottom: '8px', color: '#1890ff' }}>学智产品库</Title>
-      <Text type="secondary">中国AI智能建设领域-全案整合者与智能交付平台</Text>
+      {/* 顶部横幅图（横向铺满） */}
+      <div className="pl-banner">
+        <img
+          className="pl-banner-image"
+          src="https://student-1320907290.cos.ap-guangzhou.myqcloud.com/logo2.jpg"
+          alt="学智"
+          loading="lazy"
+        />
+      </div>
 
       <Divider style={{ margin: '18px 0' }} />
 
-      {/* 统计卡（对齐 case-library 的配色） */}
-      <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
-        <Col xs={24} sm={12} md={8}>
-          <Card variant="outlined" style={{ backgroundColor: '#f6ffed', borderColor: '#b7eb8f' }}>
-            <Row align="middle">
-              <Col span={8}>
-                <div style={{ fontSize: '32px', color: '#52c41a', textAlign: 'center' }}>
-                  {stats.productTotal}
-                </div>
-              </Col>
-              <Col span={16}>
-                <Title level={5} style={{ margin: 0, color: '#52c41a' }}>产品总数</Title>
-                <Text type="secondary">AI智能产业链：六大产业链</Text>
-              </Col>
-            </Row>
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={8}>
-          <Card variant="outlined" style={{ backgroundColor: '#e6f7ff', borderColor: '#91d5ff' }}>
-            <Row align="middle">
-              <Col span={8}>
-                <div style={{ fontSize: '32px', color: '#1890ff', textAlign: 'center' }}>
-                  {stats.vendorTotal}
-                </div>
-              </Col>
-              <Col span={16}>
-                <Title level={5} style={{ margin: 0, color: '#1890ff' }}>供应商数量</Title>
-                <Text type="secondary">产业供应商数量：100+</Text>
-              </Col>
-            </Row>
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={8}>
-          <Card variant="outlined" style={{ backgroundColor: '#fff7e6', borderColor: '#ffd591' }}>
-            <Row align="middle">
-              <Col span={8}>
-                <div style={{ fontSize: '32px', color: '#fa8c16', textAlign: 'center' }}>
-                  {stats.categoryTotal}
-                </div>
-              </Col>
-              <Col span={16}>
-                <Title level={5} style={{ margin: 0, color: '#fa8c16' }}>分类数量</Title>
-                <Text type="secondary">智能产品：300+</Text>
-              </Col>
-            </Row>
-          </Card>
-        </Col>
-      </Row>
+      
       <Row gutter={[16, 16]}>
         {categories.map((c) => (
           <Col key={c.key} xs={24} sm={12} lg={8}>

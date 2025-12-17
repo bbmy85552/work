@@ -1,0 +1,88 @@
+Image Rename Log
+=================
+Date: 2025-12-17
+
+PART 1: Category Cover Images (Classification Covers)
+--------------------------------------------------
+
+Original File Name -> New English File Name
+--------------------------------------------
+
+1. 分类封面｜人工智能机器人 (Category Cover - AI Educational Robot)
+   1.png -> ai_educational_robot.png
+   Description: Service robot形象 for campus and education scenarios, friendly white rounded robot in modern campus hall/exhibition environment
+
+2. 分类封面｜AI智能穿戴设备 (Category Cover - AI Smart Wearable Devices)
+   2.png -> ai_smart_wearable_devices.png
+   Description: Smart wearable collection for education and health scenarios (smart bands/watches/chest positioning devices)
+
+3. 分类封面｜AI玩具学习与情感陪伴 (Category Cover - AI Learning Companion Toys)
+   3.png -> ai_learning_companion_toys.png
+   Description: Cute but not childish AI companion toys (plush/small robot toys) in warm learning corner
+
+4. 分类封面｜AI超级智能体大模型 (Category Cover - AI Large Language Model)
+   4.png -> ai_large_language_model.png
+   Description: Abstract large model/intelligent agent concept, glowing neural network/data grid
+
+5. 分类封面｜AI智能软件开发 (Category Cover - AI Software Development)
+   5.png -> ai_software_development.png
+   Description: AI software development and platform scenarios, modern UI interface abstraction
+
+6. 分类封面｜其他 (Category Cover - Other)
+   6.png -> ai_edge_computing_devices.png
+   Description: Educational technology products collection (edge computing boxes, sensors, camera modules, gateway devices)
+
+Summary - Part 1:
+- Total category cover files renamed: 6
+- Format: PNG
+- Naming convention: ai_category_description.png
+- All images maintain 16:9 aspect ratio with no text, logo, or watermark
+
+PART 2: Product Detail Images (Product Details - Hero Images)
+-----------------------------------------------------------
+
+Original File Name -> New English File Name
+--------------------------------------------
+
+7. 产品详情｜校园导览机器人 (Product Detail - Campus Guide Robot)
+   1.png -> campus_guide_robot_xr_robot_001.png
+   Product Code: xr-robot-001
+   Description: White friendly guide robot in campus hall/history museum entrance guiding visitors, robot screen emits soft light, background is modern campus exhibition hall
+
+8. 产品详情｜课堂互动机器人 (Product Detail - Classroom Interaction Robot)
+   2.png -> classroom_interaction_robot_xr_robot_002.png
+   Product Code: xr-robot-002
+   Description: Classroom scene, interaction robot assisting teaching beside podium, students in seats (back view/blurred), blackboard/large screen showing abstract graphics
+
+9. 产品详情｜校园守护手环 (Product Detail - Campus Guardian Bracelet)
+   3.png -> campus_guardian_bracelet_wear_001.png
+   Product Code: wear-001
+   Description: Smart bracelet close-up with campus safety scene hint (blurred school gate/playground background), abstract positioning ripples and guardian graphics light effects
+
+10. 产品详情｜学习与陪伴AI玩具 (Product Detail - Learning Companion AI Toy)
+   4.png -> learning_companion_toy_toy_001.png
+   Product Code: toy-001
+   Description: AI companion toy on children's learning desk with picture books and building blocks, warm soft light, family/childcare learning corner atmosphere
+
+11. 产品详情｜校园智能体平台 (Product Detail - Campus Intelligent Agent Platform)
+   5.png -> campus_intelligent_platform_llm_001.png
+   Product Code: llm-001
+   Description: Intelligent agent platform concept with central abstract UI (cards, flow nodes, knowledge library icons) surrounded by connected agent nodes and data stream light effects
+
+12. 产品详情｜边缘计算盒 (Product Detail - Edge Computing Box)
+   6.png -> edge_computing_box_other_001.png
+   Product Code: other-001
+   Description: Edge computing box product main image, metallic texture small device in computer room/weak current room scene (blurred background), network cables and indicator light effects
+
+13. 产品详情｜AI教学内容与应用平台 (Product Detail - AI Teaching Content and Application Platform)
+   7.png -> ai_teaching_content_platform_soft_001.png
+   Product Code: soft-001
+   Description: Educational software platform main vision, modern web console UI abstraction (course arrangement cards, resource library, analysis charts) floating on light background
+
+Overall Summary:
+- Total files renamed: 13 (6 category covers + 7 product details)
+- Format: PNG
+- Category covers naming convention: ai_category_description.png
+- Product details naming convention: product_description_product_code.png
+- All images maintain 16:9 aspect ratio with no text, logo, or watermark
+- All images follow consistent brand style and quality standards

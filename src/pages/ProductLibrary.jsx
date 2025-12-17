@@ -15,6 +15,11 @@ function ImagePlaceholder({ height = 140, label = '图片占位' }) {
   )
 }
 
+function ImageOrPlaceholder({ src, height, label, className, alt }) {
+  if (!src) return <ImagePlaceholder height={height} label={label} />
+  return <img className={className} src={src} alt={alt || label || 'image'} loading="lazy" />
+}
+
 function CategoryOverview({ categories, onEnterCategory }) {
   return (
     <div className="pl-page">
@@ -40,7 +45,13 @@ function CategoryOverview({ categories, onEnterCategory }) {
               onClick={() => onEnterCategory(c.key)}
               title={<span className="pl-card-title">{c.name}</span>}
             >
-              <ImagePlaceholder height={120} label="分类图片占位" />
+              <ImageOrPlaceholder
+                src={c.coverImageUrl}
+                height={120}
+                label="分类图片占位"
+                className="pl-cover-image-0"
+                alt={c.name}
+              />
               <Paragraph className="pl-card-desc" style={{ marginTop: 12 }}>
                 {c.description}
               </Paragraph>
@@ -86,7 +97,13 @@ function CategoryProducts({ category, products, onBack, onOpenProduct }) {
               onClick={() => onOpenProduct(item.id)}
               title={<span className="pl-card-title">{item.name}</span>}
             >
-              <ImagePlaceholder height={120} label="产品图片占位" />
+              <ImageOrPlaceholder
+                src={item.imageUrl}
+                height={120}
+                label="产品图片占位"
+                className="pl-cover-image"
+                alt={item.name}
+              />
               <div style={{ marginTop: 12 }}>
                 <Tag color="blue">{item.vendor}</Tag>
               </div>
@@ -131,10 +148,13 @@ function ProductDetail({ category, product, onBackToCategory, onBackToOverview }
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={10}>
           <Card className="pl-card">
-            <ImagePlaceholder height={320} label="产品大图占位" />
-            <div style={{ marginTop: 12 }}>
-              <Text type="secondary">当前模块暂时无图片，已预留展示位置，后续可接入供应商图片资源。</Text>
-            </div>
+            <ImageOrPlaceholder
+              src={product.imageUrl}
+              height={320}
+              label="产品大图占位"
+              className="pl-detail-image"
+              alt={product.name}
+            />
           </Card>
         </Col>
         <Col xs={24} lg={14}>
@@ -170,12 +190,6 @@ export default function ProductLibrary() {
 
   const categories = productLibraryData.categories
   const products = productLibraryData.products
-  const stats = useMemo(() => ({
-    // 对齐 case-library / 设计稿展示数字：后续接入真实接口可替换为动态统计
-    productTotal: 12,
-    vendorTotal: 5,
-    categoryTotal: categories.length,
-  }), [categories.length])
 
   const category = useMemo(
     () => categories.find((c) => c.key === categoryKey),
@@ -200,7 +214,6 @@ export default function ProductLibrary() {
     return (
       <CategoryOverview
         categories={categories}
-        stats={stats}
         onEnterCategory={(key) => navigate(`/product-library/${key}`)}
       />
     )

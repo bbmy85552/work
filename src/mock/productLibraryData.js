@@ -4,7 +4,7 @@ const productLibraryData = {
       key: 'ai-robot',
       name: '人工智能机器人',
       description: '覆盖迎宾导览、课堂互动、陪伴与巡检等场景，支持多模态交互与内容定制。',
-      coverImageUrl: 'https://student-1320907290.cos.ap-guangzhou.myqcloud.com/ai_educational_robot.png',
+      coverImageUrl: 'https://student-1320907290.cos.ap-guangzhou.myqcloud.com/robot0.png',
     },
     {
       key: 'ai-wearable',
@@ -43,7 +43,7 @@ const productLibraryData = {
       categoryKey: 'ai-robot',
       name: 'Xuezhi Campus Bot（校园导览机器人）',
       vendor: '星澜智能',
-      imageUrl: 'https://student-1320907290.cos.ap-guangzhou.myqcloud.com/campus_guide_robot_xr_robot_001.png',
+      imageUrl: 'https://student-1320907290.cos.ap-guangzhou.myqcloud.com/robot1.png',
       shortIntro: '面向学校展厅/校园大厅的导览与问答机器人，支持中英文讲解与路线导航。',
       detailIntro:
         '本产品面向教育场景的接待与导览需求，提供语音对话、地图导航、活动播报与信息发布能力。可对接学校知识库，实现校史馆/科创中心等场所的智能讲解。',
@@ -59,7 +59,7 @@ const productLibraryData = {
       categoryKey: 'ai-robot',
       name: 'Xuezhi ClassMate（课堂互动机器人）',
       vendor: '启学机器人',
-      imageUrl: 'https://student-1320907290.cos.ap-guangzhou.myqcloud.com/classroom_interaction_robot_xr_robot_002.png',
+      imageUrl: 'https://student-1320907290.cos.ap-guangzhou.myqcloud.com/robot2.png',
       shortIntro: '课堂互动与分组活动助手，支持点名、答题、口语练习与课堂节奏引导。',
       detailIntro:
         '通过本地语音识别与内容库，结合课堂活动流程配置，协助老师开展互动教学与分组任务。支持课堂数据统计与导出，便于教研复盘。',

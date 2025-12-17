@@ -140,9 +140,9 @@ const caseData = {
       description: '为华中师范大学附属中学开发的智能排课系统，基于AI算法优化课程安排，解决了传统排课中的冲突问题，提高了教学资源利用率。该系统考虑了教师偏好、教室资源、学生需求等多维度因素。',
       achievements: '1. 开发了AI智能排课引擎\n2. 排课时间从3天缩短至30分钟\n3. 课程冲突率降低100%\n4. 教学资源利用率提升30%\n5. 教师满意度达到95%',
       categories: ['智能排课', '教育信息化', '资源优化'],
-      coverImage: 'https://student-1320907290.cos.ap-guangzhou.myqcloud.com/009.jpg',
+      coverImage: 'https://student-1320907290.cos.ap-guangzhou.myqcloud.com/030.jpg',
       galleryImages: [
-        'https://student-1320907290.cos.ap-guangzhou.myqcloud.com/009.jpg'
+        'https://student-1320907290.cos.ap-guangzhou.myqcloud.com/030.jpg'
       ]
     },
     {

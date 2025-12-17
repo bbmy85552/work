@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Row, Col, Typography, Select, Input, Button, Tag, Empty, Spin, Modal, Image, Space } from 'antd';
-import { SearchOutlined, EyeOutlined, FilterOutlined, CalendarOutlined, UserOutlined, BookOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { EyeOutlined, FilterOutlined, CalendarOutlined, UserOutlined, BookOutlined } from '@ant-design/icons';
 import caseData from '../mock/caseData.js';
 import { getImageUrl, getPlaceholderUrl, handleImageError } from '../utils/imageConfig.js';
 
@@ -248,10 +248,18 @@ const CaseLibrary = () => {
                     <Image
                       src={getImageUrl(item.coverImage)}
                       alt={item.projectName}
-                      placeholder={<img src={getPlaceholderUrl(400, 180)} alt="loading" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
+                      placeholder={
+                        <img
+                          src={getPlaceholderUrl(400, 180)}
+                          alt="loading"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      }
                       loading="lazy"
                       onError={handleImageError}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      wrapperStyle={{ width: '100%', height: '100%', display: 'block' }}
+                      style={{ width: '100%', height: '100%', display: 'block' }}
+                      imgStyle={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       preview={false}
                     />
                   </div>
@@ -327,10 +335,18 @@ const CaseLibrary = () => {
               <Image
                 src={getImageUrl(selectedCase.coverImage)}
                 alt={selectedCase.projectName}
-                placeholder={<img src={getPlaceholderUrl(800, 400)} alt="loading" style={{ width: '100%', borderRadius: '8px' }} />}
+                placeholder={
+                  <img
+                    src={getPlaceholderUrl(800, 400)}
+                    alt="loading"
+                    style={{ width: '100%', borderRadius: '8px' }}
+                  />
+                }
                 loading="lazy"
                 onError={handleImageError}
-                style={{ width: '100%', borderRadius: '8px' }}
+                wrapperStyle={{ width: '100%', display: 'block' }}
+                style={{ width: '100%', display: 'block', borderRadius: '8px' }}
+                imgStyle={{ width: '100%', height: 'auto', display: 'block', borderRadius: '8px' }}
               />
             </div>
             
@@ -410,7 +426,9 @@ const CaseLibrary = () => {
                       <Image
                         src={getImageUrl(image)}
                         alt={`成果图片 ${index + 1}`}
-                        style={{ width: '100%', borderRadius: '8px' }}
+                        wrapperStyle={{ width: '100%', display: 'block' }}
+                        style={{ width: '100%', display: 'block', borderRadius: '8px' }}
+                        imgStyle={{ width: '100%', height: 'auto', display: 'block', borderRadius: '8px' }}
                       />
                     </Col>
                   ))}

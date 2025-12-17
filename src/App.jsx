@@ -1,5 +1,5 @@
 import React from 'react'
-import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { Layout, Menu, Avatar } from 'antd'
 import { PieChartOutlined, BookOutlined, ShopOutlined, BoxPlotOutlined, TeamOutlined, DollarOutlined, UserOutlined, BellOutlined, SettingOutlined, SearchOutlined, SolutionOutlined } from '@ant-design/icons'
 import './App.css'
@@ -16,13 +16,27 @@ import EngineerManagement from './pages/EngineerManagement'
 import PhotographerManagement from './pages/PhotographerManagement'
 import AISolutionCenter from './pages/AISolutionCenter.jsx'
 import CaseLibrary from './pages/CaseLibrary.jsx'
+import Login from './pages/Login.jsx'
+import { isAuthed } from './utils/auth'
 
 const { Header, Content, Sider } = Layout
 
-function App() {
+function RequireAuth() {
+  const location = useLocation()
+  if (!isAuthed()) {
+    return <Navigate to="/login" replace state={{ from: location }} />
+  }
+  return <Outlet />
+}
+
+function AdminLayout() {
   const navigate = useNavigate()
   const location = useLocation()
   const [selectedKeys, setSelectedKeys] = React.useState([location.pathname])
+
+  React.useEffect(() => {
+    setSelectedKeys([location.pathname])
+  }, [location.pathname])
 
   const handleMenuClick = (e) => {
     setSelectedKeys([e.key])
@@ -165,26 +179,44 @@ function App() {
           />
         </Sider>
         <Content className="app-content">
-          <Routes>
-            <Route path="/" element={<DataCenter />} />
-            <Route path="/dashboard" element={<DataCenter />} />
-            <Route path="/business" element={<DataCenter />} />
-            <Route path="/school" element={<SchoolManagement />} />
-            <Route path="/order" element={<OrderCenter />} />
-            <Route path="/delivery" element={<DeliveryTracking />} />
-            <Route path="/supplier" element={<SupplierManagement />} />
-            <Route path="/financial" element={<FinancialManagement />} />
-            <Route path="/ai-solution" element={<AISolutionCenter />} />
-            <Route path="/talent-overview" element={<TalentManagement />} />
-            <Route path="/planner-management" element={<PlannerManagement />} />
-            <Route path="/designer-management" element={<DesignerManagement />} />
-            <Route path="/engineer-management" element={<EngineerManagement />} />
-            <Route path="/photographer-management" element={<PhotographerManagement />} />
-            <Route path="/case-library" element={<CaseLibrary />} />
-          </Routes>
+          <Outlet />
         </Content>
       </Layout>
     </Layout>
+  )
+}
+
+function App() {
+  const authed = isAuthed()
+  return (
+    <Routes>
+      <Route
+        path="/login"
+        element={authed ? <Navigate to="/dashboard" replace /> : <Login />}
+      />
+
+      <Route element={<RequireAuth />}>
+        <Route element={<AdminLayout />}>
+          <Route path="/" element={<DataCenter />} />
+          <Route path="/dashboard" element={<DataCenter />} />
+          <Route path="/business" element={<DataCenter />} />
+          <Route path="/school" element={<SchoolManagement />} />
+          <Route path="/order" element={<OrderCenter />} />
+          <Route path="/delivery" element={<DeliveryTracking />} />
+          <Route path="/supplier" element={<SupplierManagement />} />
+          <Route path="/financial" element={<FinancialManagement />} />
+          <Route path="/ai-solution" element={<AISolutionCenter />} />
+          <Route path="/talent-overview" element={<TalentManagement />} />
+          <Route path="/planner-management" element={<PlannerManagement />} />
+          <Route path="/designer-management" element={<DesignerManagement />} />
+          <Route path="/engineer-management" element={<EngineerManagement />} />
+          <Route path="/photographer-management" element={<PhotographerManagement />} />
+          <Route path="/case-library" element={<CaseLibrary />} />
+        </Route>
+      </Route>
+
+      <Route path="*" element={<Navigate to={authed ? '/dashboard' : '/login'} replace />} />
+    </Routes>
   )
 }
 

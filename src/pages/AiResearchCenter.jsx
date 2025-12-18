@@ -31,12 +31,14 @@ const AiResearchCenter = () => {
 
   return (
     <div className="ai-research-center">
-      {/* 页面头部 */}
-      <div className="research-header">
-        <div className="header-content">
-          <h1>宇智AI研发中心</h1>
-          <p className="header-subtitle">引领教育AI技术创新，打造智能教育未来</p>
-        </div>
+      {/* 顶部横幅图（横向铺满） */}
+      <div className="research-banner">
+        <img
+          className="research-banner-image"
+          src="https://student-1320907290.cos.ap-guangzhou.myqcloud.com/img6.png"
+          alt="宇智AI研发中心"
+          loading="lazy"
+        />
       </div>
 
       {/* 主要内容区域 */}

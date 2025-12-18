@@ -27,7 +27,7 @@ function CategoryOverview({ categories, onEnterCategory }) {
       <div className="pl-banner">
         <img
           className="pl-banner-image"
-          src="https://student-1320907290.cos.ap-guangzhou.myqcloud.com/logo2.jpg"
+          src="https://student-1320907290.cos.ap-guangzhou.myqcloud.com/logo3.jpg"
           alt="学智"
           loading="lazy"
         />

@@ -386,7 +386,7 @@ const paymentStatusColors = {
 
 // 导出数据
 const financialData = {
-  financialTransactions,
+  transactions: financialTransactions,
   projectCategoryOptions,
   costCategoryOptions,
   paymentStatusOptions,

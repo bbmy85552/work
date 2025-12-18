@@ -1,0 +1,416 @@
+.ai-research-center {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #FFB3BA 0%, #FFDFBA 25%, #FFFFBA 50%, #BAFFBA 75%, #BAE1FF 100%);
+  padding: 20px;
+}
+
+.research-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.header-content h1 {
+  color: #1a1a1a;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-align: center;
+  background: linear-gradient(135deg, #FF9A8B 0%, #FECFEF 25%, #A7F3D0 50%, #BFDBFE 75%, #FDE68A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header-subtitle {
+  color: #666;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 32px;
+  font-weight: 400;
+}
+
+.header-stats {
+  display: flex;
+  justify-content: space-around;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.header-stats .ant-statistic {
+  text-align: center;
+  background: rgba(255, 182, 193, 0.15);
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 182, 193, 0.3);
+  min-width: 120px;
+}
+
+.header-stats .ant-statistic-title {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.header-stats .ant-statistic-content {
+  color: #FF9A8B;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.research-content {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 卡片样式 */
+.capability-card,
+.market-analysis-card,
+.competitiveness-card,
+.collaboration-card,
+.research-directions-card,
+.team-card,
+.achievements-card,
+.awards-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+}
+
+.capability-card:hover,
+.market-analysis-card:hover,
+.competitiveness-card:hover,
+.collaboration-card:hover,
+.research-directions-card:hover,
+.team-card:hover,
+.achievements-card:hover,
+.awards-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.capability-card .ant-card-head,
+.market-analysis-card .ant-card-head,
+.competitiveness-card .ant-card-head,
+.collaboration-card .ant-card-head,
+.research-directions-card .ant-card-head,
+.team-card .ant-card-head,
+.achievements-card .ant-card-head,
+.awards-card .ant-card-head {
+  background: linear-gradient(135deg, #FF9A8B 0%, #FECFEF 50%, #A7F3D0 100%);
+  color: white;
+  border-bottom: none;
+}
+
+.capability-card .ant-card-head-title,
+.market-analysis-card .ant-card-head-title,
+.competitiveness-card .ant-card-head-title,
+.collaboration-card .ant-card-head-title,
+.research-directions-card .ant-card-head-title,
+.team-card .ant-card-head-title,
+.achievements-card .ant-card-head-title,
+.awards-card .ant-card-head-title {
+  color: white;
+  font-weight: 600;
+}
+
+/* 标签页样式 */
+.ant-tabs-card > .ant-tabs-content > .ant-tabs-tabpane,
+.ant-tabs-editable-card > .ant-tabs-content > .ant-tabs-tabpane {
+  background: transparent;
+}
+
+.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab,
+.ant-tabs-editable-card > .ant-tabs-nav .ant-tabs-tab {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 8px 8px 0 0;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+}
+
+.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active,
+.ant-tabs-editable-card > .ant-tabs-nav .ant-tabs-tab-active {
+  background: linear-gradient(135deg, #FF9A8B 0%, #FECFEF 50%, #A7F3D0 100%);
+  color: white;
+  border-color: transparent;
+}
+
+.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab:hover,
+.ant-tabs-editable-card > .ant-tabs-nav .ant-tabs-tab:hover {
+  color: #FF9A8B;
+}
+
+/* 技术标签样式 */
+.tech-tags,
+.application-tags,
+.conference-tags {
+  margin: 8px 0;
+}
+
+.tech-tags .ant-tag,
+.application-tags .ant-tag,
+.conference-tags .ant-tag {
+  margin-bottom: 4px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+/* 能力元信息样式 */
+.capability-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.performance {
+  color: #52c41a;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* 市场分析卡片样式 */
+.market-item-card,
+.research-item-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.market-item-card:hover,
+.research-item-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.market-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.market-header h3 {
+  margin: 0;
+  color: #1a1a1a;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.market-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.market-share,
+.growth-rate {
+  font-size: 14px;
+  color: #666;
+  background: rgba(255, 182, 193, 0.15);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.market-size {
+  color: #FF9A8B;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.competitors,
+.advantages {
+  margin-bottom: 12px;
+}
+
+.competitors .ant-tag,
+.partners-list .ant-tag {
+  margin-bottom: 4px;
+  border-radius: 6px;
+}
+
+/* 竞争力评分样式 */
+.feature-item {
+  margin-bottom: 20px;
+}
+
+.feature-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.feature-name {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.feature-score {
+  color: #FF9A8B;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.feature-description {
+  color: #666;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+/* 合作卡片样式 */
+.partners-section,
+.projects-section,
+.achievements-section {
+  margin-bottom: 16px;
+}
+
+.partners-section h4,
+.projects-section h4,
+.achievements-section h4 {
+  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.projects-section ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.projects-section li {
+  margin-bottom: 4px;
+  color: #666;
+}
+
+/* 研发方向卡片样式 */
+.research-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.research-header h3 {
+  margin: 0;
+  color: #1a1a1a;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.research-focus {
+  color: #666;
+  line-height: 1.6;
+}
+
+/* 团队卡片样式 */
+.team-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: rgba(255, 182, 193, 0.08);
+  border-radius: 8px;
+}
+
+.team-stats .ant-statistic {
+  text-align: center;
+}
+
+.team-stats .ant-statistic-title {
+  color: #666;
+  font-size: 14px;
+}
+
+.team-stats .ant-statistic-content {
+  color: #FF9A8B;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.key-members h4 {
+  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+/* 成就卡片样式 */
+.achievements-card .ant-statistic,
+.awards-card .ant-statistic {
+  color: #FF9A8B;
+  margin-bottom: 24px;
+}
+
+.conference-list h4 {
+  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .ai-research-center {
+    padding: 12px;
+  }
+
+  .research-header {
+    padding: 20px;
+  }
+
+  .header-content h1 {
+    font-size: 28px;
+  }
+
+  .header-subtitle {
+    font-size: 16px;
+  }
+
+  .header-stats {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .header-stats .ant-statistic {
+    min-width: auto;
+  }
+
+  .market-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .market-stats {
+    align-self: flex-end;
+  }
+
+  .team-stats {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .research-content {
+    padding: 16px;
+  }
+
+  .ant-tabs-tab {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Routes, Route, Navigate, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { Layout, Menu, Avatar } from 'antd'
-import { PieChartOutlined, BookOutlined, ShopOutlined, BoxPlotOutlined, TeamOutlined, DollarOutlined, UserOutlined, BellOutlined, SettingOutlined, SearchOutlined, SolutionOutlined, AppstoreOutlined } from '@ant-design/icons'
+import { PieChartOutlined, BookOutlined, ShopOutlined, BoxPlotOutlined, TeamOutlined, DollarOutlined, UserOutlined, BellOutlined, SettingOutlined, SearchOutlined, SolutionOutlined, AppstoreOutlined, ExperimentOutlined } from '@ant-design/icons'
 import './App.css'
 import DataCenter from './pages/DataCenter.jsx'
 import SchoolManagement from './pages/SchoolManagement'
@@ -17,6 +17,7 @@ import PhotographerManagement from './pages/PhotographerManagement'
 import AISolutionCenter from './pages/AISolutionCenter.jsx'
 import CaseLibrary from './pages/CaseLibrary.jsx'
 import ProductLibrary from './pages/ProductLibrary.jsx'
+import AiResearchCenter from './pages/AiResearchCenter.jsx'
 import Login from './pages/Login.jsx'
 import { isAuthed } from './utils/auth'
 
@@ -90,6 +91,11 @@ function AdminLayout() {
       key: '/ai-solution',
       icon: <SolutionOutlined />,
       label: 'AI方案中心'
+    },
+    {
+      key: '/ai-research',
+      icon: <ExperimentOutlined />,
+      label: '宇智AI研发中心'
     },
     {
       key: '/product-library',
@@ -212,6 +218,7 @@ function App() {
           <Route path="/supplier" element={<SupplierManagement />} />
           <Route path="/financial" element={<FinancialManagement />} />
           <Route path="/ai-solution" element={<AISolutionCenter />} />
+          <Route path="/ai-research" element={<AiResearchCenter />} />
           <Route path="/product-library" element={<ProductLibrary />} />
           <Route path="/product-library/:categoryKey" element={<ProductLibrary />} />
           <Route path="/product-library/:categoryKey/:productId" element={<ProductLibrary />} />

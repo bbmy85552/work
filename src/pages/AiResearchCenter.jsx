@@ -36,12 +36,6 @@ const AiResearchCenter = () => {
         <div className="header-content">
           <h1>宇智AI研发中心</h1>
           <p className="header-subtitle">引领教育AI技术创新，打造智能教育未来</p>
-          <div className="header-stats">
-            <Statistic title="研发人员" value={teamInfo.totalMembers} suffix="人" />
-            <Statistic title="专利申请" value={aiCapabilities.patentsAndPublications.patents} suffix="项" />
-            <Statistic title="核心技术" value={aiCapabilities.coreTechnologies.length} suffix="项" />
-            <Statistic title="服务学校" value="2000+" suffix="所" />
-          </div>
         </div>
       </div>
 

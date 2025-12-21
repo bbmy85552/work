@@ -18,6 +18,7 @@ import AISolutionCenter from './pages/AISolutionCenter.jsx'
 import CaseLibrary from './pages/CaseLibrary.jsx'
 import ProductLibrary from './pages/ProductLibrary.jsx'
 import AiResearchCenter from './pages/AiResearchCenter.jsx'
+import BICockpit from './pages/BICockpit.jsx'
 import Login from './pages/Login.jsx'
 import { isAuthed } from './utils/auth'
 
@@ -59,6 +60,10 @@ function AdminLayout() {
         {
           key: '/business',
           label: '业务数据中心',
+        },
+        {
+          key: '/bi-cockpit',
+          label: 'BI数据驾驶舱',
         }
       ]
     },
@@ -212,6 +217,7 @@ function App() {
           <Route path="/" element={<DataCenter />} />
           <Route path="/dashboard" element={<DataCenter />} />
           <Route path="/business" element={<DataCenter />} />
+          <Route path="/bi-cockpit" element={<BICockpit />} />
           <Route path="/school" element={<SchoolManagement />} />
           <Route path="/order" element={<OrderCenter />} />
           <Route path="/delivery" element={<DeliveryTracking />} />

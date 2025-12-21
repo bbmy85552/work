@@ -58,10 +58,6 @@ function AdminLayout() {
           label: '数据中心分析',
         },
         {
-          key: '/business',
-          label: '业务数据中心',
-        },
-        {
           key: '/bi-cockpit',
           label: 'BI数据驾驶舱',
         }
@@ -216,7 +212,6 @@ function App() {
         <Route element={<AdminLayout />}>
           <Route path="/" element={<DataCenter />} />
           <Route path="/dashboard" element={<DataCenter />} />
-          <Route path="/business" element={<DataCenter />} />
           <Route path="/bi-cockpit" element={<BICockpit />} />
           <Route path="/school" element={<SchoolManagement />} />
           <Route path="/order" element={<OrderCenter />} />

@@ -3,19 +3,17 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './AISolutionCenter.css';
 import './components/AISolution/AISolutionStyles.css';
 
-// 导入五个功能模块
+// 导入功能模块
 import BudgetPlanner from './components/AISolution/BudgetPlanner';
-import HardwareConfigCenter from './components/AISolution/HardwareConfigCenter';
 import DesignCenter from './components/AISolution/DesignCenter';
 import ProposalGenerator from './components/AISolution/ProposalGenerator';
-import SolutionManager from './components/AISolution/SolutionManager';
 
 const AISolutionCenter = () => {
   // 使用路由相关功能
   const location = useLocation();
   const navigate = useNavigate();
   
-  // 当前步骤：1-预算方案 2-硬件配置 3-设计中心 4-方案生成 5-方案管理
+  // 当前步骤：1-方案配置 2-方案预览 3-效果图生成
   const [currentStep, setCurrentStep] = useState(1);
   // 全局加载状态
   const [isStepLoading, setIsStepLoading] = useState(false);
@@ -52,7 +50,7 @@ const AISolutionCenter = () => {
     
     // 检查URL参数是否指定了步骤
     const stepParam = new URLSearchParams(location.search).get('step');
-    if (stepParam && !isNaN(stepParam) && stepParam >= 1 && stepParam <= 5) {
+    if (stepParam && !isNaN(stepParam) && stepParam >= 1 && stepParam <= 3) {
       setCurrentStep(parseInt(stepParam));
     }
   }, [location.search]);
@@ -99,7 +97,7 @@ const AISolutionCenter = () => {
 
   // 切换到下一步
   const handleNextStep = useCallback(async () => {
-    if (currentStep < 5) {
+    if (currentStep < 3) {
       // 开始过渡动画
       setIsTransitioning(true);
       
@@ -177,19 +175,24 @@ const AISolutionCenter = () => {
 
   // 更新解决方案数据
   const updateSolutionData = useCallback((key, data) => {
-    // 使用函数式更新确保获取最新状态
+    // 支持两种调用方式：
+    // 1. updateSolutionData(key, data) - 更新单个键
+    // 2. updateSolutionData(object) - 批量更新多个键
     setSolutionData(prev => {
-      // 优化：只有当数据真正变化时才更新状态
+      // 如果第一个参数是对象，则批量更新
+      if (typeof key === 'object' && key !== null && data === undefined) {
+        return { ...prev, ...key };
+      }
+
+      // 否则更新单个键
       if (JSON.stringify(prev[key]) === JSON.stringify(data)) {
         return prev;
       }
-      
-      const newData = {
+
+      return {
         ...prev,
         [key]: data
       };
-      
-      return newData;
     });
   }, []);
   
@@ -240,7 +243,7 @@ const AISolutionCenter = () => {
   
   // 缓存步骤状态数组
   const stepStatuses = useMemo(() => {
-    return [1, 2, 3, 4, 5].map(step => getStepStatus(step));
+    return [1, 2, 3].map(step => getStepStatus(step));
   }, [getStepStatus]);
 
   // 使用useMemo缓存当前步骤组件，避免不必要的重渲染
@@ -260,13 +263,9 @@ const AISolutionCenter = () => {
       case 1:
         return <BudgetPlanner {...commonProps} />;
       case 2:
-         return <HardwareConfigCenter {...commonProps} />;
-      case 3:
         return <DesignCenter {...commonProps} />;
-      case 4:
+      case 3:
         return <ProposalGenerator {...commonProps} />;
-      case 5:
-         return <SolutionManager {...commonProps} onNext={undefined} />;
       default:
         return <BudgetPlanner {...commonProps} />;
     }
@@ -289,11 +288,9 @@ const AISolutionCenter = () => {
         {/* 步骤导航 - 使用优化的状态管理 */}
       <div className="progress-indicator">
         {[
-          { step: 1, title: '预算方案' },
-          { step: 2, title: '硬件配置' },
-          { step: 3, title: '方案设计' },
-          { step: 4, title: '方案生成' },
-          { step: 5, title: '方案管理' }
+          { step: 1, title: '方案配置' },
+          { step: 2, title: '方案预览' },
+          { step: 3, title: '效果图生成' }
         ].map(({ step, title }) => (
           <div
             key={step}

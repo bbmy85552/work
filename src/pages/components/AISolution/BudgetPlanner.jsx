@@ -1,494 +1,653 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, Select, InputNumber, Radio, Button, Table, Tag, Divider, message, Typography, Space } from 'antd';
-import { SaveOutlined, ArrowRightOutlined, UndoOutlined, FileSearchOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Card, Input, Button, message, Typography, Tooltip, Spin, Alert, Tag } from 'antd';
+import {
+  SaveOutlined,
+  ArrowRightOutlined,
+  UndoOutlined,
+  InfoCircleOutlined,
+  LoadingOutlined,
+  CheckCircleOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
+import { generateWallDesign, parseStreamedContent } from '../../../services/wallDesign.service';
 
-const { Option } = Select;
-const { Group, Button: RadioButton } = Radio;
-const { Title, Paragraph } = Typography;
+const { Title, Paragraph, Text } = Typography;
+
+// 设计风格数据
+const WALL_DESIGN_STYLES = {
+  "现代简约科技风": {
+    description: "以简洁线条、金属质感和LED灯带为主，突出科技感与现代美学",
+    elements: ["LED显示屏", "金属框架", "极简线条", "智能照明", "触摸交互面板"],
+    color_scheme: "空间基调为高级灰（#616161）、哑光白（#F5F5F5）；以科技蓝（#007BFF）作为核心功能色与导视色，贯穿于灯光与界面，营造理性、冷静的氛围",
+    materials: "主要采用拉丝不锈钢、高光白色PVC覆膜板、雾面半透明亚克力，结合平板灯箱与嵌入式LED灯带，所有材质表面追求平整、光滑的精密质感"
+  },
+  "未来科幻风格": {
+    description: "采用流线型设计、霓虹色彩和虚拟现实元素，营造未来感氛围",
+    elements: ["流线型面板", "霓虹灯效", "VR展示区", "全息投影", "智能传感设备"],
+    color_scheme: "背景以深空黑（#121212）或深灰蓝（#2A3B5D）为主，强烈对比荧光蓝（#00F3FF）、电子紫（#B200FF）等动态霓虹光效，营造沉浸式视觉冲击",
+    materials: "大量运用镜面不锈钢、透光软膜、定制曲面彩色亚克力，结合RGB灯带与全息膜，塑造充满流动感与光影变化的超现实场景"
+  },
+  "自然生态风格": {
+    description: "融入绿色植物、木材纹理和自然光效，体现环保与生态理念",
+    elements: ["绿色植被墙", "木材装饰", "自然采光", "生态材料", "太阳能面板"],
+    color_scheme: "主色调取自自然，包括不同明度的生态绿（如#2E8B57, #8FBC8F）、原木色（#DEB887）与米白色（#F5F5DC），局部点缀陶土红（#CC7357）增添温暖活力",
+    materials: "核心采用天然实木（如橡木、松木）板材、竹纤维板，搭配硅藻泥墙面与天然麻布软装，地面可选用水磨石或仿石瓷砖，强调材料的真实触感与环保属性"
+  },
+  "艺术创意风格": {
+    description: "融入抽象艺术与几何图形，强调互动与参与，旨在激发学生创意潜能与自由表达",
+    elements: ["抽象艺术装置", "可涂鸦互动墙", "几何造型展具", "创意灯光雕塑", "学生作品动态展区"],
+    color_scheme: "主色选用白色、浅灰色，搭配明亮色块（如橙黄、湖蓝）进行高饱和度点缀",
+    materials: "以艺术涂料、彩色玻璃、织物软装、可书写板材为主，局部使用金属构件"
+  },
+  "新中式现代风格": {
+    description: "提炼传统建筑、文化符号，运用现代设计语言与科技进行转译，体现\"中西融合、古今对话\"的校园人文气质",
+    elements: ["简化后的格栅", "花窗", "月洞门等意象", "数字山水画卷", "智能书法台", "榫卯解构装置", "校园精神篆刻墙"],
+    color_scheme: "空间基调为浅灰、素白、原木色，局部点缀朱砂红、石青、黛色等传统色彩",
+    materials: "主要采用木材、深色金属、微水泥，结合LED灯带与互动透明屏呈现数字内容"
+  },
+  "传统中式风格": {
+    description: "严谨运用传统形制、结构与装饰，营造庄重、典雅的学术氛围，适用于展现深厚历史与文化传承的专属空间",
+    elements: ["对称布局", "匾额楹联", "中式博古架", "案几", "古典园林框景", "典籍陈列"],
+    color_scheme: "以深栗色、暗红色、墨黑、原木本色为主，辅以石绿、泥金等装饰色",
+    materials: "以实木（如榆木、花梨）、青砖、石材、宣纸灯、竹编为主，注重工艺细节（如雕刻、榫卯）"
+  }
+};
+
+// 风格卡片组件
+const StyleCard = ({ styleName, styleInfo, isSelected, onSelect }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div
+      className={`style-card ${isSelected ? 'selected' : ''}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={() => onSelect(styleName)}
+      style={{
+        border: `2px solid ${isSelected ? '#1890ff' : '#e8e8e8'}`,
+        borderRadius: '8px',
+        padding: '16px',
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        backgroundColor: isSelected ? '#e6f7ff' : '#fff',
+        position: 'relative',
+        overflow: 'visible',
+        zIndex: isHovered ? 100 : 1,
+        boxShadow: isHovered ? '0 4px 12px rgba(24, 144, 255, 0.15)' : '0 2px 4px rgba(0,0,0,0.05)'
+      }}
+    >
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '8px'
+      }}>
+        <Text strong style={{ fontSize: '16px', color: '#333' }}>{styleName}</Text>
+        {isSelected && (
+          <span style={{
+            color: '#52c41a',
+            fontSize: '18px',
+            fontWeight: 'bold'
+          }}>✓</span>
+        )}
+      </div>
+
+      <Paragraph style={{
+        color: '#666',
+        fontSize: '13px',
+        marginBottom: '12px',
+        margin: 0
+      }}>
+        {styleInfo.description}
+      </Paragraph>
+
+      {/* 悬浮展开的详细信息 */}
+      {isHovered && (
+        <div style={{
+          position: 'absolute',
+          left: 'auto',
+          right: '0',
+          top: '100%',
+          marginTop: '8px',
+          width: '320px',
+          background: 'white',
+          border: '1px solid #d9d9d9',
+          borderRadius: '8px',
+          padding: '16px',
+          boxShadow: '0 6px 16px rgba(0,0,0,0.12)',
+          zIndex: 1000,
+          animation: 'slideDown 0.3s ease'
+        }}>
+          <div style={{ marginBottom: '12px' }}>
+            <Text strong style={{ color: '#1890ff' }}>关键元素：</Text>
+            <div style={{ marginTop: '4px', color: '#666', fontSize: '12px' }}>
+              {styleInfo.elements.join('、')}
+            </div>
+          </div>
+
+          <div style={{ marginBottom: '12px' }}>
+            <Text strong style={{ color: '#1890ff' }}>色彩色调：</Text>
+            <div style={{ marginTop: '4px', color: '#666', fontSize: '12px' }}>
+              {styleInfo.color_scheme}
+            </div>
+          </div>
+
+          <div>
+            <Text strong style={{ color: '#1890ff' }}>材料材质：</Text>
+            <div style={{ marginTop: '4px', color: '#666', fontSize: '12px' }}>
+              {styleInfo.materials}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// 搜索结果展示组件
+const SearchResults = ({ results }) => {
+  if (!results || results.length === 0) return null;
+
+  return (
+    <div style={{ marginTop: '16px' }}>
+      <Alert
+        message={<span><SearchOutlined /> 找到 {results.length} 条相关信息</span>}
+        type="info"
+        style={{ marginBottom: '12px' }}
+      />
+      <div style={{
+        maxHeight: '300px',
+        overflowY: 'auto',
+        border: '1px solid #d9d9d9',
+        borderRadius: '8px',
+        padding: '12px',
+        background: '#fafafa'
+      }}>
+        {results.map((result, index) => (
+          <div
+            key={index}
+            style={{
+              padding: '8px',
+              marginBottom: index < results.length - 1 ? '8px' : '0',
+              borderBottom: index < results.length - 1 ? '1px solid #f0f0f0' : 'none',
+              fontSize: '13px'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+              <Tag color="blue" style={{ marginTop: '2px'}}>
+                {result.index}
+              </Tag>
+              <div style={{ flex: 1 }}>
+                <a
+                  href={result.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: '#1890ff', textDecoration: 'none', fontWeight: 500 }}
+                >
+                  {result.title}
+                </a>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// 方案内容展示组件
+const ProposalContent = ({ data }) => {
+  if (!data) return null;
+
+  return (
+    <div style={{
+      marginTop: '16px',
+      padding: '16px',
+      background: '#f6ffed',
+      border: '1px solid #b7eb8f',
+      borderRadius: '8px'
+    }}>
+      <Title level={5} style={{ color: '#52c41a', marginBottom: '16px' }}>
+        <CheckCircleOutlined /> 方案生成完成
+      </Title>
+
+      {data.school_name && (
+        <div style={{ marginBottom: '12px' }}>
+          <Text strong>学校名称：</Text>
+          <Text>{data.school_name}</Text>
+        </div>
+      )}
+
+      {data.style && (
+        <div style={{ marginBottom: '12px' }}>
+          <Text strong>设计风格：</Text>
+          <Tag color="blue">{data.style}</Tag>
+        </div>
+      )}
+
+      {data.proposal_content && (
+        <div style={{ marginTop: '16px' }}>
+          <Text strong style={{ display: 'block', marginBottom: '8px' }}>方案内容：</Text>
+          <div style={{
+            padding: '12px',
+            background: 'white',
+            borderRadius: '4px',
+            whiteSpace: 'pre-wrap',
+            fontSize: '14px',
+            lineHeight: '1.6',
+            color: '#333'
+          }}>
+            {data.proposal_content}
+          </div>
+        </div>
+      )}
+
+      {data.design_elements && Array.isArray(data.design_elements) && data.design_elements.length > 0 && (
+        <div style={{ marginTop: '16px' }}>
+          <Text strong style={{ display: 'block', marginBottom: '8px' }}>设计元素：</Text>
+          <div>
+            {data.design_elements.map((element, index) => (
+              <Tag key={index} color="green" style={{ marginBottom: '8px' }}>
+                {element}
+              </Tag>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// 加载动画组件
+const LoadingIndicator = ({ progress, streamingContent }) => {
+  return (
+    <div style={{
+      padding: '20px',
+      background: '#f0f2f5',
+      borderRadius: '8px',
+      marginTop: '16px'
+    }}>
+      <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+        <Spin
+          indicator={<LoadingOutlined style={{ fontSize: 48, color: '#1890ff' }} spin />}
+        />
+        <div style={{ marginTop: '16px', fontSize: '16px', color: '#333' }}>
+          正在生成方案...
+        </div>
+        {progress && (
+          <div style={{ marginTop: '8px', fontSize: '14px', color: '#666' }}>
+            {progress}
+          </div>
+        )}
+      </div>
+
+      {/* 实时流式内容显示 */}
+      {streamingContent && (
+        <div style={{
+          marginTop: '16px',
+          padding: '12px',
+          background: 'white',
+          border: '1px solid #d9d9d9',
+          borderRadius: '4px'
+        }}>
+          <Text strong style={{ color: '#1890ff', display: 'block', marginBottom: '8px' }}>
+            实时生成内容：
+          </Text>
+          <div style={{
+            padding: '12px',
+            background: '#fafafa',
+            borderRadius: '4px',
+            fontFamily: 'monospace',
+            fontSize: '12px',
+            color: '#333',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            maxHeight: '400px',
+            overflowY: 'auto'
+          }}>
+            {streamingContent}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const BudgetPlanner = ({ solutionData, updateSolutionData, onNext, onBack }) => {
   // 状态管理
-  const [schoolType, setSchoolType] = useState('');
-  const [spaceArea, setSpaceArea] = useState(50);
-  const [customArea, setCustomArea] = useState(null);
-  const [budgetRange, setBudgetRange] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');
-  const [computedBudget, setComputedBudget] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  
-  // 获取付款方式文本
-  const getPaymentMethodText = (method) => {
-    if (!method) return '-';
-    const paymentOptions = {
-      full: '一次性全款支付（97折）', 
-      '80-20': '80% + 20%分期支付',
-      '70-30': '70% + 30%分期支付',
-      '50-50': '50% + 50%分期支付'
-    };
-    return paymentOptions[method] || '-';
-  };
+  const [schoolName, setSchoolName] = useState('');
+  const [selectedStyle, setSelectedStyle] = useState('');
+
+  // 流式请求相关状态
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [contentChunks, setContentChunks] = useState([]);
+  const [parsedProposal, setParsedProposal] = useState(null);
+  const [usageStats, setUsageStats] = useState(null);
+  const [generationProgress, setGenerationProgress] = useState('');
+  const [streamingContent, setStreamingContent] = useState(''); // 实时流式内容
+  const cancelRequestRef = useRef(null);
+  const contentChunksRef = useRef([]); // 使用 ref 避免闭包问题
+  const searchResultsRef = useRef([]); // 使用 ref 避免闭包问题
 
   // 初始化数据
   useEffect(() => {
     if (solutionData) {
-      setSchoolType(solutionData.schoolType || '');
-      setSpaceArea(solutionData.spaceArea || 50);
-      setCustomArea(solutionData.customArea || null);
-      setBudgetRange(solutionData.budgetRange || '');
-      setPaymentMethod(solutionData.paymentMethod || '');
+      setSchoolName(solutionData.schoolName || '');
+      setSelectedStyle(solutionData.selectedStyle || '');
     }
   }, [solutionData]);
 
-  // 防抖函数
-  const debounce = (func, wait) => {
-    let timeout;
-    return function executedFunction(...args) {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
-  };
-
-  // 计算预算的函数
-  const calculateBudget = useCallback(() => {
-    if (schoolType && budgetRange && paymentMethod) {
-      setIsLoading(true);
-      // 模拟计算延迟
-      setTimeout(() => {
-        // 模拟计算逻辑
-        let baseBudget = 0;
-        switch (budgetRange) {
-          case '10w': baseBudget = 100000; break;
-          case '20w': baseBudget = 200000; break;
-          case '30w': baseBudget = 300000; break;
-          case '50w+': baseBudget = 500000; break;
-          default: baseBudget = 200000;
-        }
-
-        // 空间面积影响因子
-        const areaFactor = (customArea || spaceArea) / 50;
-        const totalBudget = baseBudget * areaFactor;
-
-        // 付款方式折扣
-        let discount = 1;
-        switch (paymentMethod) {
-          case 'full': discount = 0.97; break; // 3%折扣
-          case '80-20':
-          case '70-30':
-          case '50-50':
-          default: discount = 1;
-        }
-
-        const finalBudget = totalBudget * discount;
-
-        // 计算详细费用构成
-        const budgetDetails = {
-          total: finalBudget,
-          hardware: finalBudget * 0.6, // 硬件60%
-          software: finalBudget * 0.2, // 软件20%
-          service: finalBudget * 0.2,  // 服务20%
-          discount,
-          payment: paymentMethod
-        };
-        
-        setComputedBudget(budgetDetails);
-
-        // 更新方案数据
-        const budgetData = {
-          schoolType,
-          spaceArea: customArea || spaceArea,
-          budgetRange,
-          paymentMethod,
-          details: budgetDetails
-        };
-        
-        updateSolutionData('budget', budgetData);
-        setIsLoading(false);
-      }, 300);
-    }
-  }, [schoolType, spaceArea, customArea, budgetRange, paymentMethod, updateSolutionData]);
-
-  // 防抖处理的预算计算
-  const debouncedCalculateBudget = useCallback(debounce(calculateBudget, 300), [calculateBudget]);
-
-  // 根据选择计算预算 - 使用防抖
+  // 组件卸载时取消请求
   useEffect(() => {
-    debouncedCalculateBudget();
-    
-    // 清理函数
     return () => {
-      // 清除防抖定时器
-      if (debouncedCalculateBudget.timeout) {
-        clearTimeout(debouncedCalculateBudget.timeout);
+      if (cancelRequestRef.current) {
+        cancelRequestRef.current();
       }
     };
-  }, [debouncedCalculateBudget]);
+  }, []);
+
+  // 生成方案
+  const handleGenerate = useCallback(async () => {
+    if (!schoolName) {
+      message.warning('请输入学校完整名称');
+      return;
+    }
+    if (!selectedStyle) {
+      message.warning('请选择设计风格');
+      return;
+    }
+
+    // 重置状态
+    setIsGenerating(true);
+    setSearchResults([]);
+    searchResultsRef.current = []; // 修复：不是 setSearchResultsRef
+    setContentChunks([]);
+    setStreamingContent('');
+    setParsedProposal(null);
+    setUsageStats(null);
+    setGenerationProgress('正在搜索学校相关信息...');
+    contentChunksRef.current = [];
+
+    try {
+      // 发起流式请求
+      cancelRequestRef.current = generateWallDesign({
+        school_name: schoolName,
+        style: selectedStyle,
+        onMessage: (data) => {
+          switch (data.type) {
+            case 'search_info':
+              // 显示搜索结果
+              if (data.search_results) {
+                setSearchResults(data.search_results);
+                searchResultsRef.current = data.search_results; // 同步更新 ref
+                setGenerationProgress(`找到 ${data.search_results.length} 条相关信息，正在生成方案...`);
+              }
+              break;
+
+            case 'content':
+              // 累积内容块
+              if (data.content) {
+                setContentChunks(prev => {
+                  const newChunks = [...prev, data.content];
+                  contentChunksRef.current = newChunks; // 同步更新 ref
+
+                  // 更新实时显示的内容
+                  const fullContent = newChunks.join('');
+                  setStreamingContent(fullContent);
+
+                  return newChunks;
+                });
+                setGenerationProgress('正在生成方案内容...');
+              }
+              break;
+
+            case 'usage_stats':
+              // 保存使用统计
+              if (data.usage_stats) {
+                setUsageStats(data.usage_stats);
+              }
+              break;
+
+            case 'completed':
+              // 请求完成
+              setGenerationProgress('方案生成完成！');
+              break;
+
+            default:
+          // 未知消息类型，忽略
+          }
+        },
+        onComplete: (data) => {
+          // 使用 ref 中的最新数据解析
+          const proposal = parseStreamedContent(contentChunksRef.current);
+
+          if (proposal) {
+            setParsedProposal(proposal);
+          } else {
+            // 如果解析失败，至少显示原始内容
+            console.warn('JSON 解析失败，显示原始内容');
+          }
+
+          // 一次性保存所有数据
+          const dataToSave = {
+            schoolName,
+            selectedStyle,
+            styleInfo: WALL_DESIGN_STYLES[selectedStyle],
+            generatedProposal: proposal,
+            searchResults: searchResultsRef.current, // 使用 ref 中的最新值
+            usageStats: usageStats,
+            rawContent: streamingContent
+          };
+
+          updateSolutionData(dataToSave);
+
+          message.success('方案生成成功！');
+
+          // 延迟后跳转到方案预览页
+          setTimeout(() => {
+            setIsGenerating(false);
+            if (onNext) {
+              onNext();
+            }
+          }, 1000);
+        },
+        onError: (error) => {
+          console.error('生成失败:', error);
+          message.error(`生成失败: ${error.message || '未知错误'}`);
+          setIsGenerating(false);
+        },
+      });
+    } catch (error) {
+      console.error('生成方案失败:', error);
+      message.error('生成方案失败，请稍后重试');
+      setIsGenerating(false);
+    }
+  }, [schoolName, selectedStyle, contentChunks, searchResults, usageStats, updateSolutionData, onNext]);
 
   // 保存方案
   const handleSave = useCallback(() => {
-    if (!schoolType) {
-      message.warning('请选择学校类型');
+    if (!schoolName) {
+      message.warning('请输入学校完整名称');
       return false;
     }
-    if (!budgetRange) {
-      message.warning('请选择预算范围');
+    if (!selectedStyle) {
+      message.warning('请选择设计风格');
       return false;
     }
-    if (!paymentMethod) {
-      message.warning('请选择付款方式');
-      return false;
-    }
-    
+
     try {
-      // 确保computedBudget已计算完成
-      const budgetData = {
-        schoolType,
-        spaceArea: customArea || spaceArea,
-        budgetRange,
-        paymentMethod,
-        computedBudget
+      const techWallData = {
+        schoolName,
+        selectedStyle,
+        styleInfo: WALL_DESIGN_STYLES[selectedStyle]
       };
-      
-      // 正确使用updateSolutionData函数设置所有必要字段
-      updateSolutionData('budget', computedBudget?.total || 0);
-      updateSolutionData('schoolType', schoolType);
-      updateSolutionData('spaceArea', customArea || spaceArea);
-      updateSolutionData('budgetRange', budgetRange);
-      updateSolutionData('paymentMethod', paymentMethod);
-      updateSolutionData('budgetDetails', budgetData);
-      
-      // 优化localStorage写入，避免频繁写入
+
+      updateSolutionData('schoolName', schoolName);
+      updateSolutionData('selectedStyle', selectedStyle);
+      updateSolutionData('styleInfo', WALL_DESIGN_STYLES[selectedStyle]);
+      updateSolutionData('techWallData', techWallData);
+
       if (typeof window !== 'undefined' && window.localStorage) {
-        localStorage.setItem('savedBudgetPlan', JSON.stringify(budgetData));
+        localStorage.setItem('savedTechWallPlan', JSON.stringify(techWallData));
       }
-      
+
       message.success('方案已保存');
-      return true; // 返回true表示保存成功
+      return true;
     } catch (error) {
       console.error('保存方案失败:', error);
       message.error('保存失败，请稍后重试');
       return false;
     }
-  }, [schoolType, spaceArea, customArea, budgetRange, paymentMethod, computedBudget, updateSolutionData]);
+  }, [schoolName, selectedStyle, updateSolutionData]);
 
   // 重置
   const handleReset = () => {
-    setSchoolType('');
-    setSpaceArea(50);
-    setCustomArea(null);
-    setBudgetRange('');
-    setPaymentMethod('');
-    setComputedBudget(null);
-    
-    // 重置全局数据
-    updateSolutionData('budget', {
-      schoolType: '',
-      spaceArea: 50,
-      budgetRange: '',
-      paymentMethod: '',
-      details: null
-    });
+    setSchoolName('');
+    setSelectedStyle('');
+    setSearchResults([]);
+    searchResultsRef.current = []; // 重置 ref
+    setContentChunks([]);
+    setStreamingContent('');
+    setParsedProposal(null);
+    setUsageStats(null);
+
+    updateSolutionData('schoolName', '');
+    updateSolutionData('selectedStyle', '');
+    updateSolutionData('styleInfo', null);
+    updateSolutionData('techWallData', null);
   };
-
-  // 查看案例
-  const handleViewCases = () => {
-    if (!schoolType) {
-      message.warning('请先选择学校类型');
-      return;
-    }
-    
-    const schoolTypeMap = {
-      primary: '小学',
-      junior: '初中',
-      senior: '高中',
-      vocational: '职校',
-      university: '大学'
-    };
-    
-    message.info(`正在查询${schoolTypeMap[schoolType]}相关案例...`);
-    // 这里可以实现查看案例的逻辑，比如打开模态框或跳转到案例页面
-  };
-
-  // 预算分配表数据
-  const budgetTableData = computedBudget ? [
-    { key: '1', name: '硬件费用', amount: computedBudget.hardware, percentage: 60 },
-    { key: '2', name: '软件费用', amount: computedBudget.software, percentage: 20 },
-    { key: '3', name: '服务费用', amount: computedBudget.service, percentage: 20 },
-    { key: '4', name: '总计', amount: computedBudget.total, percentage: 100, isTotal: true }
-  ] : [];
-
-  // 表格列配置
-  const budgetTableColumns = [
-    {
-      title: '费用类型',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text, record) => (
-        <span style={{ fontWeight: record.isTotal ? 'bold' : 'normal' }}>{text}</span>
-      )
-    },
-    {
-      title: '金额',
-      dataIndex: 'amount',
-      key: 'amount',
-      render: (text, record) => (
-        <span style={{ fontWeight: record.isTotal ? 'bold' : 'normal', color: record.isTotal ? '#1890ff' : '#333' }}>
-          ¥{text.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-        </span>
-      )
-    },
-    {
-      title: '占比',
-      dataIndex: 'percentage',
-      key: 'percentage',
-      render: (text) => <Tag color="blue">{text}%</Tag>
-    }
-  ];
-
-  // 推荐硬件配置（模拟数据）
-  const recommendedHardware = schoolType && budgetRange ? [
-    {
-      name: 'AI工作站',
-      quantity: Math.ceil((customArea || spaceArea) / 25),
-      description: '高性能GPU工作站'
-    },
-    {
-      name: '服务器',
-      quantity: 1,
-      description: '数据存储和处理服务器'
-    },
-    {
-      name: '网络设备',
-      quantity: 1,
-      description: '高性能交换机和路由器'
-    }
-  ] : [];
 
   return (
     <div className="budget-planner fade-in">
-      <div className="two-column-layout">
-        {/* 左侧配置面板 */}
-        <div className="left-panel">
-          <Card title="预算方案配置" variant="outlined" className="card-shadow">
-            <Title level={5}>请根据学校实际情况，选择合适的配置选项</Title>
-            <Paragraph>您的选择将直接影响后续的硬件配置和方案设计</Paragraph>
-            {/* 学校类型选择 */}
-            <div className="config-section">
-              <h4>学校类型 <span style={{color: '#ff4d4f'}}>*</span></h4>
-              <Select
-                placeholder="请选择学校类型"
-                style={{ width: '100%' }}
-                value={schoolType}
-                onChange={setSchoolType}
-              >
-                <Option value="primary">小学</Option>
-                <Option value="junior">初中</Option>
-                <Option value="senior">高中</Option>
-                <Option value="vocational">职校</Option>
-                <Option value="university">大学</Option>
-              </Select>
-            </div>
+      <Card title="科技墙方案配置" variant="outlined" className="card-shadow">
+        <Title level={5}>请填写学校信息并选择合适的设计风格</Title>
+        <Paragraph>您的选择将直接影响后续的方案设计</Paragraph>
 
-            {/* 空间面积选择 */}
-            <div className="config-section">
-              <h4>空间面积 (平方米)</h4>
-              <Radio.Group 
-                value={spaceArea.toString() === 'custom' ? 'custom' : spaceArea.toString()}
-                onChange={(e) => {
-                  if (e.target.value === 'custom') {
-                    setSpaceArea(0);
-                  } else {
-                    setSpaceArea(parseInt(e.target.value));
-                    setCustomArea(null);
-                  }
-                }}
-              >
-                <RadioButton value="30">30平方</RadioButton>
-                <RadioButton value="50">50平方</RadioButton>
-                <RadioButton value="100">100平方</RadioButton>
-                <RadioButton value="custom">其他</RadioButton>
-              </Radio.Group>
-              {spaceArea === 0 && (
-                <InputNumber
-                  style={{ width: '100%', marginTop: '10px' }}
-                  min={10}
-                  placeholder="请输入具体面积"
-                  onChange={setCustomArea}
-                />
-              )}
-              <div style={{ marginTop: '8px', color: '#666', fontSize: '12px' }}>
-                可容纳工作站数量: {Math.ceil((customArea || spaceArea) / 25)}台
-              </div>
-            </div>
-
-            {/* 方案预算选择 */}
-            <div className="config-section">
-              <h4>方案预算 <span style={{color: '#ff4d4f'}}>*</span></h4>
-              <Select
-                placeholder="请选择预算范围"
-                style={{ width: '100%' }}
-                value={budgetRange}
-                onChange={setBudgetRange}
-              >
-                <Option value="10w">10万左右</Option>
-                <Option value="20w">20万左右</Option>
-                <Option value="30w">30万左右</Option>
-                <Option value="50w+">50万以上</Option>
-              </Select>
-            </div>
-
-            {/* 付款方式选择 */}
-            <div className="config-section">
-              <h4>付款方式 <span style={{color: '#ff4d4f'}}>*</span></h4>
-              <Radio.Group 
-                value={paymentMethod}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-                style={{ width: '100%' }}
-              >
-                <Radio value="full">一次性全款支付（享受3%折扣）</Radio>
-                <Radio value="80-20">80% + 20%分期支付 (首付80%，验收后支付20%)</Radio>
-                <Radio value="70-30">70% + 30%分期支付 (首付70%，验收后支付30%)</Radio>
-                <Radio value="50-50">50% + 50%分期支付 (首付50%，验收后支付50%)</Radio>
-              </Radio.Group>
-              <Space style={{marginTop: '8px', fontSize: '12px', color: '#666'}}>
-                <InfoCircleOutlined />
-                分期支付可在项目验收合格后再支付剩余款项
-              </Space>
-            </div>
-
-            {/* 操作按钮 */}
-            <div className="button-group">
-              <Button 
-                icon={<SaveOutlined />} 
-                onClick={handleSave}
-                disabled={!schoolType || !budgetRange || !paymentMethod}
-                style={{ marginRight: '8px' }}
-              >
-                保存方案
-              </Button>
-              <Button 
-                icon={<UndoOutlined />} 
-                onClick={handleReset}
-                style={{ marginRight: '8px' }}
-              >
-                重置
-              </Button>
-              <Button 
-                icon={<FileSearchOutlined />} 
-                onClick={handleViewCases}
-                disabled={!schoolType}
-                style={{ marginRight: 'auto' }}
-              >
-                查看案例
-              </Button>
-              {onBack && (
-                <Button 
-                  onClick={onBack}
-                  style={{ marginRight: '8px' }}
-                >
-                  上一步
-                </Button>
-              )}
-              <Button 
-                type="primary" 
-                icon={<ArrowRightOutlined />} 
-                onClick={() => {
-                  // 保存方案并在成功后导航到下一步
-                  if (handleSave()) {
-                    setTimeout(() => {
-                      onNext();
-                    }, 500); // 给用户一些时间看到保存成功的提示
-                  }
-                }}
-                disabled={!schoolType || !budgetRange || !paymentMethod}
-                loading={isLoading}
-              >
-                下一步
-              </Button>
-            </div>
-          </Card>
+        {/* 学校名称输入 */}
+        <div className="config-section">
+          <h4>
+            学校完整名称 <span style={{ color: '#ff4d4f' }}>*</span>
+            <Tooltip title="请输入学校的法定全称，例如：北京市第一中学">
+              <InfoCircleOutlined style={{ marginLeft: '8px', color: '#1890ff', cursor: 'help' }} />
+            </Tooltip>
+          </h4>
+          <Input
+            placeholder="请输入学校完整名称"
+            style={{ width: '100%' }}
+            value={schoolName}
+            onChange={(e) => setSchoolName(e.target.value)}
+            maxLength={50}
+            showCount
+            disabled={isGenerating}
+          />
         </div>
 
-        {/* 右侧预览面板 */}
-        <div className="right-panel">
-          <Card title="预算方案预览" variant="outlined" className="card-shadow">
-            {isLoading ? (
-              <div className="loading-container">
-                <div style={{ textAlign: 'center' }}>
-                  <div className="progress-bar" style={{ width: '200px', margin: '0 auto 16px' }}>
-                    <div className="progress-fill" style={{ width: '70%' }}></div>
-                  </div>
-                  <p>正在计算预算方案...</p>
-                </div>
-              </div>
-            ) : computedBudget ? (
-              <>
-                {/* 总预算信息 */}
-                <div className="preview-card">
-                  <h5>当前配置</h5>
-                  <p><strong>学校类型:</strong> {schoolType ? 
-                    { primary: '小学', junior: '初中', senior: '高中', vocational: '职校', university: '大学' }[schoolType] : '-'}
-                  </p>
-                  <p><strong>空间面积:</strong> {customArea || spaceArea}平方米</p>
-                  <p><strong>预算范围:</strong> {budgetRange ? 
-                    { '10w': '10万左右', '20w': '20万左右', '30w': '30万左右', '50w+': '50万以上' }[budgetRange] : '-'}
-                  </p>
-                  <p><strong>付款方式:</strong> {getPaymentMethodText(paymentMethod)}</p>
-                </div>
+        {/* 设计风格选择 */}
+        <div className="config-section">
+          <h4>
+            选择设计风格 <span style={{ color: '#ff4d4f' }}>*</span>
+            <Tooltip title="鼠标悬浮可查看风格详细信息">
+              <InfoCircleOutlined style={{ marginLeft: '8px', color: '#1890ff', cursor: 'help' }} />
+            </Tooltip>
+          </h4>
 
-                {/* 预算分配表 */}
-              <div className="preview-card">
-                <h5>预算分配表</h5>
-                {isLoading ? (
-                  <p className="loading">正在计算预算分配...</p>
-                ) : (
-                  <Table
-                    size="small"
-                    dataSource={budgetTableData}
-                    columns={budgetTableColumns}
-                    pagination={false}
-                    rowKey="key"
-                  />
-                )}
-              </div>
-
-              {/* 推荐硬件配置 */}
-              <div className="preview-card">
-                <h5>推荐硬件配置</h5>
-                {isLoading ? (
-                  <p className="loading">正在生成推荐配置...</p>
-                ) : (
-                  recommendedHardware.map((item, index) => (
-                    <div key={index} style={{ marginBottom: '8px', paddingBottom: '8px', borderBottom: index < recommendedHardware.length - 1 ? '1px solid #f0f0f0' : 'none' }}>
-                      <div><strong>{item.name}</strong> × {item.quantity}</div>
-                      <div style={{ fontSize: '12px', color: '#666' }}>{item.description}</div>
-                    </div>
-                  ))
-                )}
-              </div>
-
-              {/* 交付信息 */}
-              <div className="preview-card">
-                <h5>交付信息</h5>
-                <p><strong>交付时间:</strong> 确认订单后30-45个工作日</p>
-                <p><strong>服务内容:</strong> 安装调试、培训、1年免费维护</p>
-              </div>
-              </>
-            ) : (
-              <div style={{ textAlign: 'center', padding: '40px 0', color: '#999' }}>
-                <InfoCircleOutlined style={{ fontSize: '32px', marginBottom: '16px' }} />
-                <p>请完成左侧配置以查看预算方案预览</p>
-                <p style={{ fontSize: '12px', marginTop: '8px', color: '#bfbfbf' }}>
-                  完成所有必填项后，系统将自动计算并生成预算方案
-                </p>
-              </div>
-            )}
-          </Card>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '12px',
+            marginTop: '16px'
+          }}>
+            {Object.entries(WALL_DESIGN_STYLES).map(([styleName, styleInfo]) => (
+              <StyleCard
+                key={styleName}
+                styleName={styleName}
+                styleInfo={styleInfo}
+                isSelected={selectedStyle === styleName}
+                onSelect={setSelectedStyle}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+
+        {/* 已选择的风格信息展示 */}
+        {selectedStyle && !isGenerating && (
+          <div className="config-section" style={{
+            background: '#f6ffed',
+            border: '1px solid #b7eb8f',
+            borderRadius: '8px',
+            padding: '16px'
+          }}>
+            <h4 style={{ color: '#52c41a', marginBottom: '12px' }}>
+              ✓ 已选择：{selectedStyle}
+            </h4>
+            <div style={{ color: '#666', fontSize: '13px' }}>
+              <p style={{ marginBottom: '8px' }}><strong>描述：</strong>{WALL_DESIGN_STYLES[selectedStyle].description}</p>
+              <p style={{ marginBottom: '8px' }}><strong>关键元素：</strong>{WALL_DESIGN_STYLES[selectedStyle].elements.join('、')}</p>
+            </div>
+          </div>
+        )}
+
+        {/* 生成中状态 */}
+        {isGenerating && (
+          <>
+            <LoadingIndicator progress={generationProgress} streamingContent={streamingContent} />
+            {/* 生成过程中显示搜索结果 */}
+            {searchResults.length > 0 && <SearchResults results={searchResults} />}
+          </>
+        )}
+
+        {/* 生成结果展示 */}
+        {!isGenerating && parsedProposal && (
+          <ProposalContent data={parsedProposal} />
+        )}
+
+        {/* 操作按钮 */}
+        <div className="button-group" style={{ marginTop: '24px' }}>
+          <Button
+            icon={<SaveOutlined />}
+            onClick={handleSave}
+            disabled={!schoolName || !selectedStyle || isGenerating}
+            style={{ marginRight: '8px' }}
+          >
+            保存方案
+          </Button>
+          <Button
+            icon={<UndoOutlined />}
+            onClick={handleReset}
+            disabled={isGenerating}
+            style={{ marginRight: 'auto' }}
+          >
+            重置
+          </Button>
+          <Button
+            type="primary"
+            icon={<ArrowRightOutlined />}
+            onClick={handleGenerate}
+            disabled={!schoolName || !selectedStyle || isGenerating}
+            loading={isGenerating}
+          >
+            {isGenerating ? '生成中...' : '生成方案'}
+          </Button>
+        </div>
+      </Card>
+
+      <style>{`
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .style-card:hover {
+          transform: translateY(-2px);
+        }
+      `}</style>
     </div>
   );
 };

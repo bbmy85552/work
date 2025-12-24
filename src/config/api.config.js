@@ -5,11 +5,14 @@
 
 // 先定义常量，避免模块初始化顺序问题
 const API_VERSION = 'v1';
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const API_PREFIX = import.meta.env.VITE_API_PREFIX || '/api';
+const API_HOST = import.meta.env.VITE_API_BASE_URL || '';
+const BASE_URL = `${API_HOST}${API_PREFIX}`;
 
 export const API_CONFIG = {
   // 基础 URL
   BASE_URL: BASE_URL,
+  API_PREFIX: API_PREFIX,
 
   // API 版本
   API_VERSION: API_VERSION,
@@ -24,7 +27,9 @@ export const API_CONFIG = {
  * @returns {string} 完整的 API URL
  */
 const buildEndpoint = (path) => {
-  return `${BASE_URL}/api/${API_VERSION}${path}`;
+  const normalizedBase = BASE_URL.replace(/\/+$/, '');
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return `${normalizedBase}/${API_VERSION}${normalizedPath}`;
 };
 
 /**
@@ -34,6 +39,7 @@ export const API_ENDPOINTS = {
   // 科技墙设计相关
   WALL_DESIGN: {
     GENERATE: buildEndpoint('/wall-design/generate'), // 生成科技墙设计方案
+    TASK: (taskId) => buildEndpoint(`/wall-design/task/${taskId}`), // 获取/更新科技墙方案
   },
 };
 

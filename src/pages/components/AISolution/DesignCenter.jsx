@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Spin } from 'antd';
+import { Button, Spin, Input, message, Space } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
+import { updateWallDesignTask } from '../../../services/wallDesign.service';
 
-const DesignCenter = ({ onPrev, onNext, solutionData }) => {
+const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
   const [proposal, setProposal] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { TextArea } = Input;
 
   useEffect(() => {
     setLoading(true);
@@ -65,7 +68,55 @@ const DesignCenter = ({ onPrev, onNext, solutionData }) => {
     );
   }
 
-  const schoolName = proposal.school_name || '未知学校';
+  const schoolName = proposal.school_name || proposal.schoolInfo?.type || '未知学校';
+
+  const handleContentChange = (sectionIndex, itemIndex, value) => {
+    setProposal((prev) => {
+      const next = { ...prev };
+      next.sections = [...(prev.sections || [])];
+      next.sections[sectionIndex] = {
+        ...next.sections[sectionIndex],
+        items: [...(next.sections[sectionIndex]?.items || [])],
+      };
+      next.sections[sectionIndex].items[itemIndex] = {
+        ...next.sections[sectionIndex].items[itemIndex],
+        content: value,
+      };
+      return next;
+    });
+  };
+
+  const handleSave = async () => {
+    if (!solutionData?.taskId) {
+      message.error('缺少任务ID，请重新生成方案后再保存');
+      return;
+    }
+
+    const normalizedProposal = {
+      school_name: proposal.school_name || solutionData.schoolName || schoolName || '',
+      style: solutionData.selectedStyle || proposal.style || '',
+      sections: proposal.sections || []
+    };
+
+    setIsSaving(true);
+    try {
+      await updateWallDesignTask({
+        taskId: solutionData.taskId,
+        jsonResult: normalizedProposal,
+        userParams: {
+          school_name: solutionData.schoolName || schoolName || '',
+          style: solutionData.selectedStyle || solutionData?.designConfig?.style || '',
+        },
+      });
+      updateSolutionData?.({ generatedProposal: normalizedProposal });
+      message.success('方案已保存到数据库');
+    } catch (err) {
+      console.error(err);
+      message.error(err.message || '保存失败，请稍后重试');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <div style={{
@@ -188,9 +239,17 @@ const DesignCenter = ({ onPrev, onNext, solutionData }) => {
                       }}>
                         {item.subtitle}：
                       </div>
-                      <div style={{ fontSize: '1em', lineHeight: '1.8' }}>
-                        {item.content}
-                      </div>
+                      <TextArea
+                        value={item.content}
+                        autoSize={{ minRows: 3, maxRows: 12 }}
+                        onChange={(e) => handleContentChange(sectionIndex, itemIndex, e.target.value)}
+                        style={{
+                          background: 'rgba(255,255,255,0.9)',
+                          borderRadius: '10px',
+                          border: '1px solid #dbeafe',
+                          color: '#1f2d5c',
+                        }}
+                      />
                     </div>
                   );
                 })}
@@ -290,13 +349,26 @@ const DesignCenter = ({ onPrev, onNext, solutionData }) => {
             justifyContent: 'space-between',
             alignItems: 'center'
           }}>
-            <Button
-              size="large"
-              onClick={onPrev}
-              style={{ borderRadius: '8px' }}
-            >
-              返回修改
-            </Button>
+            <Space>
+              <Button
+                size="large"
+                onClick={onPrev}
+                style={{ borderRadius: '8px' }}
+              >
+                返回修改
+              </Button>
+              <Button
+                type="primary"
+                ghost
+                size="large"
+                onClick={handleSave}
+                loading={isSaving}
+                disabled={!proposal}
+                style={{ borderRadius: '8px' }}
+              >
+                保存方案
+              </Button>
+            </Space>
             <Button
               type="primary"
               icon={<ArrowRightOutlined />}

@@ -33,7 +33,8 @@ const AISolutionCenter = () => {
     designConfig: {},
     // 生成的方案
     generatedProposal: null,
-    detailedProposal: null
+    detailedProposal: null,
+    taskId: ''
   });
   
   // 页面加载时，从localStorage恢复数据

@@ -98,6 +98,37 @@ export const generateWallDesign = ({
 };
 
 /**
+ * 更新科技墙设计任务的 json_result
+ * @param {Object} params
+ * @param {string} params.taskId - 任务ID
+ * @param {Object} params.jsonResult - 要保存的方案内容
+ * @param {Object} params.userParams - 可选，更新 user_params
+ */
+export const updateWallDesignTask = async ({ taskId, jsonResult, userParams }) => {
+  if (!taskId) {
+    throw new Error('缺少任务ID，无法保存方案');
+  }
+
+  const response = await fetch(API_ENDPOINTS.WALL_DESIGN.TASK(taskId), {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      json_result: jsonResult,
+      user_params: userParams,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`保存方案失败: ${errorText || response.status}`);
+  }
+
+  return response.json();
+};
+
+/**
  * 解析流式内容为 JSON
  * @param {Array<string>} contentChunks - 内容块数组
  * @returns {Object|null} 解析后的 JSON 对象

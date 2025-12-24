@@ -4,7 +4,8 @@ import {
   schoolTypes,
   mockCases
 } from '../../../mock/aisolutionData';
-import { Card, Button, Select, Space, Progress, Input } from 'antd';
+import { Card, Button, Select, Space, Progress, Input, message } from 'antd';
+import { updateWallDesignTask } from '../../../services/wallDesign.service';
 const { TextArea } = Input;
 
 const ProposalGenerator = ({ onBack, onNext, solutionData, updateSolutionData }) => {
@@ -15,6 +16,7 @@ const ProposalGenerator = ({ onBack, onNext, solutionData, updateSolutionData })
   const [isExporting, setIsExporting] = useState(false);
   const [customTitle, setCustomTitle] = useState('');
   const [customContent, setCustomContent] = useState({});
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     // 如果之前已经生成过方案，直接使用
@@ -324,6 +326,61 @@ const ProposalGenerator = ({ onBack, onNext, solutionData, updateSolutionData })
     return colorMap[color] || '科技蓝';
   };
 
+  // 将自定义内容合并进方案，便于保存
+  const getMergedProposal = () => {
+    if (!proposal) return null;
+
+    const mergedPages = proposal.pages?.map((page, pageIndex) => ({
+      ...page,
+      sections: page.sections?.map((section, sectionIndex) => ({
+        ...section,
+        content: getCustomContent(pageIndex, sectionIndex) || section.content,
+      })) || [],
+    })) || [];
+
+    return {
+      ...proposal,
+      title: customTitle || proposal.title,
+      pages: mergedPages,
+    };
+  };
+
+  // 保存修改后的方案到数据库
+  const handleSaveToDB = async () => {
+    if (!proposal) {
+      message.warning('请先生成方案');
+      return;
+    }
+
+    if (!solutionData?.taskId) {
+      message.error('缺少任务ID，请重新生成方案后再保存');
+      return;
+    }
+
+    const mergedProposal = getMergedProposal();
+    if (!mergedProposal) return;
+
+    setIsSaving(true);
+    try {
+      await updateWallDesignTask({
+        taskId: solutionData.taskId,
+        jsonResult: mergedProposal,
+        userParams: {
+          school_name: solutionData.schoolName || mergedProposal?.schoolInfo?.type || '',
+          style: solutionData.selectedStyle || solutionData?.designConfig?.style || '',
+        },
+      });
+
+      updateSolutionData({ generatedProposal: mergedProposal });
+      message.success('方案已保存到数据库');
+    } catch (error) {
+      console.error('保存方案失败:', error);
+      message.error(error.message || '保存失败，请稍后重试');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   // 渲染方案页面预览
   const renderProposalPreview = () => {
     if (!proposal) return null;
@@ -392,6 +449,7 @@ const ProposalGenerator = ({ onBack, onNext, solutionData, updateSolutionData })
   };
 
   return (
+    <>
     <div className="proposal-generator fade-in">
       {/* 顶部导航 */}
       <div className="step-nav">
@@ -481,19 +539,6 @@ const ProposalGenerator = ({ onBack, onNext, solutionData, updateSolutionData })
             )}
           </div>
 
-          <div className="action-buttons" style={{ marginTop: 16 }}>
-            <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-              <Button onClick={onBack}>
-                上一步
-              </Button>
-              <Button onClick={onNext}
-                type="primary"
-                disabled={!proposal}
-              >
-                下一步
-              </Button>
-            </Space>
-          </div>
           </Card>
         </div>
 
@@ -513,6 +558,30 @@ const ProposalGenerator = ({ onBack, onNext, solutionData, updateSolutionData })
         </div>
       </div>
     </div>
+    <div className="proposal-footer-actions">
+      <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+        <Button onClick={onBack}>
+          返回修改
+        </Button>
+        <Button
+          type="primary"
+          ghost
+          onClick={handleSaveToDB}
+          disabled={!proposal}
+          loading={isSaving}
+        >
+          保存方案
+        </Button>
+        <Button
+          onClick={onNext}
+          type="primary"
+          disabled={!proposal}
+        >
+          下一步
+        </Button>
+      </Space>
+    </div>
+    </>
   );
 };
 

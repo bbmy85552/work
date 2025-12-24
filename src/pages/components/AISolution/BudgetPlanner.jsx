@@ -419,6 +419,7 @@ const BudgetPlanner = ({ solutionData, updateSolutionData, onNext, onBack }) => 
           }
         },
         onComplete: (data) => {
+          const taskId = data?.task_id || '';
           // 使用 ref 中的最新数据解析
           const proposal = parseStreamedContent(contentChunksRef.current);
 
@@ -437,7 +438,8 @@ const BudgetPlanner = ({ solutionData, updateSolutionData, onNext, onBack }) => 
             generatedProposal: proposal,
             searchResults: searchResultsRef.current, // 使用 ref 中的最新值
             usageStats: usageStats,
-            rawContent: streamingContent
+            rawContent: streamingContent,
+            taskId
           };
 
           updateSolutionData(dataToSave);

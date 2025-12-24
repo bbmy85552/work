@@ -1,21 +1,73 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Spin, Input, message, Space } from 'antd';
+import { Button, Spin, message, Space } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { updateWallDesignTask } from '../../../services/wallDesign.service';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
   const [proposal, setProposal] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { TextArea } = Input;
+
+  // 富文本编辑器配置
+  const quillModules = {
+    toolbar: false,  // 隐藏工具栏
+  };
+
+  const quillFormats = [
+    'header', 'bold', 'italic', 'underline', 'strike',
+    'color', 'background', 'list', 'bullet', 'blockquote', 'code-block'
+  ];
+
+  // Markdown 转 HTML 的函数
+  const markdownToHtml = (text) => {
+    if (!text || typeof text !== 'string') return text;
+
+    let html = text;
+
+    // 加粗 **文字** 带彩色括号
+    html = html.replace(/\*\*(.+?)\*\*/g, '<span style="color: #f59e0b; font-weight: 700;">「</span><strong>$1</strong><span style="color: #f59e0b; font-weight: 700;">」</span>');
+
+    // 斜体 *文字*
+    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+    // 行内代码 `代码`
+    html = html.replace(/`(.+?)`/g, '<code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; color: #e11d48;">$1</code>');
+
+    // 引用 > 文字（整行）
+    html = html.replace(/^>\s*(.+)$/gm, '<blockquote>$1</blockquote>');
+
+    // 高亮背景 ==文字==
+    html = html.replace(/==(.+?)==/g, '<mark style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 2px 6px; border-radius: 4px;">$1</mark>');
+
+    return html;
+  };
+
+  // 转换 sections 中的 Markdown 为 HTML
+  const convertMarkdownInProposal = (proposalData) => {
+    if (!proposalData || !proposalData.sections) return proposalData;
+
+    return {
+      ...proposalData,
+      sections: proposalData.sections.map(section => ({
+        ...section,
+        items: section.items?.map(item => ({
+          ...item,
+          content: markdownToHtml(item.content)
+        })) || []
+      }))
+    };
+  };
 
   useEffect(() => {
     setLoading(true);
 
     if (solutionData) {
       if (solutionData.generatedProposal) {
-        setProposal(solutionData.generatedProposal);
+        const convertedProposal = convertMarkdownInProposal(solutionData.generatedProposal);
+        setProposal(convertedProposal);
       }
       if (solutionData.searchResults) {
         setSearchResults(solutionData.searchResults);
@@ -136,6 +188,89 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
           }
+
+          /* 自定义 Quill 编辑器样式 */
+          .ql-container {
+            font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+            font-size: 16px;
+            line-height: 1.8;
+            border: none !important;
+          }
+
+          .ql-toolbar {
+            border: none !important;
+            border-bottom: 1px solid #e8e8e8 !important;
+            background: #fafafa;
+          }
+
+          .ql-editor {
+            min-height: 120px;
+            padding: 16px;
+            color: #1f2d5c;
+          }
+
+          .ql-editor.ql-blank::before {
+            color: #999;
+            font-style: normal;
+          }
+
+          /* 高亮样式 */
+          .ql-editor mark {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            padding: 2px 6px;
+            border-radius: 4px;
+          }
+
+          /* 特殊框样式 - 使用 blockquote */
+          .ql-editor blockquote {
+            border-left: 4px solid #1e3a8a;
+            padding-left: 16px;
+            margin: 12px 0;
+            color: #1e3a8a;
+            background: linear-gradient(90deg, rgba(30, 58, 138, 0.05), transparent);
+            font-weight: 600;
+          }
+
+          /* 加粗渐变文字 */
+          .ql-editor strong {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+          }
+
+          /* 背景色样式 */
+          .ql-editor .ql-bg-blue {
+            background-color: #dbeafe;
+            padding: 2px 6px;
+            border-radius: 4px;
+          }
+
+          .ql-editor .ql-bg-yellow {
+            background-color: #fef3c7;
+            padding: 2px 6px;
+            border-radius: 4px;
+          }
+
+          .ql-editor .ql-bg-green {
+            background-color: #d1fae5;
+            padding: 2px 6px;
+            border-radius: 4px;
+          }
+
+          /* 标题样式 */
+          .ql-editor h2 {
+            font-size: 1.5em;
+            color: #1e3a8a;
+            font-weight: 700;
+          }
+
+          .ql-editor h3 {
+            font-size: 1.3em;
+            color: #2563eb;
+            font-weight: 600;
+          }
         `}
       </style>
 
@@ -239,17 +374,25 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
                       }}>
                         {item.subtitle}：
                       </div>
-                      <TextArea
-                        value={item.content}
-                        autoSize={{ minRows: 3, maxRows: 12 }}
-                        onChange={(e) => handleContentChange(sectionIndex, itemIndex, e.target.value)}
-                        style={{
-                          background: 'rgba(255,255,255,0.9)',
-                          borderRadius: '10px',
-                          border: '1px solid #dbeafe',
-                          color: '#1f2d5c',
-                        }}
-                      />
+                      <div style={{
+                        background: 'rgba(255,255,255,0.9)',
+                        borderRadius: '10px',
+                        border: '1px solid #dbeafe',
+                        overflow: 'hidden',
+                      }}>
+                        <ReactQuill
+                          value={item.content || ''}
+                          onChange={(value) => handleContentChange(sectionIndex, itemIndex, value)}
+                          modules={quillModules}
+                          formats={quillFormats}
+                          theme="snow"
+                          style={{
+                            fontSize: '16px',
+                            lineHeight: '1.8',
+                          }}
+                          placeholder="请输入内容..."
+                        />
+                      </div>
                     </div>
                   );
                 })}

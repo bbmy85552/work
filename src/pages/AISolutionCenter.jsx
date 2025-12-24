@@ -305,18 +305,6 @@ const AISolutionCenter = () => {
           </div>
         ))}
       </div>
-        
-        {/* 重置按钮 */}
-        <div style={{ textAlign: 'right', marginTop: '16px' }}>
-          <button 
-            onClick={handleResetAll} 
-            className="back-button"
-            title="重置所有数据"
-            style={{ padding: '6px 16px', borderRadius: '4px', border: '1px solid #d9d9d9', cursor: 'pointer' }}
-          >
-            重置所有数据
-          </button>
-        </div>
       </div>
       
       {/* 主要内容区域 - 添加过渡动画和加载状态 */}

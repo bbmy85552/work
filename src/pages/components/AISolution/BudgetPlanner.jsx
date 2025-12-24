@@ -608,17 +608,9 @@ const BudgetPlanner = ({ solutionData, updateSolutionData, onNext, onBack }) => 
             icon={<SaveOutlined />}
             onClick={handleSave}
             disabled={!schoolName || !selectedStyle || isGenerating}
-            style={{ marginRight: '8px' }}
-          >
-            保存方案
-          </Button>
-          <Button
-            icon={<UndoOutlined />}
-            onClick={handleReset}
-            disabled={isGenerating}
             style={{ marginRight: 'auto' }}
           >
-            重置
+            保存方案
           </Button>
           <Button
             type="primary"

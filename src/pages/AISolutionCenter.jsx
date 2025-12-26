@@ -6,14 +6,15 @@ import './components/AISolution/AISolutionStyles.css';
 // 导入功能模块
 import BudgetPlanner from './components/AISolution/BudgetPlanner';
 import DesignCenter from './components/AISolution/DesignCenter';
-import ProposalGenerator from './components/AISolution/ProposalGenerator';
+import ImageGenerator from './components/AISolution/ImageGenerator';
+import FinalScheme from './components/AISolution/FinalScheme';
 
 const AISolutionCenter = () => {
   // 使用路由相关功能
   const location = useLocation();
   const navigate = useNavigate();
   
-  // 当前步骤：1-方案配置 2-方案预览 3-效果图生成
+  // 当前步骤：1-方案配置 2-方案预览 3-效果图生成 4-最终方案
   const [currentStep, setCurrentStep] = useState(1);
   // 全局加载状态
   const [isStepLoading, setIsStepLoading] = useState(false);
@@ -34,7 +35,12 @@ const AISolutionCenter = () => {
     // 生成的方案
     generatedProposal: null,
     detailedProposal: null,
-    taskId: ''
+    taskId: '',
+    // 生成的效果图
+    generatedImages: [],
+    wallDimensions: { width: 8, height: 3 },
+    // 选中的效果图
+    selectedImage: null
   });
   
   // 页面加载时，从localStorage恢复数据
@@ -51,7 +57,7 @@ const AISolutionCenter = () => {
     
     // 检查URL参数是否指定了步骤
     const stepParam = new URLSearchParams(location.search).get('step');
-    if (stepParam && !isNaN(stepParam) && stepParam >= 1 && stepParam <= 3) {
+    if (stepParam && !isNaN(stepParam) && stepParam >= 1 && stepParam <= 4) {
       setCurrentStep(parseInt(stepParam));
     }
   }, [location.search]);
@@ -98,20 +104,20 @@ const AISolutionCenter = () => {
 
   // 切换到下一步
   const handleNextStep = useCallback(async () => {
-    if (currentStep < 3) {
+    if (currentStep < 4) {
       // 开始过渡动画
       setIsTransitioning(true);
-      
+
       // 模拟短暂延迟以确保动画可见
       await new Promise(resolve => setTimeout(resolve, 300));
-      
+
       const newStep = currentStep + 1;
       setCurrentStep(newStep);
       // 设置加载状态
       setIsStepLoading(true);
       // 更新URL参数
       navigate(`/ai-solution?step=${newStep}`, { replace: true });
-      
+
       // 模拟加载完成
       setTimeout(() => {
         setIsStepLoading(false);
@@ -244,7 +250,7 @@ const AISolutionCenter = () => {
   
   // 缓存步骤状态数组
   const stepStatuses = useMemo(() => {
-    return [1, 2, 3].map(step => getStepStatus(step));
+    return [1, 2, 3, 4].map(step => getStepStatus(step));
   }, [getStepStatus]);
 
   // 使用useMemo缓存当前步骤组件，避免不必要的重渲染
@@ -259,14 +265,16 @@ const AISolutionCenter = () => {
       setIsStepLoading,
       getCurrentSolutionData
     };
-    
+
     switch (currentStep) {
       case 1:
         return <BudgetPlanner {...commonProps} />;
       case 2:
         return <DesignCenter {...commonProps} />;
       case 3:
-        return <ProposalGenerator {...commonProps} />;
+        return <ImageGenerator {...commonProps} />;
+      case 4:
+        return <FinalScheme {...commonProps} />;
       default:
         return <BudgetPlanner {...commonProps} />;
     }
@@ -291,7 +299,8 @@ const AISolutionCenter = () => {
         {[
           { step: 1, title: '方案配置' },
           { step: 2, title: '方案预览' },
-          { step: 3, title: '效果图生成' }
+          { step: 3, title: '效果图生成' },
+          { step: 4, title: '最终方案' }
         ].map(({ step, title }) => (
           <div
             key={step}

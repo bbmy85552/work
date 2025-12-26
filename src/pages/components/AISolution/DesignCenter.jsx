@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Spin, message, Space } from 'antd';
+import { Button, Spin, message, Space, InputNumber, Card } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import { updateWallDesignTask } from '../../../services/wallDesign.service';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
+  const navigate = useNavigate();
   const [proposal, setProposal] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // 墙的尺寸
+  const [wallWidth, setWallWidth] = useState(8);
+  const [wallHeight, setWallHeight] = useState(3);
+  const [isGeneratingImages, setIsGeneratingImages] = useState(false);
+
+  // 检查是否从缓存恢复的方案 - 需要在useEffect之前声明
+  const [isFromCache, setIsFromCache] = useState(false);
 
   // 富文本编辑器配置
   const quillModules = {
@@ -45,6 +55,16 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
     return html;
   };
 
+  // HTML 转 纯文本的函数 - 用于生成图片提示词
+  const stripHtmlTags = (html) => {
+    if (!html || typeof html !== 'string') return html;
+
+    // 创建临时DOM元素来提取纯文本
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  };
+
   // 转换 sections 中的 Markdown 为 HTML
   const convertMarkdownInProposal = (proposalData) => {
     if (!proposalData || !proposalData.sections) return proposalData;
@@ -61,21 +81,64 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
     };
   };
 
+  // 清除缓存的方案 - 需要在useEffect之前声明，因为JSX会使用它
+  const handleClearCache = () => {
+    if (window.confirm('确定要清除缓存的方案吗？清除后需要重新生成方案。')) {
+      try {
+        localStorage.removeItem('currentAISolution');
+        setProposal(null);
+        setSearchResults([]);
+        updateSolutionData?.({
+          generatedProposal: null,
+          searchResults: []
+        });
+        message.success('缓存已清除');
+      } catch (error) {
+        console.error('清除缓存失败:', error);
+        message.error('清除缓存失败');
+      }
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
 
-    if (solutionData) {
-      if (solutionData.generatedProposal) {
-        const convertedProposal = convertMarkdownInProposal(solutionData.generatedProposal);
-        setProposal(convertedProposal);
-      }
-      if (solutionData.searchResults) {
-        setSearchResults(solutionData.searchResults);
+    // 首先尝试从props获取
+    if (solutionData?.generatedProposal) {
+      const convertedProposal = convertMarkdownInProposal(solutionData.generatedProposal);
+      setProposal(convertedProposal);
+      setIsFromCache(false);
+      console.log('从solutionData加载方案:', convertedProposal);
+    } else {
+      // 如果props没有，尝试从localStorage读取
+      try {
+        const savedData = localStorage.getItem('currentAISolution');
+        if (savedData) {
+          const parsedData = JSON.parse(savedData);
+          if (parsedData.generatedProposal) {
+            const convertedProposal = convertMarkdownInProposal(parsedData.generatedProposal);
+            setProposal(convertedProposal);
+            setIsFromCache(true);
+            console.log('从localStorage恢复方案:', convertedProposal);
+
+            // 同时更新solutionData，保持同步
+            updateSolutionData?.(parsedData);
+          }
+          if (parsedData.searchResults) {
+            setSearchResults(parsedData.searchResults);
+          }
+        }
+      } catch (error) {
+        console.error('从localStorage读取方案失败:', error);
       }
     }
 
+    if (solutionData?.searchResults) {
+      setSearchResults(solutionData.searchResults);
+    }
+
     setLoading(false);
-  }, [solutionData]);
+  }, [solutionData, updateSolutionData]);
 
   if (loading) {
     return (
@@ -85,12 +148,16 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
         alignItems: 'center',
         minHeight: '400px'
       }}>
-        <Spin size="large" tip="加载方案预览..." />
+        <Spin size="large" />
+        <span style={{ marginLeft: '12px', color: '#1e3a8a', fontSize: '16px' }}>加载方案预览...</span>
       </div>
     );
   }
 
   if (!proposal) {
+    // 检查是否有缓存
+    const hasCache = !!localStorage.getItem('currentAISolution');
+
     return (
       <div style={{
         padding: '60px',
@@ -105,17 +172,29 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
         <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '16px', marginBottom: '24px' }}>
           请先在第一步配置方案并生成
         </p>
-        {onPrev && (
-          <Button
-            type="primary"
-            icon={<ArrowRightOutlined />}
-            onClick={onPrev}
-            size="large"
-            style={{ background: 'white', color: '#1e3a8a', border: 'none' }}
-          >
-            返回配置方案
-          </Button>
-        )}
+        <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+          {onPrev && (
+            <Button
+              type="primary"
+              icon={<ArrowRightOutlined />}
+              onClick={onPrev}
+              size="large"
+              style={{ background: 'white', color: '#1e3a8a', border: 'none' }}
+            >
+              返回配置方案
+            </Button>
+          )}
+          {hasCache && (
+            <Button
+              danger
+              size="large"
+              onClick={handleClearCache}
+              style={{ borderRadius: '8px' }}
+            >
+              清除缓存重新生成
+            </Button>
+          )}
+        </div>
       </div>
     );
   }
@@ -167,6 +246,110 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
       message.error(err.message || '保存失败，请稍后重试');
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  // 生成效果图
+  const handleGenerateImages = async () => {
+    if (!proposal || !proposal.sections) {
+      message.error('请先生成方案');
+      return;
+    }
+
+    // 获取 "🏫 校园空间" 和 "💡 传统中式风格空间设计的理念解读" 的内容
+    const campusSpaceSection = proposal.sections.find(s => s.title.includes('校园空间'));
+    const designConceptSection = proposal.sections.find(s => s.title.includes('理念解读'));
+
+    if (!campusSpaceSection || !designConceptSection) {
+      message.error('方案数据不完整，请重新生成方案');
+      return;
+    }
+
+    // 构建prompt - 使用stripHtmlTags提取纯文本，去除HTML标签
+    const campusContent = campusSpaceSection.items?.map(item => `${item.subtitle}：${stripHtmlTags(item.content)}`).join('\n') || '';
+    const designContent = designConceptSection.items?.map(item => `${item.subtitle}：${stripHtmlTags(item.content)}`).join('\n') || '';
+
+    const prompt = `校园空间：${campusContent}\n\n传统中式风格空间设计的理念解读\n${designContent}\n\n根据以上的信息，对学校的一面墙进行设计，宽度${wallWidth}米，高度${wallHeight}米，要求现实风格的正面图，注意是墙的正面，不要做成走廊。生成2张效果图`;
+
+    console.log('开始生成效果图，prompt长度:', prompt.length);
+    console.log('最终prompt（纯文本）:', prompt);
+    setIsGeneratingImages(true);
+
+    // 清除旧的图片缓存，并立即同步设置isGeneratingImages状态
+    try {
+      const savedData = JSON.parse(localStorage.getItem('currentAISolution') || '{}');
+      const cleanedData = {
+        ...savedData,
+        generatedImages: [],
+        selectedImage: null,
+        selectedImageIndex: null,
+        isGeneratingImages: true, // 立即设置生成状态
+        wallDimensions: { width: wallWidth, height: wallHeight }
+      };
+      localStorage.setItem('currentAISolution', JSON.stringify(cleanedData));
+      console.log('已清除旧的图片缓存并设置生成状态');
+    } catch (error) {
+      console.error('清除缓存失败:', error);
+    }
+
+    // 更新state
+    updateSolutionData?.({
+      generatedImages: [],
+      wallDimensions: { width: wallWidth, height: wallHeight },
+      isGeneratingImages: true,
+      selectedImage: null,
+      selectedImageIndex: null
+    });
+    console.log('已初始化数据，准备跳转');
+
+    // 立即跳转到步骤3（效果图生成页面）
+    navigate('/ai-solution?step=3', { replace: true });
+    console.log('已触发跳转到step=3');
+
+    // 初始化图片数组
+    const images = [];
+
+    try {
+      const { generateEffectImages } = await import('../../../services/imageGeneration.service');
+
+      generateEffectImages({
+        prompt,
+        max_images: 2,
+        size: '2K',
+        onMessage: (data) => {
+          console.log('收到消息:', data.type, data);
+          if (data.type === 'image_generated') {
+            images.push({
+              url: data.data.url,
+              size: data.data.size
+            });
+            console.log('添加图片:', images.length, images);
+            // 实时更新图片列表
+            updateSolutionData?.({
+              generatedImages: [...images],
+              wallDimensions: { width: wallWidth, height: wallHeight }
+            });
+            message.success(`第${data.data.image_index + 1}张效果图生成成功！`);
+          }
+        },
+        onComplete: (result) => {
+          console.log('生成完成:', result);
+          setIsGeneratingImages(false);
+          updateSolutionData?.({ isGeneratingImages: false });
+          message.success('所有效果图生成完成！');
+        },
+        onError: (error) => {
+          console.error('生成效果图失败:', error);
+          setIsGeneratingImages(false);
+          updateSolutionData?.({ isGeneratingImages: false });
+          message.error(error.message || '生成效果图失败，请稍后重试');
+        },
+      });
+    } catch (error) {
+      console.error('生成效果图失败:', error);
+      setIsGeneratingImages(false);
+      updateSolutionData?.({ isGeneratingImages: false });
+      message.error(error.message || '生成效果图失败，请稍后重试');
     }
   };
 
@@ -278,6 +461,53 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
         maxWidth: '1100px',
         margin: '0 auto'
       }}>
+        {/* 缓存提示条 */}
+        {isFromCache && (
+          <div style={{
+            background: 'linear-gradient(135deg, #fef3c7, #fde68a)',
+            border: '2px solid #f59e0b',
+            borderRadius: '15px',
+            padding: '16px 24px',
+            margin: '20px 0',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            boxShadow: '0 4px 12px rgba(245, 158, 11, 0.2)'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px'
+            }}>
+              <span style={{ fontSize: '20px' }}>💾</span>
+              <div>
+                <div style={{
+                  fontSize: '16px',
+                  fontWeight: 600,
+                  color: '#92400e',
+                  marginBottom: '4px'
+                }}>
+                  已加载缓存的方案
+                </div>
+                <div style={{
+                  fontSize: '14px',
+                  color: '#b45309'
+                }}>
+                  这是上次生成的方案，您可以继续使用或清除缓存重新生成
+                </div>
+              </div>
+            </div>
+            <Button
+              danger
+              size="large"
+              onClick={handleClearCache}
+              style={{ borderRadius: '8px' }}
+            >
+              清除缓存
+            </Button>
+          </div>
+        )}
+
         <div style={{
           background: 'rgba(255, 255, 255, 0.98)',
           backdropFilter: 'blur(15px)',
@@ -483,49 +713,119 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
             </p>
           </div>
 
-          {/* 操作按钮 */}
-          <div style={{
-            marginTop: '32px',
-            paddingTop: '24px',
-            borderTop: '1px solid #f0f0f0',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}>
-            <Space>
-              <Button
-                size="large"
-                onClick={onPrev}
-                style={{ borderRadius: '8px' }}
-              >
-                返回修改
-              </Button>
+          {/* 操作按钮和墙尺寸输入框合并区域 */}
+          <Card
+            style={{
+              marginTop: '32px',
+              background: 'linear-gradient(135deg, #f8fafc, #e2e8f0)',
+              border: '2px solid rgba(59, 130, 246, 0.2)',
+              borderRadius: '15px'
+            }}
+          >
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '20px'
+            }}>
+              {/* 左侧：返回和保存按钮 */}
+              <Space>
+                <Button
+                  size="large"
+                  onClick={onPrev}
+                  style={{ borderRadius: '8px' }}
+                  disabled={isGeneratingImages}
+                >
+                  返回修改
+                </Button>
+                <Button
+                  type="primary"
+                  ghost
+                  size="large"
+                  onClick={handleSave}
+                  loading={isSaving}
+                  disabled={!proposal || isGeneratingImages}
+                  style={{ borderRadius: '8px' }}
+                >
+                  保存方案
+                </Button>
+              </Space>
+
+              {/* 中间：墙尺寸输入框 */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '20px',
+                flex: 1,
+                justifyContent: 'center'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}>
+                  <span style={{
+                    fontSize: '16px',
+                    fontWeight: 600,
+                    color: '#1e3a8a'
+                  }}>
+                    墙宽度：
+                  </span>
+                  <InputNumber
+                    value={wallWidth}
+                    onChange={(value) => setWallWidth(value || 8)}
+                    min={1}
+                    max={50}
+                    step={0.1}
+                    style={{ width: '80px' }}
+                    disabled={isGeneratingImages}
+                  />
+                  <span style={{ fontSize: '14px', color: '#64748b' }}>米</span>
+                </div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}>
+                  <span style={{
+                    fontSize: '16px',
+                    fontWeight: 600,
+                    color: '#1e3a8a'
+                  }}>
+                    墙高度：
+                  </span>
+                  <InputNumber
+                    value={wallHeight}
+                    onChange={(value) => setWallHeight(value || 3)}
+                    min={1}
+                    max={20}
+                    step={0.1}
+                    style={{ width: '80px' }}
+                    disabled={isGeneratingImages}
+                  />
+                  <span style={{ fontSize: '14px', color: '#64748b' }}>米</span>
+                </div>
+              </div>
+
+              {/* 右侧：生成效果图按钮 */}
               <Button
                 type="primary"
-                ghost
                 size="large"
-                onClick={handleSave}
-                loading={isSaving}
+                onClick={handleGenerateImages}
+                loading={isGeneratingImages}
                 disabled={!proposal}
-                style={{ borderRadius: '8px' }}
+                style={{
+                  background: 'linear-gradient(135deg, #1e3a8a, #3b82f6)',
+                  border: 'none',
+                  borderRadius: '8px',
+                  minWidth: '160px'
+                }}
               >
-                保存方案
+                {isGeneratingImages ? '生成中...' : '生成效果图'}
               </Button>
-            </Space>
-            <Button
-              type="primary"
-              icon={<ArrowRightOutlined />}
-              onClick={onNext}
-              size="large"
-              style={{
-                background: 'linear-gradient(135deg, #1e3a8a, #3b82f6)',
-                border: 'none',
-                borderRadius: '8px'
-              }}
-            >
-              下一步：生成效果图
-            </Button>
-          </div>
+            </div>
+          </Card>
         </div>
       </div>
     </div>

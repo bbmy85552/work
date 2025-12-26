@@ -41,6 +41,10 @@ export const API_ENDPOINTS = {
     GENERATE: buildEndpoint('/wall-design/generate'), // 生成科技墙设计方案
     TASK: (taskId) => buildEndpoint(`/wall-design/task/${taskId}`), // 获取/更新科技墙方案
   },
+  // 图片生成相关
+  IMAGE_GENERATION: {
+    GENERATE: buildEndpoint('/image-generation/generate'), // 生成效果图
+  },
 };
 
 export default API_CONFIG;

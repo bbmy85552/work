@@ -8,8 +8,9 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
   const [images, setImages] = useState([]);
   const [imageLoadingStates, setImageLoadingStates] = useState({}); // 跟踪每张图片的加载状态
   const [wallDimensions, setWallDimensions] = useState(() => solutionData?.wallDimensions || { width: 8, height: 3 });
+  const [imageCount, setImageCount] = useState(() => solutionData?.imageCount || 4); // 生成图片数量
   const [isGenerating, setIsGenerating] = useState(() => solutionData?.isGeneratingImages === true);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(null); // 选中的效果图索引
+  const [selectedImageIndices, setSelectedImageIndices] = useState([]); // 选中的效果图索引数组（支持多选）
 
   // 监听 solutionData 的变化，实时更新图片
   useEffect(() => {
@@ -17,8 +18,14 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
       generatedImages: solutionData?.generatedImages,
       wallDimensions: solutionData?.wallDimensions,
       isGeneratingImages: solutionData?.isGeneratingImages,
-      selectedImage: solutionData?.selectedImage
+      selectedImage: solutionData?.selectedImage,
+      imageCount: solutionData?.imageCount
     });
+
+    // 读取图片数量
+    if (solutionData?.imageCount !== undefined) {
+      setImageCount(solutionData.imageCount);
+    }
 
     // 总是使用最新的 solutionData，不使用缓存
     if (solutionData?.generatedImages !== undefined) {
@@ -68,10 +75,23 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
     onPrev?.();
   };
 
-  // 选择效果图
+  // 选择效果图 - 支持多选，最多4张
   const handleSelectImage = (index) => {
-    setSelectedImageIndex(index);
-    message.success(`已选择第${index + 1}张效果图`);
+    const isSelected = selectedImageIndices.includes(index);
+
+    if (isSelected) {
+      // 已选中，取消选择
+      setSelectedImageIndices(prev => prev.filter(i => i !== index));
+      message.success(`已取消选择第${index + 1}张效果图`);
+    } else {
+      // 未选中，检查是否已选满4张
+      if (selectedImageIndices.length >= 4) {
+        message.warning('最多只能选择4张效果图');
+        return;
+      }
+      setSelectedImageIndices(prev => [...prev, index]);
+      message.success(`已选择第${index + 1}张效果图`);
+    }
   };
 
   // 图片加载完成处理
@@ -95,17 +115,21 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
 
   // 生成最终方案
   const handleGenerateFinalScheme = () => {
-    if (selectedImageIndex === null) {
-      message.warning('请先选择一张效果图');
+    if (selectedImageIndices.length === 0) {
+      message.warning('请先选择至少一张效果图');
       return;
     }
 
+    // 获取选中的多张图片
+    const selectedImages = selectedImageIndices.map(index => images[index]);
+
     // 保存选中的效果图到solutionData
     updateSolutionData?.({
-      selectedImage: images[selectedImageIndex],
-      selectedImageIndex: selectedImageIndex,
+      selectedImages: selectedImages,
+      selectedImageIndices: selectedImageIndices,
       generatedImages: images,
-      wallDimensions: wallDimensions
+      wallDimensions: wallDimensions,
+      imageCount: imageCount
     });
 
     // 立即同步到localStorage，确保FinalScheme能读取到
@@ -113,10 +137,11 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
       const savedData = JSON.parse(localStorage.getItem('currentAISolution') || '{}');
       const updatedData = {
         ...savedData,
-        selectedImage: images[selectedImageIndex],
-        selectedImageIndex: selectedImageIndex,
+        selectedImages: selectedImages,
+        selectedImageIndices: selectedImageIndices,
         generatedImages: images,
-        wallDimensions: wallDimensions
+        wallDimensions: wallDimensions,
+        imageCount: imageCount
       };
       localStorage.setItem('currentAISolution', JSON.stringify(updatedData));
       console.log('已保存选中的效果图到localStorage');
@@ -128,9 +153,9 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
     onNext?.();
   };
 
-  console.log('ImageGenerator渲染状态:', { isGenerating, imagesLength: images.length });
+  console.log('ImageGenerator渲染状态:', { isGenerating, imagesLength: images.length, imageCount });
 
-  // 正在生成中且还没有图片，显示加载动画和2个占位符
+  // 正在生成中且还没有图片，显示加载动画和动态数量的占位符
   if (isGenerating && images.length === 0) {
     return (
       <div style={{
@@ -223,7 +248,7 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
                   color: '#1e3a8a',
                   fontWeight: 600
                 }}>
-                  正在生成效果图... (0/2)
+                  正在生成效果图... (0/{imageCount})
                 </h3>
                 <p style={{
                   margin: '4px 0 0 0',
@@ -235,14 +260,14 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
               </div>
             </div>
 
-            {/* 图片占位符 - 显示2个加载卡片 */}
+            {/* 图片占位符 - 显示动态数量的加载卡片 */}
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))',
               gap: '30px',
               marginBottom: '40px'
             }}>
-              {[1, 2].map((placeholderIndex) => (
+              {Array.from({ length: imageCount }, (_, i) => i + 1).map((placeholderIndex) => (
                 <Card
                   key={placeholderIndex}
                   style={{
@@ -451,7 +476,7 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
                   color: '#1e3a8a',
                   fontWeight: 600
                 }}>
-                  正在生成效果图... ({images.length}/2)
+                  正在生成效果图... ({images.length}/{imageCount})
                 </h3>
                 <p style={{
                   margin: '4px 0 0 0',
@@ -473,6 +498,8 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
           }}>
             {images.map((image, index) => {
               const isLoading = imageLoadingStates[index] !== false; // 默认true，加载完成后false
+              const isSelected = selectedImageIndices.includes(index);
+              const selectedIndex = selectedImageIndices.indexOf(index);
 
               return (
                 <Card
@@ -481,10 +508,10 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
                   style={{
                     borderRadius: '20px',
                     overflow: 'hidden',
-                    border: selectedImageIndex === index
+                    border: isSelected
                       ? '3px solid #10b981'
                       : '2px solid rgba(59, 130, 246, 0.2)',
-                    boxShadow: selectedImageIndex === index
+                    boxShadow: isSelected
                       ? '0 12px 24px rgba(16, 185, 129, 0.3)'
                       : '0 8px 16px rgba(30, 58, 138, 0.1)',
                     position: 'relative',
@@ -497,7 +524,7 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
                       overflow: 'hidden',
                       background: '#f8fafc'
                     }}>
-                      {selectedImageIndex === index && !isLoading && (
+                      {isSelected && !isLoading && (
                         <div style={{
                           position: 'absolute',
                           top: '12px',
@@ -511,7 +538,7 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
                           fontWeight: 600,
                           boxShadow: '0 4px 8px rgba(16, 185, 129, 0.3)'
                         }}>
-                          ✓ 已选择
+                          ✓ 已选择 {selectedIndex + 1}
                         </div>
                       )}
 
@@ -576,21 +603,21 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
                   actions={[
                     <Button
                       key="select"
-                      type={selectedImageIndex === index ? 'primary' : 'default'}
+                      type={isSelected ? 'primary' : 'default'}
                       onClick={() => handleSelectImage(index)}
                       disabled={isLoading}
                       style={{
-                        background: selectedImageIndex === index
+                        background: isSelected
                           ? 'linear-gradient(135deg, #10b981, #059669)'
                           : undefined,
-                        border: selectedImageIndex === index
+                        border: isSelected
                           ? 'none'
                           : undefined,
                         borderRadius: '8px',
                         flex: 1
                       }}
                     >
-                      {selectedImageIndex === index ? '已选择' : '选择此图'}
+                      {isSelected ? `已选择 (${selectedIndex + 1}/${selectedImageIndices.length})` : '选择此图'}
                     </Button>,
                     <Button
                       key="download"
@@ -634,45 +661,79 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
               );
             })}
 
-            {/* 正在生成的图片占位符 */}
-            {isGenerating && images.length < 2 && (
-              <Card
-                style={{
-                  borderRadius: '20px',
-                  overflow: 'hidden',
-                  border: '2px dashed rgba(59, 130, 246, 0.5)',
-                  background: 'linear-gradient(135deg, #eff6ff, #dbeafe)',
-                  boxShadow: '0 8px 16px rgba(59, 130, 246, 0.15)'
-                }}
-              >
-                <div style={{
-                  position: 'relative',
-                  paddingTop: '75%',
-                  overflow: 'hidden',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
+            {/* 正在生成的图片占位符 - 显示剩余未生成数量的占位符 */}
+            {isGenerating && images.length < imageCount &&
+              Array.from({ length: imageCount - images.length }).map((_, i) => (
+                <Card
+                  key={`placeholder-${images.length + i}`}
+                  style={{
+                    borderRadius: '20px',
+                    overflow: 'hidden',
+                    border: '2px dashed rgba(59, 130, 246, 0.5)',
+                    background: 'linear-gradient(135deg, #eff6ff, #dbeafe)',
+                    boxShadow: '0 8px 16px rgba(59, 130, 246, 0.15)'
+                  }}
+                >
                   <div style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    textAlign: 'center'
+                    position: 'relative',
+                    paddingTop: '75%',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
                   }}>
-                    <Spin size="large" />
-                    <p style={{
-                      marginTop: '16px',
-                      fontSize: '16px',
-                      color: '#1e3a8a',
-                      fontWeight: 600
+                    <div style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      textAlign: 'center'
                     }}>
-                      正在生成第{images.length + 1}张效果图...
+                      <Spin size="large" />
+                      <p style={{
+                        marginTop: '16px',
+                        fontSize: '16px',
+                        color: '#1e3a8a',
+                        fontWeight: 600
+                      }}>
+                        {i === 0
+                          ? `正在生成第${images.length + 1}张效果图...`
+                          : `等待生成第${images.length + i + 1}张效果图...`
+                        }
+                      </p>
+                      <div style={{
+                        marginTop: '8px',
+                        fontSize: '14px',
+                        color: '#3b82f6'
+                      }}>
+                        {i === 0 ? 'AI正在设计中' : '请稍候'}
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{
+                    padding: '16px',
+                    background: 'linear-gradient(135deg, #f8fafc, #e2e8f0)',
+                    borderRadius: '12px'
+                  }}>
+                    <h3 style={{
+                      fontSize: '1.3em',
+                      color: '#1e3a8a',
+                      fontWeight: 700,
+                      marginBottom: '8px'
+                    }}>
+                      效果图 {images.length + i + 1}
+                    </h3>
+                    <p style={{
+                      fontSize: '0.95em',
+                      color: '#64748b',
+                      margin: 0
+                    }}>
+                      图片尺寸：生成中...
                     </p>
                   </div>
-                </div>
-              </Card>
-            )}
+                </Card>
+              ))
+            }
           </div>
 
           {/* 操作按钮 */}
@@ -725,14 +786,14 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
               fontWeight: 600,
               margin: '8px 0'
             }}>
-              💡 提示：请选择一张效果图用于最终方案
+              💡 提示：请选择1-4张效果图用于最终方案
             </p>
             <p style={{
               fontSize: '1em',
               color: '#64748b',
               margin: '8px 0'
             }}>
-              您可以下载所有效果图，但只能选择一张用于最终方案
+              已选择 {selectedImageIndices.length} 张图片，最多可选择 4 张
             </p>
           </div>
         </Card>

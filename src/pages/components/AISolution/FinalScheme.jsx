@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Spin } from 'antd';
-import { ArrowLeftOutlined, DownloadOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import './AISolutionStyles.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -8,7 +8,7 @@ import 'react-quill/dist/quill.snow.css';
 const FinalScheme = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
   const [loading, setLoading] = useState(true);
   const [proposal, setProposal] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImages, setSelectedImages] = useState([]); // 支持多张图片
   const [wallDimensions, setWallDimensions] = useState({ width: 8, height: 3 });
 
   // 富文本编辑器配置
@@ -64,17 +64,26 @@ const FinalScheme = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
   useEffect(() => {
     setLoading(true);
 
+    console.log('=== FinalScheme 数据检查 ===');
     console.log('FinalScheme - solutionData:', solutionData);
-    console.log('FinalScheme - selectedImage:', solutionData?.selectedImage);
+    console.log('FinalScheme - selectedImages:', solutionData?.selectedImages);
+    console.log('FinalScheme - selectedImage (旧数据):', solutionData?.selectedImage);
 
     // 获取方案数据并转换 Markdown
     if (solutionData?.generatedProposal) {
       const convertedProposal = convertMarkdownInProposal(solutionData.generatedProposal);
       setProposal(convertedProposal);
     }
-    if (solutionData?.selectedImage) {
-      setSelectedImage(solutionData.selectedImage);
-      console.log('设置了selectedImage:', solutionData.selectedImage);
+    if (solutionData?.selectedImages && Array.isArray(solutionData.selectedImages)) {
+      setSelectedImages(solutionData.selectedImages);
+      console.log('✅ 设置了selectedImages数组，长度:', solutionData.selectedImages.length);
+    } else if (solutionData?.selectedImage) {
+      // 兼容旧数据，单张图片转为数组
+      setSelectedImages([solutionData.selectedImage]);
+      console.log('✅ 设置了selectedImage (转换为数组):', solutionData.selectedImage);
+    } else {
+      console.warn('⚠️ 未找到选中的图片数据');
+      setSelectedImages([]);
     }
     if (solutionData?.wallDimensions) {
       setWallDimensions(solutionData.wallDimensions);
@@ -82,23 +91,6 @@ const FinalScheme = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
 
     setLoading(false);
   }, [solutionData]);
-
-  // 下载最终效果图 - 直接使用图片URL下载，避免CORS跨域问题
-  const handleDownloadImage = () => {
-    if (!selectedImage) return;
-
-    try {
-      const a = document.createElement('a');
-      a.href = selectedImage.url;
-      a.download = `最终方案效果图.jpg`;
-      a.target = '_blank'; // 在新标签页打开，避免跨域下载问题
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } catch (error) {
-      console.error('下载图片失败:', error);
-    }
-  };
 
   if (loading) {
     return (
@@ -374,8 +366,8 @@ const FinalScheme = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
             </div>
           ))}
 
-          {/* 最终效果图 */}
-          {selectedImage && (
+          {/* 最终效果图 - 支持多张图片 */}
+          {selectedImages && selectedImages.length > 0 && (
             <div style={{
               margin: '40px 0',
               padding: '40px',
@@ -401,25 +393,70 @@ const FinalScheme = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
                 color: '#059669',
                 textAlign: 'center'
               }}>
-                🎨 最终效果图
+                🎨 最终效果图 ({selectedImages.length}张)
               </h2>
 
+              {/* 图片网格 - 根据数量自适应布局 */}
               <div style={{
-                maxWidth: '800px',
-                margin: '0 auto',
-                borderRadius: '15px',
-                overflow: 'hidden',
-                boxShadow: '0 8px 16px rgba(16, 185, 129, 0.2)'
+                display: 'grid',
+                gridTemplateColumns: selectedImages.length === 1
+                  ? '1fr'
+                  : selectedImages.length === 2
+                  ? 'repeat(2, 1fr)'
+                  : 'repeat(auto-fit, minmax(400px, 1fr))',
+                gap: '24px',
+                maxWidth: '1400px',
+                margin: '0 auto'
               }}>
-                <img
-                  src={selectedImage.url}
-                  alt="最终效果图"
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    display: 'block'
-                  }}
-                />
+                {selectedImages.map((image, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      borderRadius: '15px',
+                      overflow: 'hidden',
+                      boxShadow: '0 8px 16px rgba(16, 185, 129, 0.2)',
+                      background: 'white',
+                      transition: 'all 0.3s ease',
+                      position: 'relative'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-8px)';
+                      e.currentTarget.style.boxShadow = '0 12px 24px rgba(16, 185, 129, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 8px 16px rgba(16, 185, 129, 0.2)';
+                    }}
+                  >
+                    {/* 图片编号标签 */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '12px',
+                      left: '12px',
+                      background: 'linear-gradient(135deg, #10b981, #059669)',
+                      color: 'white',
+                      padding: '6px 12px',
+                      borderRadius: '20px',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      zIndex: 10,
+                      boxShadow: '0 4px 8px rgba(16, 185, 129, 0.3)'
+                    }}>
+                      效果图 {index + 1}
+                    </div>
+
+                    <img
+                      src={image.url}
+                      alt={`最终效果图 ${index + 1}`}
+                      style={{
+                        width: '100%',
+                        height: 'auto',
+                        display: 'block',
+                        transition: 'transform 0.3s ease'
+                      }}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           )}

@@ -16,6 +16,7 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
   // 墙的尺寸
   const [wallWidth, setWallWidth] = useState(8);
   const [wallHeight, setWallHeight] = useState(3);
+  const [imageCount, setImageCount] = useState(4); // 生成图片数量
   const [isGeneratingImages, setIsGeneratingImages] = useState(false);
 
   // 检查是否从缓存恢复的方案 - 需要在useEffect之前声明
@@ -269,7 +270,14 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
     const campusContent = campusSpaceSection.items?.map(item => `${item.subtitle}：${stripHtmlTags(item.content)}`).join('\n') || '';
     const designContent = designConceptSection.items?.map(item => `${item.subtitle}：${stripHtmlTags(item.content)}`).join('\n') || '';
 
-    const prompt = `校园空间：${campusContent}\n\n传统中式风格空间设计的理念解读\n${designContent}\n\n根据以上的信息，对学校的一面墙进行设计，宽度${wallWidth}米，高度${wallHeight}米，要求现实风格的正面图，注意是墙的正面，不要做成走廊。生成2张效果图`;
+    const prompt = `校园空间：${campusContent}\n\n传统中式风格空间设计的理念解读\n${designContent}\n\n根据以上的信息，对学校的一面墙进行设计，墙面宽度${wallWidth}米，高度${wallHeight}米。要求：
+1. 横向16:9的超宽幅画面，展现墙面的全景视角
+2. 现实风格的真实照片级渲染，正面视角展示科技墙
+3. 画面中包含学生与科技墙互动的场景：有2-3名学生在墙面操作触摸屏、观看数字内容或使用互动设备
+4. 学生动作自然，展现专注学习的状态
+5. 光线柔和明亮，体现智慧教育空间的现代感
+6. 不要做成走廊视角，专注于墙面本身的设计和互动体验
+生成${imageCount}张不同角度和互动场景的效果图`;
 
     console.log('开始生成效果图，prompt长度:', prompt.length);
     console.log('最终prompt（纯文本）:', prompt);
@@ -298,7 +306,8 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
       wallDimensions: { width: wallWidth, height: wallHeight },
       isGeneratingImages: true,
       selectedImage: null,
-      selectedImageIndex: null
+      selectedImageIndex: null,
+      imageCount: imageCount // 保存图片数量
     });
     console.log('已初始化数据，准备跳转');
 
@@ -314,7 +323,7 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
 
       generateEffectImages({
         prompt,
-        max_images: 2,
+        max_images: imageCount,
         size: '2K',
         onMessage: (data) => {
           console.log('收到消息:', data.type, data);
@@ -752,13 +761,14 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
                 </Button>
               </Space>
 
-              {/* 中间：墙尺寸输入框 */}
+              {/* 中间：墙尺寸输入框和图片数量选择器 */}
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '20px',
                 flex: 1,
-                justifyContent: 'center'
+                justifyContent: 'center',
+                flexWrap: 'wrap'
               }}>
                 <div style={{
                   display: 'flex',
@@ -805,6 +815,29 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
                     disabled={isGeneratingImages}
                   />
                   <span style={{ fontSize: '14px', color: '#64748b' }}>米</span>
+                </div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}>
+                  <span style={{
+                    fontSize: '16px',
+                    fontWeight: 600,
+                    color: '#1e3a8a'
+                  }}>
+                    图片数量：
+                  </span>
+                  <InputNumber
+                    value={imageCount}
+                    onChange={(value) => setImageCount(value || 2)}
+                    min={1}
+                    max={6}
+                    step={1}
+                    style={{ width: '80px' }}
+                    disabled={isGeneratingImages}
+                  />
+                  <span style={{ fontSize: '14px', color: '#64748b' }}>张</span>
                 </div>
               </div>
 

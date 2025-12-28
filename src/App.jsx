@@ -85,19 +85,9 @@ function AdminLayout() {
       label: '共建生态链'
     },
     {
-      key: '/financial',
-      icon: <DollarOutlined />,
-      label: '财务管理'
-    },
-    {
       key: '/ai-solution',
       icon: <SolutionOutlined />,
       label: 'AI方案中心'
-    },
-    {
-      key: '/ai-research',
-      icon: <ExperimentOutlined />,
-      label: 'AI研发中心'
     },
     {
       key: 'product-library',
@@ -113,6 +103,11 @@ function AdminLayout() {
           label: 'AI产品库'
         }
       ]
+    },
+    {
+      key: '/ai-research',
+      icon: <ExperimentOutlined />,
+      label: 'AI研发中心'
     },
     {
       key: '/case-library',
@@ -145,6 +140,11 @@ function AdminLayout() {
           label: '摄影师管理'
         }
       ]
+    },
+    {
+      key: '/financial',
+      icon: <DollarOutlined />,
+      label: '财务管理'
     }
   ]
 

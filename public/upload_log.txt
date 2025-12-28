@@ -1,0 +1,42 @@
+============================================================
+图像上传日志 - 2025-12-17 01:25:12
+============================================================
+源目录: /Users/2dqy003/Projects/work/campus_buildings
+存储桶: student-1320907290
+总文件数: 32
+------------------------------------------------------------
+001.png -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/001.png (ETag: "66ad41d8cc87e055a172b670c254576c-3")
+002.png -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/002.png (ETag: "de498f4910d044b749d5721e132ee75e-4")
+003.png -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/003.png (ETag: "b88c565ba9baa66f061a0e2c76f25c8b-2")
+004.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/004.jpg (ETag: "a24f137448de1d01b8ad05261f529d09-2")
+005.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/005.jpg (ETag: "44d948fb674a30f37db6a76ec055110c")
+006.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/006.jpg (ETag: "f6a0a64a7fed69e32ed2768c86a29d7d")
+007.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/007.jpg (ETag: "5219400d79a932109dfc6d4096f5b359")
+008.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/008.jpg (ETag: "6517b67c90bc416da7553e54e7e5b29f")
+009.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/009.jpg (ETag: "c0e1661ca132c69d05deb218792a3560")
+010.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/010.jpg (ETag: "b40025d858417cb93e259bbef0f2f01b")
+011.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/011.jpg (ETag: "4f98e43bf09e72f467132d8beb17fa2a")
+012.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/012.jpg (ETag: "f6c74eeafd2fc0be6ac71a7e8338c81a-2")
+013.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/013.jpg (ETag: "234b5d7af8d3aef7f0172cd13cef0ef6")
+014.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/014.jpg (ETag: "f10bbca927f6a1867df0e7dfbbb7f597")
+015.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/015.jpg (ETag: "7a761f3cf41390db5cdd44d2da4adac0")
+016.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/016.jpg (ETag: "52b991ce28921f3f9aff5215ab880842")
+017.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/017.jpg (ETag: "290987b548f99e1f1fd4b4515ea5c6b0")
+018.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/018.jpg (ETag: "d2bb5b85bb78141aa81e5fa8990661d8")
+019.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/019.jpg (ETag: "947774d690d001ce917e9c6bff09563b")
+020.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/020.jpg (ETag: "5726d2032166256f98e869561a770da9")
+021.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/021.jpg (ETag: "163dc217b05fd8655344db2a07ae8355")
+022.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/022.jpg (ETag: "550484ef80e60dff7f8e51631a342193")
+023.png -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/023.png (ETag: "20a2f21ec44908282b91cc37aaa078e6")
+024.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/024.jpg (ETag: "08b73c99e84af79e499e480ca5feb7e3")
+025.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/025.jpg (ETag: "fc584cde9120b0a05be594b544dfc82a-2")
+026.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/026.jpg (ETag: "a893b47d72497a02417ba5eb8db2e681")
+027.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/027.jpg (ETag: "86dc6d4fe65b119e28870c0cdca99b4b")
+028.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/028.jpg (ETag: "f6bc00cbe4907a90f37061c060a6f98b")
+029.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/029.jpg (ETag: "a77596cca3b8ec027aa739f2598382df")
+030.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/030.jpg (ETag: "e2f2af2f061334497b1cda613aeb7d5e")
+031.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/031.jpg (ETag: "e6b4e999ee86f73d947eff5fe8ffbc3d")
+032.jpg -> https://student-1320907290.cos.ap-guangzhou.myqcloud.com/032.jpg (ETag: "a45cce2b1bbafd42f781b91039d5ca01")
+============================================================
+上传完成 - 成功: 32, 失败: 0
+============================================================

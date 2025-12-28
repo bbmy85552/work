@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学智AI - 工程师团队</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/v4-shims.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#36CFC9',
+                        accent: '#722ED1',
+                        dark: '#1D2129',
+                        light: '#F2F3F5'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .gradient-bg {
+                background: linear-gradient(135deg, #165DFF 0%, #36CFC9 100%);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+            .text-gradient {
+                background: linear-gradient(135deg, #165DFF 0%, #36CFC9 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            .cube-icon {
+                position: relative;
+                width: 40px;
+                height: 40px;
+                transform-style: preserve-3d;
+                transform: rotateX(30deg) rotateY(45deg);
+                animation: rotateCube 8s infinite linear;
+            }
+            @keyframes rotateCube {
+                0% { transform: rotateX(30deg) rotateY(45deg); }
+                100% { transform: rotateX(30deg) rotateY(405deg); }
+            }
+            .cube-face {
+                position: absolute;
+                width: 40px;
+                height: 40px;
+                background: rgba(22, 93, 255, 0.8);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 16px;
+            }
+            .cube-face.front { transform: translateZ(20px); }
+            .cube-face.back { transform: translateZ(-20px) rotateY(180deg); }
+            .cube-face.right { transform: translateX(20px) rotateY(90deg); }
+            .cube-face.left { transform: translateX(-20px) rotateY(-90deg); }
+            .cube-face.top { transform: translateY(-20px) rotateX(90deg); }
+            .cube-face.bottom { transform: translateY(20px) rotateX(-90deg); }
+            .fade-in {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.6s ease, transform 0.6s ease;
+            }
+            .fade-in.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .filter-tag {
+                transition: all 0.2s ease;
+            }
+            .filter-tag:hover {
+                transform: scale(1.05);
+            }
+            .filter-tag.active {
+                background-color: #165DFF;
+                color: white;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-light text-dark">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <img class="h-10 w-auto mr-3" src="https://student-1320907290.cos.ap-guangzhou.myqcloud.com/logo.png" alt="学智AI Logo" loading="lazy" decoding="async">
+                            <span class="text-xl font-bold gradient-text">学智AI</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-dark hover:text-primary transition-colors">首页</a>
+                    <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-dark hover:text-primary transition-colors">产品服务</a>
+                    <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-dark hover:text-primary transition-colors">学校案例</a>
+                    <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-primary border border-primary hover:bg-primary hover:text-white transition-colors">关于我们</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <section class="relative overflow-hidden bg-white">
+        <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-4xl font-extrabold tracking-tight text-gradient sm:text-5xl md:text-6xl">
+                    全球AI工程师团队
+                </h1>
+                <p class="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+                    汇聚来自全球顶尖高校和科技公司的AI工程师，为智慧校园建设提供强大的技术支持
+                </p>
+                <div class="mt-8 flex flex-wrap justify-center gap-4">
+                    <div class="inline-flex items-center px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                        <i class="fa fa-users mr-2"></i>
+                        500+ 专业工程师
+                    </div>
+                    <div class="inline-flex items-center px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                        <i class="fa fa-graduation-cap mr-2"></i>
+                        30+ 顶尖高校
+                    </div>
+                    <div class="inline-flex items-center px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                        <i class="fa fa-map-marker mr-2"></i>
+                        15+ 城市分布
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 背景装饰 -->
+        <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-light to-transparent"></div>
+    </section>
+
+    <!-- 筛选区域 -->
+    <section class="py-8 bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-dark mb-4">筛选团队成员</h2>
+                <div class="flex flex-wrap gap-3">
+                    <!-- 城市筛选 -->
+                    <div class="mr-8">
+                        <h3 class="text-sm font-medium text-gray-500 mb-2">城市分布</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="filter-tag px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors" data-filter="all">全部城市</button>
+                            <button class="filter-tag px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors" data-filter="beijing">北京</button>
+                            <button class="filter-tag px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors" data-filter="shanghai">上海</button>
+                            <button class="filter-tag px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors" data-filter="hangzhou">杭州</button>
+                            <button class="filter-tag px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors" data-filter="shenzhen">深圳</button>
+                            <button class="filter-tag px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors" data-filter="guangzhou">广州</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 学校筛选 -->
+                    <div class="mr-8">
+                        <h3 class="text-sm font-medium text-gray-500 mb-2">毕业院校</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="filter-tag px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors" data-filter="all">全部学校</button>
+                            <button class="filter-tag px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors" data-filter="tsinghua">清华大学</button>
+                            <button class="filter-tag px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors" data-filter="peking">北京大学</button>
+                            <button class="filter-tag px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors" data-filter="zhejiang">浙江大学</button>
+                            <button class="filter-tag px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors" data-filter="shanghai-jiao-tong">上海交通大学</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 专业领域筛选 -->
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500 mb-2">专业领域</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="filter-tag px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors" data-filter="all">全部领域</button>
+                            <button class="filter-tag px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors" data-filter="machine-learning">机器学习</button>
+                            <button class="filter-tag px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors" data-filter="deep-learning">深度学习</button>
+                            <button class="filter-tag px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors" data-filter="nlp">自然语言处理</button>
+                            <button class="filter-tag px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors" data-filter="computer-vision">计算机视觉</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 搜索框 -->
+            <div class="relative">
+                <input type="text" id="search-team" placeholder="搜索团队成员..." class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- 团队成员展示 -->
+    <section class="py-16 bg-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <!-- 团队成员1 - 北京，清华大学，机器学习 -->
+                <div class="team-member fade-in" data-city="beijing" data-school="tsinghua" data-field="machine-learning">
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
+                        <div class="relative">
+                            <img src="https://aka.doubaocdn.com/s/aPpx1vkgzi" alt="张明" class="w-full h-64 object-cover">
+                            <div class="absolute top-4 right-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                                    机器学习专家
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-dark mb-1">张明</h3>
+                            <p class="text-sm text-gray-500 mb-3">高级AI算法工程师</p>
+                            <div class="flex items-center text-sm text-gray-500 mb-4">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span>北京</span>
+                                <span class="mx-2">•</span>
+                                <i class="fa fa-graduation-cap mr-1"></i>
+                                <span>清华大学</span>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="text-sm font-medium text-gray-500 mb-2">专业技能</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">Python</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">TensorFlow</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">PyTorch</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">Scikit-learn</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">
+                                清华大学计算机科学与技术博士，专注于机器学习算法研究与优化，拥有5年AI算法开发经验，曾主导多个智慧教育项目的算法设计。
+                            </p>
+                            <button class="w-full px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-white rounded-lg text-sm font-medium transition-colors">
+                                查看详细资料
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 团队成员2 - 上海，上海交通大学，深度学习 -->
+                <div class="team-member fade-in" data-city="shanghai" data-school="shanghai-jiao-tong" data-field="deep-learning">
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
+                        <div class="relative">
+                            <img src="https://aka.doubaocdn.com/s/gUwu1vkgzi" alt="李婷" class="w-full h-64 object-cover">
+                            <div class="absolute top-4 right-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary/10 text-secondary">
+                                    深度学习架构师
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-dark mb-1">李婷</h3>
+                            <p class="text-sm text-gray-500 mb-3">资深深度学习工程师</p>
+                            <div class="flex items-center text-sm text-gray-500 mb-4">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span>上海</span>
+                                <span class="mx-2">•</span>
+                                <i class="fa fa-graduation-cap mr-1"></i>
+                                <span>上海交通大学</span>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="text-sm font-medium text-gray-500 mb-2">专业技能</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">Python</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">PyTorch</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">Keras</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">CUDA</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">
+                                上海交通大学电子信息工程硕士，专注于深度学习模型设计与优化，拥有6年深度学习开发经验，擅长计算机视觉和自然语言处理领域的模型构建。
+                            </p>
+                            <button class="w-full px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-white rounded-lg text-sm font-medium transition-colors">
+                                查看详细资料
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 团队成员3 - 杭州，浙江大学，自然语言处理 -->
+                <div class="team-member fade-in" data-city="hangzhou" data-school="zhejiang" data-field="nlp">
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
+                        <div class="relative">
+                            <img src="https://aka.doubaocdn.com/s/EotV1vkgzj" alt="王强" class="w-full h-64 object-cover">
+                            <div class="absolute top-4 right-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-accent">
+                                    NLP专家
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-dark mb-1">王强</h3>
+                            <p class="text-sm text-gray-500 mb-3">自然语言处理工程师</p>
+                            <div class="flex items-center text-sm text-gray-500 mb-4">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span>杭州</span>
+                                <span class="mx-2">•</span>
+                                <i class="fa fa-graduation-cap mr-1"></i>
+                                <span>浙江大学</span>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="text-sm font-medium text-gray-500 mb-2">专业技能</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">Python</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">TensorFlow</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">HuggingFace</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">BERT</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">
+                                浙江大学计算机应用技术博士，专注于自然语言处理和知识图谱研究，拥有4年NLP开发经验，曾参与多个智能对话系统和文本分析项目。
+                            </p>
+                            <button class="w-full px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-white rounded-lg text-sm font-medium transition-colors">
+                                查看详细资料
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 团队成员4 - 深圳，北京大学，计算机视觉 -->
+                <div class="team-member fade-in" data-city="shenzhen" data-school="peking" data-field="computer-vision">
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
+                        <div class="relative">
+                            <img src="https://aka.doubaocdn.com/s/xeUl1vkgzi" alt="陈静" class="w-full h-64 object-cover">
+                            <div class="absolute top-4 right-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                                    计算机视觉专家
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-dark mb-1">陈静</h3>
+                            <p class="text-sm text-gray-500 mb-3">计算机视觉工程师</p>
+                            <div class="flex items-center text-sm text-gray-500 mb-4">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span>深圳</span>
+                                <span class="mx-2">•</span>
+                                <i class="fa fa-graduation-cap mr-1"></i>
+                                <span>北京大学</span>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="text-sm font-medium text-gray-500 mb-2">专业技能</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">Python</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">OpenCV</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">YOLO</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">TensorFlow</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">
+                                北京大学智能科学与技术硕士，专注于计算机视觉和图像处理研究，拥有5年计算机视觉开发经验，擅长目标检测、图像分割和人脸识别技术。
+                            </p>
+                            <button class="w-full px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-white rounded-lg text-sm font-medium transition-colors">
+                                查看详细资料
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 团队成员5 - 广州，清华大学，机器学习 -->
+                <div class="team-member fade-in" data-city="guangzhou" data-school="tsinghua" data-field="machine-learning">
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
+                        <div class="relative">
+                            <img src="https://aka.doubaocdn.com/s/qNir1vkgzj" alt="刘阳" class="w-full h-64 object-cover">
+                            <div class="absolute top-4 right-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                                    机器学习工程师
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-dark mb-1">刘阳</h3>
+                            <p class="text-sm text-gray-500 mb-3">AI算法工程师</p>
+                            <div class="flex items-center text-sm text-gray-500 mb-4">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span>广州</span>
+                                <span class="mx-2">•</span>
+                                <i class="fa fa-graduation-cap mr-1"></i>
+                                <span>清华大学</span>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="text-sm font-medium text-gray-500 mb-2">专业技能</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">Python</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">Scikit-learn</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">XGBoost</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">SQL</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">
+                                清华大学数据科学与大数据技术硕士，专注于机器学习和数据分析，拥有3年AI算法开发经验，擅长推荐系统和预测模型构建。
+                            </p>
+                            <button class="w-full px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-white rounded-lg text-sm font-medium transition-colors">
+                                查看详细资料
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 团队成员6 - 北京，北京大学，自然语言处理 -->
+                <div class="team-member fade-in" data-city="beijing" data-school="peking" data-field="nlp">
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
+                        <div class="relative">
+                            <img src="https://aka.doubaocdn.com/s/WIOD1vkgzi" alt="赵琳" class="w-full h-64 object-cover">
+                            <div class="absolute top-4 right-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-accent">
+                                    NLP工程师
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-dark mb-1">赵琳</h3>
+                            <p class="text-sm text-gray-500 mb-3">自然语言处理工程师</p>
+                            <div class="flex items-center text-sm text-gray-500 mb-4">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span>北京</span>
+                                <span class="mx-2">•</span>
+                                <i class="fa fa-graduation-cap mr-1"></i>
+                                <span>北京大学</span>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="text-sm font-medium text-gray-500 mb-2">专业技能</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">Python</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">HuggingFace</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">Transformers</span>
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">spaCy</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">
+                                北京大学语言学与计算机科学双学位，专注于自然语言处理和文本挖掘，拥有4年NLP开发经验，擅长文本分类、情感分析和机器翻译。
+                            </p>
+                            <button class="w-full px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-white rounded-lg text-sm font-medium transition-colors">
+                                查看详细资料
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 加载更多按钮 -->
+            <div class="text-center mt-12">
+                <button id="load-more" class="px-8 py-3 border border-primary text-primary hover:bg-primary hover:text-white rounded-lg text-sm font-medium transition-colors">
+                    加载更多团队成员
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 团队统计 -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl font-extrabold text-dark sm:text-4xl">
+                    我们的团队实力
+                </h2>
+                <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
+                    学智AI工程师团队汇聚了来自全球顶尖高校和科技公司的专业人才，为智慧校园建设提供强大的技术支持
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 fade-in">
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-graduation-cap text-primary text-3xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-dark mb-2">30+</h3>
+                    <p class="text-gray-500">合作高校</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-trophy text-secondary text-3xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-dark mb-2">50+</h3>
+                    <p class="text-gray-500">技术专利</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-code text-accent text-3xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-dark mb-2">100+</h3>
+                    <p class="text-gray-500">开源项目</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-building text-primary text-3xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-dark mb-2">200+</h3>
+                    <p class="text-gray-500">合作院校</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 加入我们 -->
+    <section class="py-16 gradient-bg text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 fade-in">
+                <h2 class="text-3xl font-extrabold sm:text-4xl">
+                    加入我们的全球人才网络
+                </h2>
+                <p class="mt-4 max-w-3xl mx-auto text-xl text-white/80">
+                    无论您是AI工程师、教育专家、设计师还是建设工程师，我们都欢迎您加入学智AI全球人才库，共同推动智慧教育的发展。
+                </p>
+            </div>
+
+            <div class="max-w-xl mx-auto fade-in">
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-2xl">
+                    <form id="talent-form" class="space-y-6">
+                        <!-- 姓名 -->
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-white mb-2">
+                                姓名
+                            </label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                placeholder="请输入您的姓名"
+                                required
+                                class="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all"
+                            >
+                        </div>
+
+                        <!-- 学校 -->
+                        <div>
+                            <label for="school" class="block text-sm font-medium text-white mb-2">
+                                学校
+                            </label>
+                            <input
+                                type="text"
+                                id="school"
+                                name="school"
+                                placeholder="请输入您的学校"
+                                required
+                                class="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all"
+                            >
+                        </div>
+
+                        <!-- 专业领域 -->
+                        <div>
+                            <label for="field" class="block text-sm font-medium text-white mb-2">
+                                专业领域
+                            </label>
+                            <select
+                                id="field"
+                                name="field"
+                                required
+                                class="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all [&>option]:text-dark"
+                            >
+                                <option value="">请选择您的专业领域</option>
+                                <option value="ai-engineer">AI工程师</option>
+                                <option value="education-expert">教育专家</option>
+                                <option value="designer">设计师</option>
+                                <option value="construction-engineer">建设工程师</option>
+                                <option value="machine-learning">机器学习</option>
+                                <option value="nlp">自然语言处理</option>
+                                <option value="computer-vision">计算机视觉</option>
+                                <option value="data-science">数据科学</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+
+                        <!-- 个人简介 -->
+                        <div>
+                            <label for="bio" class="block text-sm font-medium text-white mb-2">
+                                个人简介
+                            </label>
+                            <textarea
+                                id="bio"
+                                name="bio"
+                                rows="4"
+                                placeholder="请简要介绍您的专业背景和经验"
+                                required
+                                class="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all resize-none"
+                            ></textarea>
+                        </div>
+
+                        <!-- 提交按钮 -->
+                        <button
+                            type="submit"
+                            class="w-full px-6 py-3 bg-white text-primary rounded-lg font-medium hover:bg-white/90 transition-colors shadow-lg"
+                        >
+                            提交申请
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white/70 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <span class="text-xl font-bold text-white">学智AI</span>
+                    </div>
+                    <p class="text-sm">
+                        智建未来，简驭校园。学智AI致力于打造全方位校园智能生态系统，让人工智能技术真正服务于教育。
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-white font-medium mb-4">产品服务</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">学习助手机器人</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">智能教学讲台</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">校园管理系统</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">安全监控系统</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-medium mb-4">关于我们</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">公司介绍</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">全球人才库</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">新闻动态</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">招贤纳士</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-medium mb-4">联系我们</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-start">
+                            <i class="fa fa-phone mt-1 mr-3"></i>
+                            <span>19865999996</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-envelope mt-1 mr-3"></i>
+                            <span>info@xuezhiai.cn</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/10 mt-8 pt-8 text-center text-sm">
+                <p>&copy; 2025 学智AI. 保留所有权利。</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 滚动渐入效果
+        function setupScrollAnimations() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            fadeElements.forEach(element => {
+                observer.observe(element);
+            });
+        }
+
+        // 筛选功能
+        function setupFilterFunctionality() {
+            const filterTags = document.querySelectorAll('.filter-tag');
+            const teamMembers = document.querySelectorAll('.team-member');
+            const searchInput = document.getElementById('search-team');
+            
+            // 标签筛选
+            filterTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    // 移除所有标签的active类
+                    filterTags.forEach(t => t.classList.remove('active'));
+                    // 为当前标签添加active类
+                    this.classList.add('active');
+                    
+                    const filterValue = this.getAttribute('data-filter');
+                    
+                    // 根据筛选条件显示/隐藏团队成员
+                    teamMembers.forEach(member => {
+                        if (filterValue === 'all' || 
+                            member.getAttribute('data-city') === filterValue ||
+                            member.getAttribute('data-school') === filterValue ||
+                            member.getAttribute('data-field') === filterValue) {
+                            member.style.display = 'block';
+                        } else {
+                            member.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // 搜索功能
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                teamMembers.forEach(member => {
+                    const memberName = member.querySelector('h3').textContent.toLowerCase();
+                    const memberInfo = member.textContent.toLowerCase();
+                    
+                    if (memberName.includes(searchTerm) || memberInfo.includes(searchTerm)) {
+                        member.style.display = 'block';
+                    } else {
+                        member.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // 加载更多功能
+        function setupLoadMoreFunctionality() {
+            const loadMoreBtn = document.getElementById('load-more');
+            
+            loadMoreBtn.addEventListener('click', function() {
+                // 模拟加载更多效果
+                this.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>加载中...';
+                
+                setTimeout(() => {
+                    this.innerHTML = '没有更多成员了';
+                    this.disabled = true;
+                    this.classList.add('opacity-50', 'cursor-not-allowed');
+                }, 1500);
+            });
+        }
+
+        // 表单提交功能
+        function setupTalentForm() {
+            const form = document.getElementById('talent-form');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // 获取表单数据
+                const formData = {
+                    name: document.getElementById('name').value,
+                    school: document.getElementById('school').value,
+                    field: document.getElementById('field').value,
+                    bio: document.getElementById('bio').value
+                };
+
+                // 显示提交中状态
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>提交中...';
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+                // 模拟提交（这里可以替换为实际的API调用）
+                setTimeout(() => {
+                    // 提交成功
+                    submitBtn.innerHTML = '<i class="fa fa-check mr-2"></i>提交成功！';
+
+                    // 显示成功提示
+                    alert('感谢您的申请！我们将尽快与您联系。');
+
+                    // 重置表单
+                    form.reset();
+
+                    // 恢复按钮状态
+                    setTimeout(() => {
+                        submitBtn.innerHTML = originalBtnText;
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }, 2000);
+                }, 1500);
+            });
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            setupScrollAnimations();
+            setupFilterFunctionality();
+            setupLoadMoreFunctionality();
+            setupTalentForm();
+
+            // 初始加载时触发一次观察
+            const event = new Event('load');
+            window.dispatchEvent(event);
+        });
+    </script>
+</body>
+</html>

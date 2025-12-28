@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学智AI - 全球教育专家团队</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/v4-shims.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'apple-blue': '#007AFF',
+                        'apple-gray': '#F2F2F7',
+                        'apple-dark': '#1D1D1F',
+                        'apple-light': '#FFFFFF',
+                        'apple-secondary': '#8E8E93',
+                        'apple-accent': '#34C759'
+                    },
+                    fontFamily: {
+                        'sf': ['-apple-system', 'BlinkMacSystemFont', 'San Francisco', 'Helvetica Neue', 'Helvetica', 'Ubuntu', 'Roboto', 'Arial', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'apple': '0 4px 30px rgba(0, 0, 0, 0.1)',
+                        'apple-hover': '0 10px 40px rgba(0, 0, 0, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .apple-blur {
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+            }
+            .text-gradient {
+                background: linear-gradient(135deg, #34C759 0%, #30D158 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            .cube-icon {
+                position: relative;
+                width: 40px;
+                height: 40px;
+                transform-style: preserve-3d;
+                transform: rotateX(30deg) rotateY(45deg);
+                animation: rotateCube 8s infinite linear;
+            }
+            @keyframes rotateCube {
+                0% { transform: rotateX(30deg) rotateY(45deg); }
+                100% { transform: rotateX(30deg) rotateY(405deg); }
+            }
+            .cube-face {
+                position: absolute;
+                width: 40px;
+                height: 40px;
+                background: rgba(52, 199, 89, 0.8);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 16px;
+            }
+            .cube-face.front { transform: translateZ(20px); }
+            .cube-face.back { transform: translateZ(-20px) rotateY(180deg); }
+            .cube-face.right { transform: translateX(20px) rotateY(90deg); }
+            .cube-face.left { transform: translateX(-20px) rotateY(-90deg); }
+            .cube-face.top { transform: translateY(-20px) rotateX(90deg); }
+            .cube-face.bottom { transform: translateY(20px) rotateX(-90deg); }
+            .fade-in {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.6s ease, transform 0.6s ease;
+            }
+            .fade-in.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .filter-tag {
+                transition: all 0.2s ease;
+            }
+            .filter-tag:hover {
+                transform: scale(1.05);
+            }
+            .filter-tag.active {
+                background-color: #34C759;
+                color: white;
+            }
+            .section-divider {
+                height: 80px;
+                background: linear-gradient(to bottom, transparent, #F2F2F7);
+            }
+        }
+    </style>
+</head>
+<body class="font-sf bg-apple-light text-apple-dark">
+    <!-- 导航栏 - 苹果风格透明模糊效果 -->
+    <nav class="fixed top-0 left-0 right-0 z-50 apple-blur bg-white/80 border-b border-gray-200/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <img class="h-10 w-auto mr-3" src="https://student-1320907290.cos.ap-guangzhou.myqcloud.com/logo.png" alt="学智AI Logo" loading="lazy" decoding="async">
+                        <span class="text-xl font-bold gradient-text">学智AI</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-apple-secondary hover:text-apple-dark transition-colors">首页</a>
+                    <a href="#talent-areas" class="text-apple-secondary hover:text-apple-dark transition-colors">人才领域</a>
+                    <a href="#expert-team" class="text-apple-secondary hover:text-apple-dark transition-colors">专家团队</a>
+                    <a href="#join-us" class="text-apple-secondary hover:text-apple-dark transition-colors">加入我们</a>
+                </div>
+                <div class="md:hidden">
+                    <button class="text-apple-dark hover:text-apple-accent">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 - 苹果风格简洁大气 -->
+    <section id="home" class="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-gradient mb-6">
+                全球教育专家团队
+            </h1>
+            <p class="text-xl text-apple-secondary mb-10 leading-relaxed">
+                集结了来自全球知名教育机构的教育专家、学者和一线教师，深入研究教育理论与实践，为智慧教育提供专业支持。
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <div class="inline-flex items-center px-4 py-2 bg-apple-gray rounded-full text-sm font-medium">
+                    <i class="fa fa-users mr-2 text-apple-accent"></i>
+                    300+ 教育专家
+                </div>
+                <div class="inline-flex items-center px-4 py-2 bg-apple-gray rounded-full text-sm font-medium">
+                    <i class="fa fa-graduation-cap mr-2 text-apple-accent"></i>
+                    50+ 合作高校
+                </div>
+                <div class="inline-flex items-center px-4 py-2 bg-apple-gray rounded-full text-sm font-medium">
+                    <i class="fa fa-book mr-2 text-apple-accent"></i>
+                    100+ 教育项目
+                </div>
+            </div>
+            <button class="px-8 py-3 bg-apple-accent text-white rounded-full font-medium hover:bg-apple-accent/90 transition-colors shadow-lg hover:shadow-xl">
+                了解更多专家
+            </button>
+        </div>
+    </section>
+
+    <!-- 专家团队展示 - 苹果风格卡片设计 -->
+    <section id="expert-team" class="py-20 px-4 sm:px-6 lg:px-8 bg-apple-gray">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">全球教育专家团队</h2>
+                <p class="text-apple-secondary max-w-2xl mx-auto">
+                    汇聚来自全球顶尖教育机构的专家学者，为智慧教育发展提供专业的理论支持和实践指导
+                </p>
+            </div>
+
+            <!-- 筛选区域 -->
+            <div class="mb-12 bg-white rounded-2xl p-6 shadow-apple fade-in">
+                <h3 class="text-lg font-semibold mb-6">筛选专家成员</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- 城市筛选 -->
+                    <div>
+                        <h4 class="text-sm font-medium text-apple-secondary mb-3">城市分布</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="filter-tag px-3 py-1.5 bg-apple-gray hover:bg-apple-gray/80 rounded-full text-sm font-medium transition-colors" data-filter="all">全部城市</button>
+                            <button class="filter-tag px-3 py-1.5 bg-apple-gray hover:bg-apple-gray/80 rounded-full text-sm font-medium transition-colors" data-filter="beijing">北京</button>
+                            <button class="filter-tag px-3 py-1.5 bg-apple-gray hover:bg-apple-gray/80 rounded-full text-sm font-medium transition-colors" data-filter="shanghai">上海</button>
+                            <button class="filter-tag px-3 py-1.5 bg-apple-gray hover:bg-apple-gray/80 rounded-full text-sm font-medium transition-colors" data-filter="hangzhou">杭州</button>
+                            <button class="filter-tag px-3 py-1.5 bg-apple-gray hover:bg-apple-gray/80 rounded-full text-sm font-medium transition-colors" data-filter="nanjing">南京</button>
+                            <button class="filter-tag px-3 py-1.5 bg-apple-gray hover:bg-apple-gray/80 rounded-full text-sm font-medium transition-colors" data-filter="guangzhou">广州</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 学校筛选 -->
+                    <div>
+                        <h4 class="text-sm font-medium text-apple-secondary mb-3">毕业院校</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="filter-tag px-3 py-1.5 bg-apple-gray hover:bg-apple-gray/80 rounded-full text-sm font-medium transition-colors" data-filter="all">全部学校</button>
+                            <button class="filter-tag px-3 py-1.5 bg-apple-gray hover:bg-apple-gray/80 rounded-full text-sm font-medium transition-colors" data-filter="peking">北京大学</button>
+                            <button class="filter-tag px-3 py-1.5 bg-apple-gray hover:bg-apple-gray/80 rounded-full text-sm font-medium transition-colors" data-filter="beijing-normal">北京师范大学</button>
+                            <button class="filter-tag px-3 py-1.5 bg-apple-gray hover:bg-apple-gray/80 rounded-full text-sm font-medium transition-colors" data-filter="east-china-normal">华东师范大学</button>
+                            <button class="filter-tag px-3 py-1.5 bg-apple-gray hover:bg-apple-gray/80 rounded-full text-sm font-medium transition-colors" data-filter="shanghai-jiao-tong">上海交通大学</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 专业领域筛选 -->
+                    <div>
+                        <h4 class="text-sm font-medium text-apple-secondary mb-3">专业领域</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="filter-tag px-3 py-1.5 bg-apple-gray hover:bg-apple-gray/80 rounded-full text-sm font-medium transition-colors" data-filter="all">全部领域</button>
+                            <button class="filter-tag px-3 py-1.5 bg-apple-gray hover:bg-apple-gray/80 rounded-full text-sm font-medium transition-colors" data-filter="education-technology">教育技术</button>
+                            <button class="filter-tag px-3 py-1.5 bg-apple-gray hover:bg-apple-gray/80 rounded-full text-sm font-medium transition-colors" data-filter="curriculum-design">课程设计</button>
+                            <button class="filter-tag px-3 py-1.5 bg-apple-gray hover:bg-apple-gray/80 rounded-full text-sm font-medium transition-colors" data-filter="educational-psychology">教育心理学</button>
+                            <button class="filter-tag px-3 py-1.5 bg-apple-gray hover:bg-apple-gray/80 rounded-full text-sm font-medium transition-colors" data-filter="education-management">教育管理</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 搜索框 -->
+                <div class="mt-6 relative">
+                    <input type="text" id="search-experts" placeholder="搜索专家成员..." class="w-full px-4 py-3 pl-10 bg-apple-gray rounded-xl focus:outline-none focus:ring-2 focus:ring-apple-accent focus:border-transparent">
+                    <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-apple-secondary"></i>
+                </div>
+            </div>
+
+            <!-- 专家成员展示 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- 专家成员1 - 北京，北京师范大学，教育技术 -->
+                <div class="expert-member fade-in" data-city="beijing" data-school="beijing-normal" data-field="education-technology">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-apple hover:shadow-apple-hover transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="relative">
+                            <img src="https://aka.doubaocdn.com/s/SGVh1vkhPO" alt="林小雨" class="w-full h-64 object-cover">
+                            <div class="absolute top-4 right-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-apple-accent">
+                                    教育技术专家
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-1">林小雨</h3>
+                            <p class="text-sm text-apple-secondary mb-3">教育技术学博士</p>
+                            <div class="flex items-center text-sm text-apple-secondary mb-4">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span>北京</span>
+                                <span class="mx-2">•</span>
+                                <i class="fa fa-graduation-cap mr-1"></i>
+                                <span>北京师范大学</span>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="text-sm font-medium text-apple-secondary mb-2">研究领域</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">教育技术</span>
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">在线教育</span>
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">智慧课堂</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-apple-secondary mb-4">
+                                北京师范大学教育技术学博士，专注于教育技术和在线教育研究，拥有8年教育技术领域研究经验，曾参与多个国家级教育信息化项目。
+                            </p>
+                            <button class="w-full px-4 py-2 border border-apple-accent text-apple-accent rounded-xl text-sm font-medium hover:bg-apple-accent hover:text-white transition-colors">
+                                查看详细资料
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 专家成员2 - 上海，华东师范大学，课程设计 -->
+                <div class="expert-member fade-in" data-city="shanghai" data-school="east-china-normal" data-field="curriculum-design">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-apple hover:shadow-apple-hover transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="relative">
+                            <img src="https://aka.doubaocdn.com/s/6k4w1vkhPO" alt="陈教授" class="w-full h-64 object-cover">
+                            <div class="absolute top-4 right-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-apple-accent">
+                                    课程设计专家
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-1">陈教授</h3>
+                            <p class="text-sm text-apple-secondary mb-3">课程与教学论专家</p>
+                            <div class="flex items-center text-sm text-apple-secondary mb-4">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span>上海</span>
+                                <span class="mx-2">•</span>
+                                <i class="fa fa-graduation-cap mr-1"></i>
+                                <span>华东师范大学</span>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="text-sm font-medium text-apple-secondary mb-2">研究领域</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">课程设计</span>
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">教学方法</span>
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">教育评价</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-apple-secondary mb-4">
+                                华东师范大学课程与教学论教授，博士生导师，拥有20年课程设计研究经验，主持多项国家级课程改革项目，出版多部教育专著。
+                            </p>
+                            <button class="w-full px-4 py-2 border border-apple-accent text-apple-accent rounded-xl text-sm font-medium hover:bg-apple-accent hover:text-white transition-colors">
+                                查看详细资料
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 专家成员3 - 杭州，北京大学，教育心理学 -->
+                <div class="expert-member fade-in" data-city="hangzhou" data-school="peking" data-field="educational-psychology">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-apple hover:shadow-apple-hover transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="relative">
+                            <img src="https://aka.doubaocdn.com/s/OYnc1vkhPO" alt="王博士" class="w-full h-64 object-cover">
+                            <div class="absolute top-4 right-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-apple-accent">
+                                    教育心理学专家
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-1">王博士</h3>
+                            <p class="text-sm text-apple-secondary mb-3">教育心理学专家</p>
+                            <div class="flex items-center text-sm text-apple-secondary mb-4">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span>杭州</span>
+                                <span class="mx-2">•</span>
+                                <i class="fa fa-graduation-cap mr-1"></i>
+                                <span>北京大学</span>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="text-sm font-medium text-apple-secondary mb-2">研究领域</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">教育心理学</span>
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">学习科学</span>
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">认知发展</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-apple-secondary mb-4">
+                                北京大学教育心理学博士，专注于学习科学和认知发展研究，拥有10年教育心理学研究经验，曾在国际顶级期刊发表多篇学术论文。
+                            </p>
+                            <button class="w-full px-4 py-2 border border-apple-accent text-apple-accent rounded-xl text-sm font-medium hover:bg-apple-accent hover:text-white transition-colors">
+                                查看详细资料
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 专家成员4 - 南京，北京师范大学，教育管理 -->
+                <div class="expert-member fade-in" data-city="nanjing" data-school="beijing-normal" data-field="education-management">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-apple hover:shadow-apple-hover transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="relative">
+                            <img src="https://aka.doubaocdn.com/s/YThE1vkhPN" alt="张教授" class="w-full h-64 object-cover">
+                            <div class="absolute top-4 right-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-apple-accent">
+                                    教育管理专家
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-1">张教授</h3>
+                            <p class="text-sm text-apple-secondary mb-3">教育管理专家</p>
+                            <div class="flex items-center text-sm text-apple-secondary mb-4">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span>南京</span>
+                                <span class="mx-2">•</span>
+                                <i class="fa fa-graduation-cap mr-1"></i>
+                                <span>北京师范大学</span>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="text-sm font-medium text-apple-secondary mb-2">研究领域</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">教育管理</span>
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">学校领导</span>
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">教育政策</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-apple-secondary mb-4">
+                                北京师范大学教育管理学院教授，拥有15年教育管理研究经验，曾担任多所知名学校的管理顾问，参与多项教育政策制定。
+                            </p>
+                            <button class="w-full px-4 py-2 border border-apple-accent text-apple-accent rounded-xl text-sm font-medium hover:bg-apple-accent hover:text-white transition-colors">
+                                查看详细资料
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 专家成员5 - 广州，上海交通大学，教育技术 -->
+                <div class="expert-member fade-in" data-city="guangzhou" data-school="shanghai-jiao-tong" data-field="education-technology">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-apple hover:shadow-apple-hover transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="relative">
+                            <img src="https://aka.doubaocdn.com/s/PvWH1vkhPN" alt="李教授" class="w-full h-64 object-cover">
+                            <div class="absolute top-4 right-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-apple-accent">
+                                    教育技术专家
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-1">李教授</h3>
+                            <p class="text-sm text-apple-secondary mb-3">教育技术学专家</p>
+                            <div class="flex items-center text-sm text-apple-secondary mb-4">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span>广州</span>
+                                <span class="mx-2">•</span>
+                                <i class="fa fa-graduation-cap mr-1"></i>
+                                <span>上海交通大学</span>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="text-sm font-medium text-apple-secondary mb-2">研究领域</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">教育技术</span>
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">人工智能教育</span>
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">教育数据挖掘</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-apple-secondary mb-4">
+                                上海交通大学教育技术学教授，博士生导师，拥有25年教育技术研究经验，是人工智能教育领域的权威专家，主持多项国家级科研项目。
+                            </p>
+                            <button class="w-full px-4 py-2 border border-apple-accent text-apple-accent rounded-xl text-sm font-medium hover:bg-apple-accent hover:text-white transition-colors">
+                                查看详细资料
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 专家成员6 - 北京，北京大学，课程设计 -->
+                <div class="expert-member fade-in" data-city="beijing" data-school="peking" data-field="curriculum-design">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-apple hover:shadow-apple-hover transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="relative">
+                            <img src="https://aka.doubaocdn.com/s/kUyu1vkhPO" alt="刘教授" class="w-full h-64 object-cover">
+                            <div class="absolute top-4 right-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-apple-accent">
+                                    课程设计专家
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-1">刘教授</h3>
+                            <p class="text-sm text-apple-secondary mb-3">课程与教学论专家</p>
+                            <div class="flex items-center text-sm text-apple-secondary mb-4">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span>北京</span>
+                                <span class="mx-2">•</span>
+                                <i class="fa fa-graduation-cap mr-1"></i>
+                                <span>北京大学</span>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="text-sm font-medium text-apple-secondary mb-2">研究领域</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">课程设计</span>
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">创新教育</span>
+                                    <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">STEM教育</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-apple-secondary mb-4">
+                                北京大学教育学院教授，课程与教学论专家，拥有18年课程设计研究经验，专注于创新教育和STEM教育研究，出版多部教育专著。
+                            </p>
+                            <button class="w-full px-4 py-2 border border-apple-accent text-apple-accent rounded-xl text-sm font-medium hover:bg-apple-accent hover:text-white transition-colors">
+                                查看详细资料
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 加载更多按钮 -->
+            <div class="text-center mt-12">
+                <button id="load-more" class="px-8 py-3 border border-apple-accent text-apple-accent rounded-xl font-medium hover:bg-apple-accent hover:text-white transition-colors">
+                    加载更多专家成员
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 团队实力统计 -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl font-bold mb-4">我们的专家团队实力</h2>
+                <p class="text-apple-secondary max-w-2xl mx-auto">
+                    学智AI教育专家团队汇聚了来自全球顶尖教育机构的专业人才，为智慧教育发展提供强大的理论支持
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 fade-in">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-graduation-cap text-apple-accent text-2xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-2">50+</h3>
+                    <p class="text-apple-secondary">合作高校</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-book text-apple-accent text-2xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-2">200+</h3>
+                    <p class="text-apple-secondary">学术论文</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-trophy text-apple-accent text-2xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-2">80+</h3>
+                    <p class="text-apple-secondary">科研项目</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-building text-apple-accent text-2xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-2">150+</h3>
+                    <p class="text-apple-secondary">合作院校</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 加入我们 -->
+    <section id="join-us" class="py-20 px-4 sm:px-6 lg:px-8 bg-apple-gray">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl font-bold mb-4">加入我们的教育专家团队</h2>
+                <p class="text-apple-secondary max-w-2xl mx-auto">
+                    我们正在寻找优秀的教育专家加入我们的团队，共同推动智慧教育的发展
+                </p>
+            </div>
+
+            <div class="bg-white rounded-3xl p-8 shadow-apple fade-in">
+                <h3 class="text-xl font-semibold mb-6">当前招聘职位</h3>
+                <div class="space-y-6">
+                    <!-- 职位1 -->
+                    <div class="border border-gray-100 rounded-2xl p-6 hover:border-apple-accent transition-colors">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="font-semibold mb-1">教育技术研究员</h4>
+                                <p class="text-sm text-apple-secondary">北京 · 全职</p>
+                            </div>
+                            <span class="px-3 py-1 bg-green-100 text-apple-accent rounded-full text-xs font-medium">
+                                教育类
+                            </span>
+                        </div>
+                        <p class="text-sm text-apple-secondary mb-4">
+                            负责教育技术相关研究，参与智慧教育产品的设计和优化
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">教育技术</span>
+                            <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">在线教育</span>
+                            <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">教育研究</span>
+                        </div>
+                        <button class="px-4 py-2 bg-apple-accent text-white rounded-xl text-sm font-medium hover:bg-apple-accent/90 transition-colors">
+                            立即申请
+                        </button>
+                    </div>
+
+                    <!-- 职位2 -->
+                    <div class="border border-gray-100 rounded-2xl p-6 hover:border-apple-accent transition-colors">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="font-semibold mb-1">课程设计专家</h4>
+                                <p class="text-sm text-apple-secondary">上海 · 全职</p>
+                            </div>
+                            <span class="px-3 py-1 bg-green-100 text-apple-accent rounded-full text-xs font-medium">
+                                教育类
+                            </span>
+                        </div>
+                        <p class="text-sm text-apple-secondary mb-4">
+                            负责智慧教育课程的设计和开发，参与课程体系的构建
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">课程设计</span>
+                            <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">教学方法</span>
+                            <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">教育评价</span>
+                        </div>
+                        <button class="px-4 py-2 bg-apple-accent text-white rounded-xl text-sm font-medium hover:bg-apple-accent/90 transition-colors">
+                            立即申请
+                        </button>
+                    </div>
+
+                    <!-- 职位3 -->
+                    <div class="border border-gray-100 rounded-2xl p-6 hover:border-apple-accent transition-colors">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="font-semibold mb-1">教育心理学专家</h4>
+                                <p class="text-sm text-apple-secondary">杭州 · 全职</p>
+                            </div>
+                            <span class="px-3 py-1 bg-green-100 text-apple-accent rounded-full text-xs font-medium">
+                                教育类
+                            </span>
+                        </div>
+                        <p class="text-sm text-apple-secondary mb-4">
+                            负责教育心理学相关研究，为智慧教育产品提供心理学支持
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">教育心理学</span>
+                            <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">学习科学</span>
+                            <span class="px-2 py-1 bg-apple-gray text-apple-dark rounded text-xs">认知发展</span>
+                        </div>
+                        <button class="px-4 py-2 bg-apple-accent text-white rounded-xl text-sm font-medium hover:bg-apple-accent/90 transition-colors">
+                            立即申请
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <a href="#" class="text-apple-accent font-medium hover:text-apple-accent/80 transition-colors">
+                        查看更多职位 <i class="fa fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 - 苹果风格简洁设计 -->
+    <footer class="py-16 px-4 sm:px-6 lg:px-8 bg-apple-dark text-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                <div class="md:col-span-2">
+                    <div class="flex items-center mb-6">
+                        <span class="text-xl font-semibold">学智AI</span>
+                    </div>
+                    <p class="text-gray-400 mb-6 max-w-md">
+                        智建未来，简驭校园。学智AI致力于打造全方位校园智能生态系统，让人工智能技术真正服务于教育。
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-6">产品服务</h4>
+                    <ul class="space-y-3 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">学习助手机器人</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">智能教学讲台</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">校园管理系统</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">安全监控系统</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-6">联系我们</h4>
+                    <ul class="space-y-3 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fa fa-phone mt-1 mr-3"></i>
+                            <span>19865999996</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-envelope mt-1 mr-3"></i>
+                            <span>info@xuezhiai.cn</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                    &copy; 2025 学智AI. 保留所有权利。
+                </p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">隐私政策</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">服务条款</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">法律声明</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 滚动渐入效果
+        function setupScrollAnimations() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            fadeElements.forEach(element => {
+                observer.observe(element);
+            });
+        }
+
+        // 筛选功能
+        function setupFilterFunctionality() {
+            const filterTags = document.querySelectorAll('.filter-tag');
+            const expertMembers = document.querySelectorAll('.expert-member');
+            const searchInput = document.getElementById('search-experts');
+            
+            // 标签筛选
+            filterTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    // 移除所有标签的active类
+                    filterTags.forEach(t => t.classList.remove('active'));
+                    // 为当前标签添加active类
+                    this.classList.add('active');
+                    
+                    const filterValue = this.getAttribute('data-filter');
+                    
+                    // 根据筛选条件显示/隐藏专家成员
+                    expertMembers.forEach(member => {
+                        if (filterValue === 'all' || 
+                            member.getAttribute('data-city') === filterValue ||
+                            member.getAttribute('data-school') === filterValue ||
+                            member.getAttribute('data-field') === filterValue) {
+                            member.style.display = 'block';
+                        } else {
+                            member.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // 搜索功能
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                expertMembers.forEach(member => {
+                    const memberName = member.querySelector('h3').textContent.toLowerCase();
+                    const memberInfo = member.textContent.toLowerCase();
+                    
+                    if (memberName.includes(searchTerm) || memberInfo.includes(searchTerm)) {
+                        member.style.display = 'block';
+                    } else {
+                        member.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // 加载更多功能
+        function setupLoadMoreFunctionality() {
+            const loadMoreBtn = document.getElementById('load-more');
+            
+            loadMoreBtn.addEventListener('click', function() {
+                // 模拟加载更多效果
+                this.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>加载中...';
+                
+                setTimeout(() => {
+                    this.innerHTML = '没有更多成员了';
+                    this.disabled = true;
+                    this.classList.add('opacity-50', 'cursor-not-allowed');
+                }, 1500);
+            });
+        }
+
+        // 平滑滚动
+        function setupSmoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // 导航栏滚动效果
+        function setupNavbarScrollEffect() {
+            const navbar = document.querySelector('nav');
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-white/95');
+                    navbar.classList.remove('bg-white/80');
+                } else {
+                    navbar.classList.add('bg-white/80');
+                    navbar.classList.remove('bg-white/95');
+                }
+            });
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            setupScrollAnimations();
+            setupFilterFunctionality();
+            setupLoadMoreFunctionality();
+            setupSmoothScroll();
+            setupNavbarScrollEffect();
+            
+            // 初始加载时触发一次观察
+            const event = new Event('load');
+            window.dispatchEvent(event);
+        });
+    </script>
+</body>
+</html>

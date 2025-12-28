@@ -6,7 +6,7 @@ const PhotographerManagement = () => {
     <div className="talent-iframe-container">
       <iframe
         className="talent-iframe"
-        src="/static/talent/construction_team.html"
+        src={`${import.meta.env.BASE_URL}static/talent/construction_team.html`}
         title="全球建设工程师"
         loading="lazy"
       />

@@ -6,7 +6,7 @@ const DesignerManagement = () => {
     <div className="talent-iframe-container">
       <iframe
         className="talent-iframe"
-        src="/static/talent/education_experts.html"
+        src={`${import.meta.env.BASE_URL}static/talent/education_experts.html`}
         title="全球教育专家库"
         loading="lazy"
       />

@@ -6,7 +6,7 @@ const TalentManagement = () => {
     <div className="talent-iframe-container">
       <iframe
         className="talent-iframe"
-        src="/static/talent/integrated_apple_style.html"
+        src={`${import.meta.env.BASE_URL}static/talent/integrated_apple_style.html`}
         title="人才概览"
         loading="lazy"
       />

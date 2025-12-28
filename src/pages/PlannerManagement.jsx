@@ -6,7 +6,7 @@ const PlannerManagement = () => {
     <div className="talent-iframe-container">
       <iframe
         className="talent-iframe"
-        src="/static/talent/engineer_team.html"
+        src={`${import.meta.env.BASE_URL}static/talent/engineer_team.html`}
         title="全球AI工程师库"
         loading="lazy"
       />

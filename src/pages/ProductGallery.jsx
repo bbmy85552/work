@@ -865,17 +865,13 @@ export default function ProductGallery() {
             <div>
               <h4 className="text-lg font-bold mb-6">联系我们</h4>
               <ul className="space-y-3">
-                <li className="flex items-center text-gray-400">
-                  <i className="fa fa-map-marker mr-3"></i>
-                  <span>北京市海淀区中关村</span>
+                <li class="flex items-start">
+                  <i class="fa fa-phone mt-1 mr-3"></i>
+                  <span>19865999996</span>
                 </li>
-                <li className="flex items-center text-gray-400">
-                  <i className="fa fa-phone mr-3"></i>
-                  <span>400-123-4567</span>
-                </li>
-                <li className="flex items-center text-gray-400">
-                  <i className="fa fa-envelope mr-3"></i>
-                  <span>contact@xuezhiai.com</span>
+                <li class="flex items-start">
+                  <i class="fa fa-envelope mt-1 mr-3"></i>
+                  <span>info@xuezhiai.cn</span>
                 </li>
               </ul>
             </div>

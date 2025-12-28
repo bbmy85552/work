@@ -117,7 +117,7 @@ function AdminLayout() {
     {
       key: '/talent',
       icon: <UserOutlined />,
-      label: '人才管理',
+      label: '全球人才库',
       children: [
         {
           key: '/talent-overview',
@@ -125,19 +125,19 @@ function AdminLayout() {
         },
         {
           key: '/planner-management',
-          label: '策划师管理'
+          label: '全球AI工程师库'
         },
         {
           key: '/designer-management',
-          label: '设计师管理'
+          label: '全球教育专家库'
         },
         {
           key: '/engineer-management',
-          label: '工程师管理'
+          label: '全球设计师中心'
         },
         {
           key: '/photographer-management',
-          label: '摄影师管理'
+          label: '全球建设工程师'
         }
       ]
     },
@@ -148,7 +148,15 @@ function AdminLayout() {
     }
   ]
 
-  const isGalleryPage = location.pathname.startsWith('/product-library/ai-gallery')
+  const fullScreenRoutes = [
+    '/product-library/ai-gallery',
+    '/talent-overview',
+    '/planner-management',
+    '/designer-management',
+    '/engineer-management',
+    '/photographer-management'
+  ]
+  const isFullScreenPage = fullScreenRoutes.some((path) => location.pathname.startsWith(path))
 
   return (
     <Layout className="app-layout">
@@ -204,7 +212,7 @@ function AdminLayout() {
             itemIcon={<span className="transition-all" />}
           />
         </Sider>
-        <Content className={isGalleryPage ? 'app-content pl-gallery-content' : 'app-content'}>
+        <Content className={isFullScreenPage ? 'app-content pl-gallery-content' : 'app-content'}>
           <Outlet />
         </Content>
       </Layout>

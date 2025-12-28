@@ -272,7 +272,6 @@ const LoadingIndicator = ({ progress, streamingContent }) => {
           indicator={<LoadingOutlined style={{ fontSize: 48, color: '#1890ff' }} spin />}
         />
         <div style={{ marginTop: '16px', fontSize: '16px', color: '#333' }}>
-          正在生成方案...
         </div>
         {progress && (
           <div style={{ marginTop: '8px', fontSize: '14px', color: '#666' }}>
@@ -366,7 +365,7 @@ const BudgetPlanner = ({ solutionData, updateSolutionData, onNext, onBack }) => 
     setStreamingContent('');
     setParsedProposal(null);
     setUsageStats(null);
-    setGenerationProgress('正在搜索学校相关信息...');
+    setGenerationProgress('学智AI正在搜索学校相关信息...');
     contentChunksRef.current = [];
 
     try {
@@ -398,7 +397,7 @@ const BudgetPlanner = ({ solutionData, updateSolutionData, onNext, onBack }) => 
 
                   return newChunks;
                 });
-                setGenerationProgress('正在生成方案内容...');
+                setGenerationProgress('学智AI自研大模型，正在为您设计中，请稍候...');
               }
               break;
 

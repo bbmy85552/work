@@ -248,14 +248,14 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
                   color: '#1e3a8a',
                   fontWeight: 600
                 }}>
-                  正在生成效果图... (0/{imageCount})
+                  学智AI自研大模型，正在为您设计中，请稍候... (0/{imageCount})
                 </h3>
                 <p style={{
                   margin: '4px 0 0 0',
                   fontSize: '14px',
                   color: '#2563eb'
                 }}>
-                  AI正在为您创建精美的墙面设计效果图，请稍候...
+                  {/* 学智AI自研大模型，正在为您设计中，请稍候... */}
                 </p>
               </div>
             </div>
@@ -307,7 +307,7 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
                         fontSize: '14px',
                         color: '#3b82f6'
                       }}>
-                        请稍候，AI正在设计中
+                        学智AI正在设计中
                       </div>
                     </div>
                   </div>
@@ -476,7 +476,7 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
                   color: '#1e3a8a',
                   fontWeight: 600
                 }}>
-                  正在生成效果图... ({images.length}/{imageCount})
+                  学智AI自研大模型，正在为您设计中，请稍候... ({images.length}/{imageCount})
                 </h3>
                 <p style={{
                   margin: '4px 0 0 0',

@@ -43,7 +43,7 @@ export const API_ENDPOINTS = {
   },
   // 图片生成相关
   IMAGE_GENERATION: {
-    GENERATE: buildEndpoint('/image-generation/generate'), // 生成效果图
+    GENERATE: buildEndpoint('/image-generation/generate/fake'), // 生成效果图
   },
 };
 

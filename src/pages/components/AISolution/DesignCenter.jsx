@@ -718,7 +718,7 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
               paddingTop: '15px',
               fontStyle: 'normal'
             }}>
-              本报告由学智AI平台呈报，内容版权归学智人工智能科技公司和客户{schoolName}所有
+              本方案由学智AI平台呈报，内容版权归学智人工智能公司和客户{schoolName}所有
             </p>
           </div>
 

@@ -17,6 +17,7 @@ import PhotographerManagement from './pages/PhotographerManagement'
 import AISolutionCenter from './pages/AISolutionCenter.jsx'
 import CaseLibrary from './pages/CaseLibrary.jsx'
 import ProductLibrary from './pages/ProductLibrary.jsx'
+import ProductLibraryGallery from './pages/ProductLibraryGallery.jsx'
 import AiResearchCenter from './pages/AiResearchCenter.jsx'
 import BICockpit from './pages/BICockpit.jsx'
 import Login from './pages/Login.jsx'
@@ -45,7 +46,7 @@ function AdminLayout() {
     setSelectedKeys([e.key])
     navigate(e.key)
   }
-  
+
   // 导航菜单项
   const menuItems = [
     {
@@ -81,7 +82,7 @@ function AdminLayout() {
     {
       key: '/supplier',
       icon: <TeamOutlined />,
-      label: '供应商管理'
+      label: '共建生态链'
     },
     {
       key: '/financial',
@@ -96,12 +97,22 @@ function AdminLayout() {
     {
       key: '/ai-research',
       icon: <ExperimentOutlined />,
-      label: '宇智AI研发中心'
+      label: 'AI研发中心'
     },
     {
-      key: '/product-library',
+      key: 'product-library',
       icon: <AppstoreOutlined />,
-      label: '学智产品库'
+      label: '学智产品库',
+      children: [
+        {
+          key: '/product-library/ai-gallery',
+          label: 'AI产品展示'
+        },
+        {
+          key: '/product-library',
+          label: 'AI产品库'
+        }
+      ]
     },
     {
       key: '/case-library',
@@ -136,6 +147,8 @@ function AdminLayout() {
       ]
     }
   ]
+
+  const isGalleryPage = location.pathname.startsWith('/product-library/ai-gallery')
 
   return (
     <Layout className="app-layout">
@@ -191,7 +204,7 @@ function AdminLayout() {
             itemIcon={<span className="transition-all" />}
           />
         </Sider>
-        <Content className="app-content">
+        <Content className={isGalleryPage ? 'app-content pl-gallery-content' : 'app-content'}>
           <Outlet />
         </Content>
       </Layout>
@@ -221,6 +234,7 @@ function App() {
           <Route path="/ai-solution" element={<AISolutionCenter />} />
           <Route path="/ai-research" element={<AiResearchCenter />} />
           <Route path="/product-library" element={<ProductLibrary />} />
+          <Route path="/product-library/ai-gallery" element={<ProductLibraryGallery />} />
           <Route path="/product-library/:categoryKey" element={<ProductLibrary />} />
           <Route path="/product-library/:categoryKey/:productId" element={<ProductLibrary />} />
           <Route path="/talent-overview" element={<TalentManagement />} />

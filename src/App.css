@@ -302,6 +302,17 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
+.pl-gallery-content {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  min-height: calc(100vh - 64px);
+  height: calc(100vh - 64px);
+  overflow: hidden;
+}
+
 /* 卡片样式增强 */
 .card-hover {
   transition: all 0.3s ease;

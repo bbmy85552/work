@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Spin, message, Space, InputNumber, Card } from 'antd';
+import { Button, message, Space, InputNumber, Card } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
+import { HashLoader } from 'react-spinners';
 import { useNavigate } from 'react-router-dom';
 import { updateWallDesignTask } from '../../../services/wallDesign.service';
 import ReactQuill from 'react-quill';
@@ -149,7 +150,7 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
         alignItems: 'center',
         minHeight: '400px'
       }}>
-        <Spin size="large" />
+        <HashLoader color="#1890ff" size={60} />
         <span style={{ marginLeft: '12px', color: '#1e3a8a', fontSize: '16px' }}>加载方案预览...</span>
       </div>
     );

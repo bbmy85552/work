@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { HashLoader } from 'react-spinners';
 import './AISolutionCenter.css';
 import './components/AISolution/AISolutionStyles.css';
 
@@ -320,8 +321,15 @@ const AISolutionCenter = () => {
       {/* 主要内容区域 - 添加过渡动画和加载状态 */}
       <div className={`main-content fade-in ${isTransitioning ? 'fade-out' : ''}`}>
         {isStepLoading ? (
-          <div className="loading-container">
-            <div className="loading-spinner"></div>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '400px',
+            gap: '16px'
+          }}>
+            <HashLoader color="#1890ff" size={60} />
             <p style={{ marginTop: '16px', fontSize: '16px', color: '#1890ff' }}>正在加载内容，请稍候...</p>
           </div>
         ) : (

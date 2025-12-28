@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Card, Input, Button, message, Typography, Tooltip, Spin, Alert, Tag } from 'antd';
+import { Card, Input, Button, message, Typography, Tooltip, Alert, Tag } from 'antd';
+import { HashLoader } from 'react-spinners';
 import {
   SaveOutlined,
   ArrowRightOutlined,
   UndoOutlined,
   InfoCircleOutlined,
-  LoadingOutlined,
   CheckCircleOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
@@ -260,21 +260,37 @@ const ProposalContent = ({ data }) => {
 
 // 加载动画组件
 const LoadingIndicator = ({ progress, streamingContent }) => {
+  const contentEndRef = React.useRef(null);
+
+  // 当内容更新时，自动滚动到底部
+  React.useEffect(() => {
+    if (contentEndRef.current) {
+      contentEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [streamingContent]);
+
   return (
     <div style={{
       padding: '20px',
       background: '#f0f2f5',
       borderRadius: '8px',
-      marginTop: '16px'
+      marginTop: '16px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      width: '100%'
     }}>
-      <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-        <Spin
-          indicator={<LoadingOutlined style={{ fontSize: 48, color: '#1890ff' }} spin />}
-        />
-        <div style={{ marginTop: '16px', fontSize: '16px', color: '#333' }}>
-        </div>
+      <div style={{
+        textAlign: 'center',
+        marginBottom: '16px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <HashLoader color="#1890ff" size={60} />
         {progress && (
-          <div style={{ marginTop: '8px', fontSize: '14px', color: '#666' }}>
+          <div style={{ marginTop: '16px', fontSize: '14px', color: '#666' }}>
             {progress}
           </div>
         )}
@@ -287,7 +303,9 @@ const LoadingIndicator = ({ progress, streamingContent }) => {
           padding: '12px',
           background: 'white',
           border: '1px solid #d9d9d9',
-          borderRadius: '4px'
+          borderRadius: '4px',
+          width: '100%',
+          maxWidth: '100%'
         }}>
           <Text strong style={{ color: '#1890ff', display: 'block', marginBottom: '8px' }}>
             实时生成内容：
@@ -305,6 +323,7 @@ const LoadingIndicator = ({ progress, streamingContent }) => {
             overflowY: 'auto'
           }}>
             {streamingContent}
+            <div ref={contentEndRef} />
           </div>
         </div>
       )}

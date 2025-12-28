@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Spin } from 'antd';
+import { Button } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
+import { HashLoader } from 'react-spinners';
 import './AISolutionStyles.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -103,7 +104,7 @@ const FinalScheme = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
         borderRadius: '20px',
         gap: '12px'
       }}>
-        <Spin size="large" />
+        <HashLoader color="#ffffff" size={60} />
         <span style={{ color: 'white', fontSize: '16px' }}>加载最终方案...</span>
       </div>
     );

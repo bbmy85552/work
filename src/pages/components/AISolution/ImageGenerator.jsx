@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Spin, message, Space } from 'antd';
+import { Button, Card, message, Space } from 'antd';
 import { ArrowLeftOutlined, DownloadOutlined } from '@ant-design/icons';
+import { HashLoader } from 'react-spinners';
 import './AISolutionStyles.css';
 
 const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
@@ -240,7 +241,7 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
               justifyContent: 'center',
               gap: '16px'
             }}>
-              <Spin size="large" />
+              <HashLoader color="#1890ff" size={50} />
               <div>
                 <h3 style={{
                   margin: 0,
@@ -281,19 +282,22 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
                   <div style={{
                     position: 'relative',
                     paddingTop: '75%',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
+                    overflow: 'hidden'
                   }}>
                     <div style={{
                       position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      textAlign: 'center'
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      padding: '16px'
                     }}>
-                      <Spin size="large" />
+                      <HashLoader color="#1890ff" size={50} />
                       <p style={{
                         marginTop: '16px',
                         fontSize: '16px',
@@ -468,7 +472,7 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
               justifyContent: 'center',
               gap: '16px'
             }}>
-              <Spin size="large" />
+              <HashLoader color="#1890ff" size={50} />
               <div>
                 <h3 style={{
                   margin: 0,
@@ -548,8 +552,8 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
                           position: 'absolute',
                           top: 0,
                           left: 0,
-                          width: '100%',
-                          height: '100%',
+                          right: 0,
+                          bottom: 0,
                           display: 'flex',
                           flexDirection: 'column',
                           alignItems: 'center',
@@ -559,11 +563,12 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
                           gap: '16px',
                           zIndex: 5
                         }}>
-                          <Spin size="large" />
+                          <HashLoader color="#1890ff" size={50} />
                           <div style={{
                             fontSize: '16px',
                             color: '#1e3a8a',
-                            fontWeight: 600
+                            fontWeight: 600,
+                            textAlign: 'center'
                           }}>
                             正在加载第{index + 1}张效果图...
                           </div>
@@ -677,19 +682,22 @@ const ImageGenerator = ({ onPrev, onNext, solutionData, updateSolutionData }) =>
                   <div style={{
                     position: 'relative',
                     paddingTop: '75%',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
+                    overflow: 'hidden'
                   }}>
                     <div style={{
                       position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      textAlign: 'center'
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      padding: '16px'
                     }}>
-                      <Spin size="large" />
+                      <HashLoader color="#1890ff" size={50} />
                       <p style={{
                         marginTop: '16px',
                         fontSize: '16px',

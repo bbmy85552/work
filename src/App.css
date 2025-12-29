@@ -302,6 +302,12 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
+.app-content-flat {
+  background-color: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+
 .pl-gallery-content {
   margin: 0;
   padding: 0;

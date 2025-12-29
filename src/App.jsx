@@ -157,6 +157,7 @@ function AdminLayout() {
     '/photographer-management'
   ]
   const isFullScreenPage = fullScreenRoutes.some((path) => location.pathname.startsWith(path))
+  const isFlatContentPage = ['/customer'].some((path) => location.pathname.startsWith(path))
 
   return (
     <Layout className="app-layout">
@@ -212,7 +213,15 @@ function AdminLayout() {
             itemIcon={<span className="transition-all" />}
           />
         </Sider>
-        <Content className={isFullScreenPage ? 'app-content pl-gallery-content' : 'app-content'}>
+        <Content
+          className={
+            isFullScreenPage
+              ? 'app-content pl-gallery-content'
+              : isFlatContentPage
+                ? 'app-content app-content-flat'
+                : 'app-content'
+          }
+        >
           <Outlet />
         </Content>
       </Layout>

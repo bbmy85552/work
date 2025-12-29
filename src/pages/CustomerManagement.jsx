@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react'
-import { Card, Table, Typography, Button, Input, Select, Space, Tabs, Modal, Form, Checkbox } from 'antd'
-import { SearchOutlined, PlusOutlined, EditOutlined } from '@ant-design/icons'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { Card, Table, Typography, Button, Input, Select, Space, Modal, Form, Checkbox, Row, Col, Statistic, Tag, Divider, message, Spin } from 'antd'
+import { SearchOutlined, PlusOutlined, EditOutlined, TeamOutlined, RocketOutlined } from '@ant-design/icons'
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import customerData from '../mock/customerData'
+import { generatePolicySearch } from '../services/policySearch.service'
 
 const { Title } = Typography
 const { Search } = Input
 const { Option } = Select
-// Tabs组件不再需要解构TabPane
+
+// 苹果蓝品牌色
+const APPLE_BLUE = '#0071e3'
+const APPLE_GRAY = '#f5f5f7'
 
 // 客户行业类型选项（三大板块）
 const customerIndustryTypes = [
@@ -56,14 +61,17 @@ const projectTypes = [
 const { allSchools, cooperationSchools } = customerData
 
 const CustomerManagement = () => {
-  const [activeTab, setActiveTab] = useState('1') // 1: 全部客户, 2: 合作客户
   const [searchText, setSearchText] = useState('')
   const [selectedRegion, setSelectedRegion] = useState('')
   const [selectedIndustryType, setSelectedIndustryType] = useState('') // 新增：行业类型筛选
   const [selectedSchoolType, setSelectedSchoolType] = useState('')
-  const [selectedProjectType, setSelectedProjectType] = useState('')
   const [filteredAllCustomers, setFilteredAllCustomers] = useState([])
-  const [filteredCooperationCustomers, setFilteredCooperationCustomers] = useState([])
+  const [policySearchSources, setPolicySearchSources] = useState([])
+  const [policyStreamingContent, setPolicyStreamingContent] = useState('')
+  const [isPolicyGenerating, setIsPolicyGenerating] = useState(false)
+  const [policyProgress, setPolicyProgress] = useState('')
+  const policyCancelRef = useRef(null)
+  const policyChunksRef = useRef([])
 
   // 处理数据格式，统一字段名
   const processedAllCustomers = allSchools.map(customer => ({
@@ -77,22 +85,8 @@ const CustomerManagement = () => {
     dockingStatus: customer.status,
     industryType: customer.industryType || '学校', // 新增：行业类型
     schoolType: customer.schoolType || getRandomSchoolType(),
-    isCooperation: customer.isCooperation !== undefined ? customer.isCooperation : false
-  }))
-
-  // 处理合作客户数据
-  const processedCooperationCustomers = cooperationSchools.map(customer => ({
-    id: customer.id,
-    name: customer.schoolName,
-    contact: customer.contactPerson,
-    phone: customer.contactPhone,
-    salesman: customer.salesman,
-    region: customer.region,
-    customerType: customer.customerType,
-    dockingStatus: customer.status,
-    industryType: customer.industryType || '学校', // 新增：行业类型
-    schoolType: customer.schoolType || getRandomSchoolType(),
-    cooperationProjects: customer.cooperationProjects || getRandomProjects(),
+    isCooperation: customer.isCooperation !== undefined ? customer.isCooperation : false,
+    cooperationProjects: customer.cooperationProjects || [],
     cooperationAmount: customer.cooperationAmount || 0
   }))
 
@@ -122,13 +116,28 @@ const CustomerManagement = () => {
   // 初始化过滤后的数据
   React.useEffect(() => {
     // 获取所有区域选项
-    const allRegions = [...new Set([...allSchools, ...cooperationSchools].map(customer => customer.region))]
+    const allRegions = [...new Set(allSchools.map(customer => customer.region))]
     setRegions(allRegions)
 
     // 初始化数据
     setFilteredAllCustomers(processedAllCustomers)
-    setFilteredCooperationCustomers(processedCooperationCustomers)
+
+    // 初始化统计数据
+    calculateStatistics()
   }, [])
+
+  // 计算统计数据
+  const calculateStatistics = () => {
+    const industryCounts = {
+      '学校': allSchools.filter(c => c.industryType === '学校').length,
+      '文旅': allSchools.filter(c => c.industryType === '文旅').length,
+      '政府+人工智能': allSchools.filter(c => c.industryType === '政府+人工智能').length
+    }
+    setIndustryStatistics(industryCounts)
+  }
+
+  // 统计数据状态
+  const [industryStatistics, setIndustryStatistics] = useState({})
 
   // 搜索功能
   const handleSearch = (value) => {
@@ -151,17 +160,11 @@ const CustomerManagement = () => {
   // 学校/细分类型筛选
   const handleSchoolTypeChange = (value) => {
     setSelectedSchoolType(value)
-    filterData(searchText, selectedRegion, selectedIndustryType, value, selectedProjectType)
-  }
-
-  // 合作项目类型筛选
-  const handleProjectTypeChange = (value) => {
-    setSelectedProjectType(value)
-    filterData(searchText, selectedRegion, selectedIndustryType, selectedSchoolType, value)
+    filterData(searchText, selectedRegion, selectedIndustryType, value)
   }
 
   // 综合筛选数据
-  const filterData = (search, region, industryType, schoolType, projectType) => {
+  const filterData = (search, region, industryType, schoolType) => {
     // 筛选全部客户
     let allCustomersData = [...processedAllCustomers]
 
@@ -187,38 +190,6 @@ const CustomerManagement = () => {
     }
 
     setFilteredAllCustomers(allCustomersData)
-
-    // 筛选合作客户
-    let cooperationCustomersData = [...processedCooperationCustomers]
-
-    if (search) {
-      cooperationCustomersData = cooperationCustomersData.filter(customer =>
-        customer.name.includes(search) ||
-        customer.contact.includes(search) ||
-        customer.salesman.includes(search) ||
-        customer.id.includes(search)
-      )
-    }
-
-    if (region) {
-      cooperationCustomersData = cooperationCustomersData.filter(customer => customer.region === region)
-    }
-
-    if (industryType) {
-      cooperationCustomersData = cooperationCustomersData.filter(customer => customer.industryType === industryType)
-    }
-
-    if (schoolType) {
-      cooperationCustomersData = cooperationCustomersData.filter(customer => customer.schoolType === schoolType)
-    }
-
-    if (projectType) {
-      cooperationCustomersData = cooperationCustomersData.filter(customer =>
-        customer.cooperationProjects.includes(projectType)
-      )
-    }
-
-    setFilteredCooperationCustomers(cooperationCustomersData)
   }
   
   // 打开添加/编辑模态框
@@ -302,8 +273,7 @@ const CustomerManagement = () => {
     { title: '行业类型', dataIndex: 'industryType', key: 'industryType' },
     { title: '细分类型', dataIndex: 'schoolType', key: 'schoolType' },
     { title: '联系人', dataIndex: 'contact', key: 'contact' },
-    { title: '联系电话', dataIndex: 'phone', key: 'phone' },
-    { title: '业务员', dataIndex: 'salesman', key: 'salesman' },
+    // 联系电话/业务员不展示，避免假数据露出
     { title: '区域', dataIndex: 'region', key: 'region' },
     { title: '客户等级', dataIndex: 'customerType', key: 'customerType' },
     { title: '对接情况', dataIndex: 'dockingStatus', key: 'dockingStatus' },
@@ -333,8 +303,7 @@ const CustomerManagement = () => {
     { title: '行业类型', dataIndex: 'industryType', key: 'industryType' },
     { title: '细分类型', dataIndex: 'schoolType', key: 'schoolType' },
     { title: '联系人', dataIndex: 'contact', key: 'contact' },
-    { title: '联系电话', dataIndex: 'phone', key: 'phone' },
-    { title: '业务员', dataIndex: 'salesman', key: 'salesman' },
+    // 联系电话/业务员不展示，避免假数据露出
     { title: '区域', dataIndex: 'region', key: 'region' },
     { title: '客户类型', dataIndex: 'customerType', key: 'customerType' },
     {
@@ -370,256 +339,656 @@ const CustomerManagement = () => {
   ]
 
   // 获取所有区域选项
-  const [regions, setRegions] = useState([...new Set(allSchools.map(school => school.region))])
-  
+  const [regions, setRegions] = useState([...new Set(allSchools.map(customer => customer.region))])
+
   // 模态框相关状态
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [editingSchool, setEditingSchool] = useState(null)
   const [form] = Form.useForm()
+  const [policyInputForm] = Form.useForm()
+
+  // 准备图表数据
+  const industryDistributionData = [
+    { name: '学校', value: industryStatistics['学校'] || 0, color: '#0071e3' },
+    { name: '文旅', value: industryStatistics['文旅'] || 0, color: '#52c41a' },
+    { name: '政府+AI', value: industryStatistics['政府+人工智能'] || 0, color: '#722ed1' }
+  ]
+
+  const regionData = [
+    { name: '北京市', value: allSchools.filter(c => c.region === '北京市').length },
+    { name: '上海市', value: allSchools.filter(c => c.region === '上海市').length },
+    { name: '广东省', value: allSchools.filter(c => c.region === '广东省').length },
+    { name: '浙江省', value: allSchools.filter(c => c.region === '浙江省').length },
+    { name: '四川省', value: allSchools.filter(c => c.region === '四川省').length }
+  ]
+
+  // 快捷筛选函数
+  const handleQuickFilter = (industryType) => {
+    setSelectedIndustryType(industryType)
+    filterData(searchText, selectedRegion, industryType, selectedSchoolType)
+  }
+
+  const isGovAI = selectedIndustryType === '政府+人工智能'
+
+  // 政府+AI 政策生成
+  const handleGeneratePolicy = useCallback(async () => {
+    try {
+      const values = await policyInputForm.validateFields()
+      const city = values.city?.trim()
+      const keywords = values.keywords || []
+
+      setIsPolicyGenerating(true)
+      setPolicySearchSources([])
+      setPolicyStreamingContent('')
+      setPolicyProgress('正在检索政策信息...')
+      policyChunksRef.current = []
+
+      if (policyCancelRef.current) {
+        policyCancelRef.current()
+      }
+
+      policyCancelRef.current = generatePolicySearch({
+        city,
+        keywords,
+        onMessage: (data) => {
+          switch (data.type) {
+            case 'search_info':
+              if (data.search_results) {
+                setPolicySearchSources(data.search_results)
+                setPolicyProgress(`找到 ${data.search_results.length} 条政策来源，正在生成内容...`)
+              }
+              break
+            case 'content':
+              if (data.content) {
+                const nextChunks = [...policyChunksRef.current, data.content]
+                policyChunksRef.current = nextChunks
+                setPolicyStreamingContent(nextChunks.join(''))
+                setPolicyProgress('学智AI正在汇总政策信息，请稍候...')
+              }
+              break
+            case 'usage_stats':
+              setPolicyProgress('政策信息生成完成')
+              break
+            case 'completed':
+              setPolicyProgress('政策信息生成完成')
+              break
+            default:
+          }
+        },
+        onComplete: () => {
+          setIsPolicyGenerating(false)
+          message.success('政策信息生成成功')
+        },
+        onError: (error) => {
+          console.error('生成政策信息失败:', error)
+          message.error(`生成失败: ${error.message || '未知错误'}`)
+          setIsPolicyGenerating(false)
+        }
+      })
+    } catch (error) {
+      if (error?.errorFields) {
+        return
+      }
+      console.error('生成政策信息失败:', error)
+      message.error('生成失败，请稍后重试')
+      setIsPolicyGenerating(false)
+    }
+  }, [policyInputForm])
+
+  useEffect(() => {
+    return () => {
+      if (policyCancelRef.current) {
+        policyCancelRef.current()
+      }
+    }
+  }, [])
 
   return (
-    <div>
-      <Title level={2}>客户管理</Title>
+    <div style={{ minHeight: '100%' }}>
+      {/* 页面标题 */}
+      <div style={{ marginBottom: '32px' }}>
+        <Title level={2} style={{ margin: 0, fontSize: '32px', fontWeight: 600, color: '#1d1d1f' }}>
+          客户管理
+        </Title>
+        <p style={{ margin: '8px 0 0 0', fontSize: '14px', color: '#86868b' }}>
+          三大板块客户数据统计与管理
+        </p>
+      </div>
 
-      {/* 搜索和筛选区域 */}
-      <Card className="mb-4">
-        <Space wrap>
-          <Space.Compact style={{ width: 400 }}>
-            <Input
-              placeholder="搜索客户名称、联系人、业务员或ID"
-              allowClear
-              onChange={(e) => handleSearch(e.target.value)}
+      {/* 核心数据统计卡片 - 苹果风格 */}
+      <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
+        <Col xs={24} sm={12} lg={8}>
+          <Card
+            style={{
+              borderRadius: '16px',
+              background: 'white',
+              border: 'none',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+              transition: 'all 0.3s ease'
+            }}
+            hoverable
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+          >
+            <Statistic
+              title={<span style={{ fontSize: '13px', color: '#86868b', fontWeight: 500 }}>客户总数</span>}
+              value={allSchools.length}
+              prefix={<TeamOutlined style={{ color: APPLE_BLUE }} />}
+              valueStyle={{ color: APPLE_BLUE, fontSize: '28px', fontWeight: 600 }}
             />
-            <Button type="primary" icon={<SearchOutlined />} onClick={() => handleSearch(searchText)} />
-          </Space.Compact>
-          <Select
-            placeholder="选择区域"
-            allowClear
-            style={{ width: 150 }}
-            onChange={handleRegionChange}
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} lg={8}>
+          <Card
+            style={{
+              borderRadius: '16px',
+              background: 'white',
+              border: 'none',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+              transition: 'all 0.3s ease'
+            }}
+            hoverable
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
           >
-            {regions.map(region => (
-              <Option key={region} value={region}>{region}</Option>
-            ))}
-          </Select>
-          <Select
-            placeholder="行业类型"
-            allowClear
-            style={{ width: 150 }}
-            onChange={handleIndustryTypeChange}
+            <Statistic
+              title={<span style={{ fontSize: '13px', color: '#86868b', fontWeight: 500 }}>学校客户</span>}
+              value={industryStatistics['学校'] || 0}
+              // prefix={<UserOutlined style={{ color: '#0071e3' }} />}
+              valueStyle={{ color: '#0071e3', fontSize: '28px', fontWeight: 600 }}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} lg={8}>
+          <Card
+            style={{
+              borderRadius: '16px',
+              background: 'white',
+              border: 'none',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+              transition: 'all 0.3s ease'
+            }}
+            hoverable
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
           >
-            {customerIndustryTypes.map(type => (
-              <Option key={type.value} value={type.value}>{type.label}</Option>
-            ))}
-          </Select>
-          <Select
-            placeholder="细分类型"
-            allowClear
-            style={{ width: 120 }}
-            onChange={handleSchoolTypeChange}
+            <Statistic
+              title={<span style={{ fontSize: '13px', color: '#86868b', fontWeight: 500 }}>政府+AI客户</span>}
+              value={industryStatistics['政府+人工智能'] || 0}
+              prefix={<RocketOutlined style={{ color: '#722ed1' }} />}
+              valueStyle={{ color: '#722ed1', fontSize: '28px', fontWeight: 600 }}
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      {/* 数据可视化区域 */}
+      <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
+        {/* 行业分布饼图 */}
+        <Col xs={24} lg={12}>
+          <Card
+            title={<span style={{ fontSize: '16px', fontWeight: 600, color: '#1d1d1f' }}>行业分布</span>}
+            style={{
+              borderRadius: '16px',
+              background: 'white',
+              border: 'none',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+            }}
           >
-            {schoolTypes.map(type => (
-              <Option key={type.value} value={type.value}>{type.label}</Option>
-            ))}
-          </Select>
-          {activeTab === '2' && (
-            <Select
-              placeholder="选择合作项目"
-              allowClear
-              style={{ width: 120, marginLeft: 8 }}
-              onChange={handleProjectTypeChange}
+            <ResponsiveContainer width="100%" height={240}>
+              <PieChart>
+                <Pie
+                  data={industryDistributionData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={70}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {industryDistributionData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </Card>
+        </Col>
+
+        {/* 区域分布柱状图 */}
+        <Col xs={24} lg={12}>
+          <Card
+            title={<span style={{ fontSize: '16px', fontWeight: 600, color: '#1d1d1f' }}>区域分布</span>}
+            style={{
+              borderRadius: '16px',
+              background: 'white',
+              border: 'none',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+            }}
+          >
+            <ResponsiveContainer width="100%" height={240}>
+              <BarChart data={regionData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis dataKey="name" stroke="#86868b" fontSize={12} />
+                <YAxis stroke="#86868b" fontSize={12} />
+                <Tooltip />
+                <Bar dataKey="value" fill={APPLE_BLUE} radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* 搜索和筛选区域 - 苹果风格 */}
+      <Card
+        style={{
+          borderRadius: '16px',
+          background: 'white',
+          border: 'none',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+          marginBottom: '24px'
+        }}
+      >
+        {/* 快捷筛选标签 */}
+        <div style={{ marginBottom: '16px' }}>
+          <Space size={[8, 8]} wrap>
+            <Button
+              type={selectedIndustryType === '' ? 'primary' : 'default'}
+              onClick={() => handleQuickFilter('')}
+              style={{
+                borderRadius: '8px',
+                height: '36px',
+                fontSize: '14px'
+              }}
             >
-              {projectTypes.map(type => (
+              全部客户
+            </Button>
+            <Button
+              type={selectedIndustryType === '学校' ? 'primary' : 'default'}
+              // icon={<UserOutlined />}
+              onClick={() => handleQuickFilter('学校')}
+              style={{
+                borderRadius: '8px',
+                height: '36px',
+                fontSize: '14px'
+              }}
+            >
+              学校
+            </Button>
+            <Button
+              type={selectedIndustryType === '文旅' ? 'primary' : 'default'}
+              onClick={() => handleQuickFilter('文旅')}
+              style={{
+                borderRadius: '8px',
+                height: '36px',
+                fontSize: '14px'
+              }}
+            >
+              文旅
+            </Button>
+            <Button
+              type={selectedIndustryType === '政府+人工智能' ? 'primary' : 'default'}
+              // icon={<RocketOutlined />}
+              onClick={() => handleQuickFilter('政府+人工智能')}
+              style={{
+                borderRadius: '8px',
+                height: '36px',
+                fontSize: '14px'
+              }}
+            >
+              政府+人工智能
+            </Button>
+          </Space>
+        </div>
+
+        {/* 搜索和详细筛选 */}
+        {!isGovAI && (
+          <Space wrap size="middle">
+            <Space.Compact style={{ width: 400 }}>
+              <Input
+                placeholder="搜索客户名称、联系人、业务员或ID"
+                allowClear
+                style={{
+                  borderRadius: '8px 0 0 8px',
+                  height: '40px',
+                  fontSize: '14px'
+                }}
+                onChange={(e) => handleSearch(e.target.value)}
+              />
+              <Button
+                type="primary"
+                icon={<SearchOutlined />}
+                onClick={() => handleSearch(searchText)}
+                style={{
+                  borderRadius: '0 8px 8px 0',
+                  height: '40px',
+                  background: APPLE_BLUE
+                }}
+              />
+            </Space.Compact>
+            <Select
+              placeholder="选择区域"
+              allowClear
+              style={{
+                width: 150,
+                borderRadius: '8px'
+              }}
+              onChange={handleRegionChange}
+            >
+              {regions.map(region => (
+                <Option key={region} value={region}>{region}</Option>
+              ))}
+            </Select>
+            <Select
+              placeholder="细分类型"
+              allowClear
+              style={{
+                width: 150,
+                borderRadius: '8px'
+              }}
+              onChange={handleSchoolTypeChange}
+            >
+              {schoolTypes.map(type => (
                 <Option key={type.value} value={type.value}>{type.label}</Option>
               ))}
             </Select>
-          )}
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal()}>
-            添加客户
-          </Button>
-
-          {/* 添加/编辑客户模态框 */}
-          <Modal
-            title={editingSchool ? '编辑客户信息' : '添加新客户'}
-            open={isModalVisible}
-            onOk={handleSubmit}
-            onCancel={handleCancel}
-            okText="保存"
-            cancelText="取消"
-            width={600}
-          >
-            <Form
-              form={form}
-              layout="vertical"
-              initialValues={{
-                schoolType: '小学',
-                customerType: '新客户',
-                status: '对接中',
-                isCooperation: false,
-                cooperationProjects: [],
-                cooperationAmount: 0
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => showModal()}
+              style={{
+                borderRadius: '8px',
+                height: '40px',
+                background: APPLE_BLUE
               }}
             >
-              <Form.Item
-                label="客户名称"
-                name="schoolName"
-                rules={[{ required: true, message: '请输入客户名称' }]}
-              >
-                <Input placeholder="请输入客户名称" />
-              </Form.Item>
+              添加客户
+            </Button>
 
-              <Form.Item
-                label="行业类型"
-                name="industryType"
-                rules={[{ required: true, message: '请选择行业类型' }]}
+            {/* 添加/编辑客户模态框 */}
+            <Modal
+              title={editingSchool ? '编辑客户信息' : '添加新客户'}
+              open={isModalVisible}
+              onOk={handleSubmit}
+              onCancel={handleCancel}
+              okText="保存"
+              cancelText="取消"
+              width={600}
+            >
+              <Form
+                form={form}
+                layout="vertical"
+                initialValues={{
+                  schoolType: '小学',
+                  customerType: '新客户',
+                  status: '对接中',
+                  isCooperation: false,
+                  cooperationProjects: [],
+                  cooperationAmount: 0
+                }}
               >
-                <Select placeholder="请选择行业类型">
-                  {customerIndustryTypes.map(type => (
-                    <Option key={type.value} value={type.value}>{type.label}</Option>
-                  ))}
-                </Select>
-              </Form.Item>
+                <Form.Item
+                  label="客户名称"
+                  name="schoolName"
+                  rules={[{ required: true, message: '请输入客户名称' }]}
+                >
+                  <Input placeholder="请输入客户名称" />
+                </Form.Item>
 
-              <Form.Item
-                label="细分类型"
-                name="schoolType"
-                rules={[{ required: true, message: '请选择细分类型' }]}
-              >
-                <Select placeholder="请选择细分类型">
-                  {schoolTypes.map(type => (
-                    <Option key={type.value} value={type.value}>{type.label}</Option>
-                  ))}
-                </Select>
-              </Form.Item>
-              
-              <Form.Item
-                label="联系人"
-                name="contactPerson"
-                rules={[{ required: true, message: '请输入联系人姓名' }]}
-              >
-                <Input placeholder="请输入联系人姓名" />
-              </Form.Item>
-              
-              <Form.Item
-                label="联系电话"
-                name="contactPhone"
-                rules={[{ required: true, message: '请输入联系电话' }]}
-              >
-                <Input placeholder="请输入联系电话" />
-              </Form.Item>
-              
-              <Form.Item
-                label="负责业务员"
-                name="salesman"
-                rules={[{ required: true, message: '请输入负责业务员' }]}
-              >
-                <Input placeholder="请输入负责业务员" />
-              </Form.Item>
-              
-              <Form.Item
-                label="区域"
-                name="region"
-                rules={[{ required: true, message: '请选择区域' }]}
-              >
-                <Select placeholder="请选择区域">
-                  {regions.map(region => (
-                    <Option key={region} value={region}>{region}</Option>
-                  ))}
-                </Select>
-              </Form.Item>
-              
-              <Form.Item
-                label="客户类型"
-                name="customerType"
-                rules={[{ required: true, message: '请选择客户类型' }]}
-              >
-                <Select placeholder="请选择客户类型">
-                  <Option value="新客户">新客户</Option>
-                  <Option value="老客户">老客户</Option>
-                </Select>
-              </Form.Item>
-              
-              <Form.Item
-                label="对接情况"
-                name="status"
-                rules={[{ required: true, message: '请选择对接情况' }]}
-              >
-                <Select placeholder="请选择对接情况">
-                  <Option value="未对接">未对接</Option>
-                  <Option value="对接中">对接中</Option>
-                  <Option value="已对接">已对接</Option>
-                </Select>
-              </Form.Item>
-              
-              <Form.Item
-                label="是否合作客户"
-                name="isCooperation"
-                valuePropName="checked"
-              >
-                <Checkbox>是合作客户</Checkbox>
-              </Form.Item>
-              
-              {form.getFieldValue('isCooperation') && (
-                <Space direction="vertical" style={{ width: '100%' }}>
+                <Form.Item
+                  label="行业类型"
+                  name="industryType"
+                  rules={[{ required: true, message: '请选择行业类型' }]}
+                >
+                  <Select placeholder="请选择行业类型">
+                    {customerIndustryTypes.map(type => (
+                      <Option key={type.value} value={type.value}>{type.label}</Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+
+                <Form.Item
+                  label="细分类型"
+                  name="schoolType"
+                  rules={[{ required: true, message: '请选择细分类型' }]}
+                >
+                  <Select placeholder="请选择细分类型">
+                    {schoolTypes.map(type => (
+                      <Option key={type.value} value={type.value}>{type.label}</Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+                
+                <Form.Item
+                  label="联系人"
+                  name="contactPerson"
+                  rules={[{ required: true, message: '请输入联系人姓名' }]}
+                >
+                  <Input placeholder="请输入联系人姓名" />
+                </Form.Item>
+                
+                <Form.Item
+                  label="联系电话"
+                  name="contactPhone"
+                  rules={[{ required: true, message: '请输入联系电话' }]}
+                >
+                  <Input placeholder="请输入联系电话" />
+                </Form.Item>
+                
+                <Form.Item
+                  label="负责业务员"
+                  name="salesman"
+                  rules={[{ required: true, message: '请输入负责业务员' }]}
+                >
+                  <Input placeholder="请输入负责业务员" />
+                </Form.Item>
+                
+                <Form.Item
+                  label="区域"
+                  name="region"
+                  rules={[{ required: true, message: '请选择区域' }]}
+                >
+                  <Select placeholder="请选择区域">
+                    {regions.map(region => (
+                      <Option key={region} value={region}>{region}</Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+                
+                <Form.Item
+                  label="客户类型"
+                  name="customerType"
+                  rules={[{ required: true, message: '请选择客户类型' }]}
+                >
+                  <Select placeholder="请选择客户类型">
+                    <Option value="新客户">新客户</Option>
+                    <Option value="老客户">老客户</Option>
+                  </Select>
+                </Form.Item>
+                
+                <Form.Item
+                  label="对接情况"
+                  name="status"
+                  rules={[{ required: true, message: '请选择对接情况' }]}
+                >
+                  <Select placeholder="请选择对接情况">
+                    <Option value="未对接">未对接</Option>
+                    <Option value="对接中">对接中</Option>
+                    <Option value="已对接">已对接</Option>
+                  </Select>
+                </Form.Item>
+                
+                <Form.Item
+                  label="是否合作客户"
+                  name="isCooperation"
+                  valuePropName="checked"
+                >
+                  <Checkbox>是合作客户</Checkbox>
+                </Form.Item>
+                
+                {form.getFieldValue('isCooperation') && (
+                  <Space direction="vertical" style={{ width: '100%' }}>
+                    <Form.Item
+                      label="合作项目"
+                      name="cooperationProjects"
+                      rules={[{ required: true, message: '请选择合作项目' }]}
+                    >
+                      <Select placeholder="请选择合作项目" mode="multiple">
+                        {projectTypes.map(type => (
+                          <Option key={type.value} value={type.value}>{type.label}</Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                    
+                    <Form.Item
+                      label="合作金额"
+                      name="cooperationAmount"
+                      rules={[{ required: true, message: '请输入合作金额' }]}
+                    >
+                      <Input type="number" placeholder="请输入合作金额" />
+                    </Form.Item>
+                  </Space>
+                )}
+              </Form>
+            </Modal>
+          </Space>
+        )}
+
+        {isGovAI && (
+          <div>
+            <Form form={policyInputForm} layout="vertical">
+              <Row gutter={[16, 16]}>
+                <Col xs={24} md={8}>
                   <Form.Item
-                    label="合作项目"
-                    name="cooperationProjects"
-                    rules={[{ required: true, message: '请选择合作项目' }]}
+                    label="政府城市"
+                    name="city"
+                    rules={[{ required: true, message: '请输入城市名称' }]}
                   >
-                    <Select placeholder="请选择合作项目" mode="multiple">
-                      {projectTypes.map(type => (
-                        <Option key={type.value} value={type.value}>{type.label}</Option>
-                      ))}
-                    </Select>
+                    <Input placeholder="请输入城市名称，例如：广州" />
                   </Form.Item>
-                  
-                  <Form.Item
-                    label="合作金额"
-                    name="cooperationAmount"
-                    rules={[{ required: true, message: '请输入合作金额' }]}
-                  >
-                    <Input type="number" placeholder="请输入合作金额" />
+                </Col>
+                <Col xs={24} md={16}>
+                  <Form.Item label="关键词" name="keywords">
+                    <Select
+                      mode="tags"
+                      tokenSeparators={[',', '，']}
+                      placeholder="输入关键词，例如：AI、人工智能、政策"
+                    />
                   </Form.Item>
-                </Space>
-              )}
+                </Col>
+              </Row>
+              <Space>
+                <Button
+                  type="primary"
+                  onClick={handleGeneratePolicy}
+                  loading={isPolicyGenerating}
+                  style={{ background: APPLE_BLUE }}
+                >
+                  生成政策信息
+                </Button>
+                {policyProgress && (
+                  <span style={{ color: '#86868b' }}>{policyProgress}</span>
+                )}
+              </Space>
             </Form>
-          </Modal>
-        </Space>
+
+            {policySearchSources.length > 0 && (
+              <div style={{ marginTop: '16px' }}>
+                <div style={{ fontSize: '13px', color: '#86868b', marginBottom: '8px' }}>搜索来源</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {policySearchSources.map((source, index) => (
+                    <Button
+                      key={source.url || `${source.title}-${index}`}
+                      type="link"
+                      href={source.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{
+                        textAlign: 'left',
+                        justifyContent: 'flex-start',
+                        padding: '6px 12px',
+                        height: 'auto',
+                        borderRadius: '8px',
+                        background: '#f5f8ff',
+                        border: '1px solid #d6e4ff',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }}
+                    >
+                      {source.title || source.url}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {isPolicyGenerating && policyStreamingContent && (
+              <div style={{
+                marginTop: '16px',
+                padding: '12px',
+                background: '#fafafa',
+                borderRadius: '8px',
+                border: '1px solid #f0f0f0',
+                fontFamily: 'monospace',
+                fontSize: '12px',
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                maxHeight: '320px',
+                overflowY: 'auto'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <Spin size="small" />
+                  <span style={{ color: '#86868b' }}>生成中...</span>
+                </div>
+                {policyStreamingContent}
+              </div>
+            )}
+          </div>
+        )}
       </Card>
-      
-      {/* Tab切换 - 使用新的items属性方式 */}
-      <Tabs 
-        activeKey={activeTab} 
-        onChange={setActiveTab}
-        items={[
-          {
-            key: '1',
-            label: '全部客户',
-            children: (
-              <Table
-                columns={allCustomerColumns}
-                dataSource={filteredAllCustomers} 
-                rowKey="id"
-                pagination={{ pageSize: 10 }}
-                scroll={{ x: 'max-content' }}
-              />
-            )
-          },
-          {
-            key: '2',
-            label: '合作客户',
-            children: (
-              <Table
-                columns={cooperationCustomerColumns}
-                dataSource={filteredCooperationCustomers}
-                rowKey="id"
-                pagination={{ pageSize: 10 }}
-                scroll={{ x: 'max-content' }}
-              />
-            )
-          }
-        ]}
-      />
+
+      {!isGovAI && (
+        <Card
+          style={{
+            borderRadius: '16px',
+            background: 'white',
+            border: 'none',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+          }}
+        >
+          <Table
+            columns={allCustomerColumns}
+            dataSource={filteredAllCustomers}
+            rowKey="id"
+            pagination={{
+              pageSize: 10,
+              showSizeChanger: false,
+              showQuickJumper: true
+            }}
+            scroll={{ x: 'max-content' }}
+            style={{
+              fontSize: '14px'
+            }}
+          />
+        </Card>
+      )}
+
+      {isGovAI && policySearchSources.length === 0 && (
+        <Card
+          style={{
+            borderRadius: '16px',
+            background: 'white',
+            border: 'none',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+          }}
+        >
+          <Divider orientation="left">政策列表</Divider>
+          <div style={{ color: '#86868b' }}>暂无政策数据</div>
+        </Card>
+      )}
     </div>
   )
 }

@@ -45,6 +45,10 @@ export const API_ENDPOINTS = {
   IMAGE_GENERATION: {
     GENERATE: buildEndpoint('/image-generation/generate'), // 生成效果图
   },
+  // 政策搜索相关
+  POLICY_SEARCH: {
+    GENERATE: buildEndpoint('/policy-search/generate'), // 生成政策搜索结果
+  },
 };
 
 export default API_CONFIG;

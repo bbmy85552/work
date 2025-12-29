@@ -23,19 +23,6 @@ const allCustomers = [
     contactPhone: '13923456789',
     salesman: '张华',
     region: '上海市',
-    customerType: '重点客户',
-    status: '已对接',
-    isCooperation: true,
-    industryType: '学校',
-    schoolType: '初中'
-  },
-  {
-    id: 'SCH002',
-    schoolName: '上海市实验学校',
-    contactPerson: '王老师',
-    contactPhone: '13923456789',
-    salesman: '张华',
-    region: '上海市',
     customerType: '示范学校',
     status: '已对接',
     isCooperation: true,
@@ -277,6 +264,84 @@ const allCustomers = [
     industryType: '文旅',
     schoolType: '文创园区'
   },
+  {
+    id: 'CUL007',
+    schoolName: '南京博物院',
+    contactPerson: '黄主任',
+    contactPhone: '13711112222',
+    salesman: '陈明',
+    region: '江苏省',
+    customerType: '重点客户',
+    status: '已对接',
+    isCooperation: true,
+    industryType: '文旅',
+    schoolType: '博物馆'
+  },
+  {
+    id: 'CUL008',
+    schoolName: '苏州博物馆',
+    contactPerson: '沈老师',
+    contactPhone: '13622223333',
+    salesman: '吴芳',
+    region: '江苏省',
+    customerType: '普通客户',
+    status: '沟通中',
+    isCooperation: false,
+    industryType: '文旅',
+    schoolType: '博物馆'
+  },
+  {
+    id: 'CUL009',
+    schoolName: '西安大唐不夜城景区',
+    contactPerson: '马经理',
+    contactPhone: '13533334444',
+    salesman: '赵红',
+    region: '陕西省',
+    customerType: '重点客户',
+    status: '待对接',
+    isCooperation: false,
+    industryType: '文旅',
+    schoolType: '旅游景区'
+  },
+  {
+    id: 'CUL010',
+    schoolName: '哈尔滨冰雪大世界',
+    contactPerson: '梁总监',
+    contactPhone: '13944445555',
+    salesman: '周强',
+    region: '黑龙江省',
+    customerType: '重点客户',
+    status: '沟通中',
+    isCooperation: false,
+    industryType: '文旅',
+    schoolType: '主题公园'
+  },
+  {
+    id: 'CUL011',
+    schoolName: '桂林两江四湖景区',
+    contactPerson: '覃主任',
+    contactPhone: '13855556666',
+    salesman: '郑华',
+    region: '广西壮族自治区',
+    customerType: '普通客户',
+    status: '待对接',
+    isCooperation: false,
+    industryType: '文旅',
+    schoolType: '旅游景区'
+  },
+  {
+    id: 'CUL012',
+    schoolName: '青岛海底世界',
+    contactPerson: '丁经理',
+    contactPhone: '13766667777',
+    salesman: '李华',
+    region: '山东省',
+    customerType: '普通客户',
+    status: '已对接',
+    isCooperation: true,
+    industryType: '文旅',
+    schoolType: '主题公园'
+  },
 
   // ===== 政府+人工智能板块 =====
   {
@@ -364,64 +429,65 @@ const allSchools = allCustomers
 const cooperationSchools = allCustomers.filter(c => c.isCooperation)
 
 // 合作客户数据 - 包含合作项目和金额
+const findCustomer = (id) => allCustomers.find(customer => customer.id === id)
 const cooperationCustomers = [
   {
-    ...allCustomers[0],
+    ...findCustomer('SCH001'),
     cooperationProjects: ['硬件设备', '软件系统'],
     cooperationAmount: 500000
   },
   {
-    ...allCustomers[1],
+    ...findCustomer('SCH002'),
     cooperationProjects: ['解决方案'],
     cooperationAmount: 350000
   },
   {
-    ...allCustomers[2],
+    ...findCustomer('SCH003'),
     cooperationProjects: ['硬件设备'],
     cooperationAmount: 200000
   },
   {
-    ...allCustomers[3],
+    ...findCustomer('SCH004'),
     cooperationProjects: ['定制方案', '软件系统'],
     cooperationAmount: 780000
   },
   {
-    ...allCustomers[4],
+    ...findCustomer('SCH005'),
     cooperationProjects: ['软件系统', '解决方案', '定制方案'],
     cooperationAmount: 680000
   },
   {
-    ...allCustomers[5],
+    ...findCustomer('SCH006'),
     cooperationProjects: ['硬件设备', '解决方案', '定制方案'],
     cooperationAmount: 950000
   },
   {
-    ...allCustomers[14],
+    ...findCustomer('CUL001'),
     cooperationProjects: ['AI智能导览系统'],
     cooperationAmount: 1200000
   },
   {
-    ...allCustomers[15],
+    ...findCustomer('CUL002'),
     cooperationProjects: ['智慧场馆解决方案'],
     cooperationAmount: 800000
   },
   {
-    ...allCustomers[16],
+    ...findCustomer('CUL003'),
     cooperationProjects: ['互动展示系统', '票务管理系统'],
     cooperationAmount: 450000
   },
   {
-    ...allCustomers[20],
+    ...findCustomer('GOV001'),
     cooperationProjects: ['AI政务助手', '智能办公系统'],
     cooperationAmount: 1500000
   },
   {
-    ...allCustomers[21],
+    ...findCustomer('GOV002'),
     cooperationProjects: ['智慧园区管理平台', 'AI监控系统'],
     cooperationAmount: 2000000
   },
   {
-    ...allCustomers[22],
+    ...findCustomer('GOV003'),
     cooperationProjects: ['AI算法平台', '智能硬件设备'],
     cooperationAmount: 1800000
   }

@@ -20,6 +20,7 @@ import ProductLibrary from './pages/ProductLibrary.jsx'
 import ProductLibraryGallery from './pages/ProductLibraryGallery.jsx'
 import AiResearchCenter from './pages/AiResearchCenter.jsx'
 import BICockpit from './pages/BICockpit.jsx'
+import XuezhiEcosystem from './pages/XuezhiEcosystem.jsx'
 import Login from './pages/Login.jsx'
 import { isAuthed } from './utils/auth'
 
@@ -80,9 +81,19 @@ function AdminLayout() {
       label: '交付跟踪'
     },
     {
-      key: '/supplier',
+      key: 'ecosystem',
       icon: <TeamOutlined />,
-      label: '共建生态链'
+      label: '共建生态链',
+      children: [
+        {
+          key: '/supplier',
+          label: '供应商管理'
+        },
+        {
+          key: '/xuezhi-ecosystem',
+          label: '学智生态圈'
+        }
+      ]
     },
     {
       key: '/ai-solution',
@@ -150,6 +161,7 @@ function AdminLayout() {
 
   const fullScreenRoutes = [
     '/product-library/ai-gallery',
+    '/xuezhi-ecosystem',
     '/talent-overview',
     '/planner-management',
     '/designer-management',
@@ -250,6 +262,7 @@ function App() {
           <Route path="/financial" element={<FinancialManagement />} />
           <Route path="/ai-solution" element={<AISolutionCenter />} />
           <Route path="/ai-research" element={<AiResearchCenter />} />
+          <Route path="/xuezhi-ecosystem" element={<XuezhiEcosystem />} />
           <Route path="/product-library" element={<ProductLibrary />} />
           <Route path="/product-library/ai-gallery" element={<ProductLibraryGallery />} />
           <Route path="/product-library/:categoryKey" element={<ProductLibrary />} />

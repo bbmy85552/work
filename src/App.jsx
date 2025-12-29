@@ -86,12 +86,12 @@ function AdminLayout() {
       label: '共建生态链',
       children: [
         {
-          key: '/supplier',
-          label: '供应商管理'
-        },
-        {
           key: '/xuezhi-ecosystem',
           label: '学智生态圈'
+        },
+        {
+          key: '/supplier',
+          label: '供应商管理'
         }
       ]
     },

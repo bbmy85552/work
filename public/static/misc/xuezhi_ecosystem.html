@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <script>
     tailwind.config = {
       theme: {
@@ -44,6 +44,43 @@
       background: linear-gradient(135deg, #2563eb, #60a5fa);
       color: #fff !important;
       box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
+      transform: translateY(-2px);
+    }
+
+    .stat-card {
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(37, 99, 235, 0.15);
+    }
+
+    .image-placeholder {
+      background: linear-gradient(135deg, #e0e7ff 0%, #f0f9ff 100%);
+      border: 2px dashed #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .section-title {
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #2563eb, #60a5fa);
+      border-radius: 2px;
     }
   </style>
 </head>
@@ -70,7 +107,7 @@
         <div class="max-w-6xl mx-auto px-5 py-16 lg:py-24 grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <p class="text-xs uppercase tracking-[0.6em] text-slate-400 mb-4">Apple Minimal · Xiaomi Ecosystem</p>
-            <h1 class="text-4xl lg:text-5xl font-semibold leading-snug mb-6 text-slate-900">
+            <h1 class="text-4xl lg:text-5xl font-bold leading-snug mb-6 text-slate-900">
               极简美学 × 数据闭环，
               <span class="text-brandBlue">学智AI</span>
               共筑教育生态链
@@ -103,7 +140,7 @@
               </div>
               <div class="rounded-3xl p-6 bg-gradient-to-br from-brandBlue to-brandBlueLight text-white">
                 <p class="text-xs uppercase tracking-[0.3em] text-white/80">价值</p>
-                <h3 class="text-2xl font-semibold mt-2">平台赋能 · 共建共享</h3>
+                <h3 class="text-2xl font-bold mt-2">平台赋能 · 共建共享</h3>
                 <p class="text-sm mt-2 text-white/90">用极简体验连接复杂生态，形成数据闭环。</p>
               </div>
             </div>
@@ -111,74 +148,121 @@
         </div>
       </section>
 
-      <section id="architecture" class="bg-white py-16 border-t border-b border-slate-100">
-        <div class="max-w-6xl mx-auto px-5 grid lg:grid-cols-2 gap-12 items-center">
-          <div class="space-y-6">
-            <p class="text-xs uppercase tracking-[0.4em] text-slate-400">核心中枢</p>
-            <h2 class="text-3xl font-semibold text-slate-900">学智校园 AI 操作系统 · EdAI OS</h2>
-            <p class="text-slate-600 leading-relaxed">类比小米 MIUI，是生态的“神经中枢”：打通校园硬件、教学数据与服务资源，统一接口、开放算力，帮助伙伴快速接入，共享 AI 能力。</p>
+      <!-- Hero Image -->
+      <div class="bg-white pb-16">
+        <div class="max-w-5xl mx-auto px-8">
+          <div class="rounded-3xl overflow-hidden shadow-2xl">
+            <img
+              src="https://student-1320907290.cos.ap-guangzhou.myqcloud.com/os.png"
+              alt="学智AI生态圈全景图"
+              class="w-full h-auto object-cover"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </div>
+
+      <section id="architecture" class="bg-white py-20 border-t border-b border-slate-100">
+        <div class="max-w-6xl mx-auto px-5">
+          <div class="text-center mb-12">
+            <p class="text-xs uppercase tracking-[0.4em] text-slate-400 mb-3">Core Platform</p>
+            <h2 class="text-3xl font-bold text-slate-900 section-title">核心中枢 · EdAI OS</h2>
+          </div>
+
+          <div class="grid lg:grid-cols-2 gap-12 items-start">
+            <div class="space-y-6">
+              <p class="text-slate-600 leading-relaxed">
+                类比小米 MIUI，是生态的"神经中枢"：打通校园硬件、教学数据与服务资源，统一接口、开放算力，帮助伙伴快速接入，共享 AI 能力。
+              </p>
             <div class="grid sm:grid-cols-3 gap-3" id="coreTabs">
-              <button class="tab-btn active-tab px-4 py-4 rounded-2xl border border-slate-200 text-left" data-target="connect">
+              <button class="tab-btn active-tab px-4 py-4 rounded-2xl border border-slate-200 text-left transition-all duration-300" data-target="connect">
                 <p class="text-xs text-white/80">设备互联</p>
                 <p class="text-lg font-semibold text-white">Unified</p>
               </button>
-              <button class="tab-btn px-4 py-4 rounded-2xl border border-slate-200 text-left text-slate-600" data-target="data">
+              <button class="tab-btn px-4 py-4 rounded-2xl border border-slate-200 text-left text-slate-600 transition-all duration-300" data-target="data">
                 <p class="text-xs uppercase tracking-[0.2em] text-slate-400">数据中台</p>
                 <p class="text-lg font-semibold text-slate-900">Insight</p>
               </button>
-              <button class="tab-btn px-4 py-4 rounded-2xl border border-slate-200 text-left text-slate-600" data-target="open">
+              <button class="tab-btn px-4 py-4 rounded-2xl border border-slate-200 text-left text-slate-600 transition-all duration-300" data-target="open">
                 <p class="text-xs uppercase tracking-[0.2em] text-slate-400">开放接口</p>
                 <p class="text-lg font-semibold text-slate-900">OpenAPI</p>
               </button>
             </div>
             <div class="glass-card p-6" id="corePanels">
               <div data-panel="connect">
-                <h3 class="text-xl font-semibold mb-3 text-slate-900">全域设备互联</h3>
+                <h3 class="text-xl font-bold mb-3 text-slate-900">全域设备互联</h3>
                 <ul class="text-sm text-slate-600 space-y-2">
-                  <li>· AI 实验室、教学终端、安防机器人统一接入，跨设备数据互通。</li>
-                  <li>· 实验台数据实时同步至教师终端，课堂互动即时反馈。</li>
-                  <li>· 家校终端纳入 EdAI OS，实现校园数据向家庭延伸。</li>
+                  <li class="flex items-start">
+                    <span class="text-brandBlue mr-2">•</span>
+                    <span>AI 实验室、教学终端、安防机器人统一接入，跨设备数据互通。</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-brandBlue mr-2">•</span>
+                    <span>实验台数据实时同步至教师终端，课堂互动即时反馈。</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-brandBlue mr-2">•</span>
+                    <span>家校终端纳入 EdAI OS，实现校园数据向家庭延伸。</span>
+                  </li>
                 </ul>
               </div>
               <div data-panel="data" class="hidden">
-                <h3 class="text-xl font-semibold mb-3 text-slate-900">数据中台引擎</h3>
+                <h3 class="text-xl font-bold mb-3 text-slate-900">数据中台引擎</h3>
                 <ul class="text-sm text-slate-600 space-y-2">
-                  <li>· 沉淀学习行为、设备运行、教学效果，生成可视化画像。</li>
-                  <li>· 算法输出个性化教学建议与设备维护预警。</li>
-                  <li>· 对伙伴开放脱敏洞察，驱动产品体验迭代。</li>
+                  <li class="flex items-start">
+                    <span class="text-brandBlue mr-2">•</span>
+                    <span>沉淀学习行为、设备运行、教学效果，生成可视化画像。</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-brandBlue mr-2">•</span>
+                    <span>算法输出个性化教学建议与设备维护预警。</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-brandBlue mr-2">•</span>
+                    <span>对伙伴开放脱敏洞察，驱动产品体验迭代。</span>
+                  </li>
                 </ul>
               </div>
               <div data-panel="open" class="hidden">
-                <h3 class="text-xl font-semibold mb-3 text-slate-900">标准化开放接口</h3>
+                <h3 class="text-xl font-bold mb-3 text-slate-900">标准化开放接口</h3>
                 <ul class="text-sm text-slate-600 space-y-2">
-                  <li>· API/SDK 支持第三方课件、测评、SaaS 工具快速集成。</li>
-                  <li>· 提供设备认证、协议适配与测试套件，保障体验一致。</li>
-                  <li>· 合作伙伴按销量支付 3%~5% 接口费 + 数据分成。</li>
+                  <li class="flex items-start">
+                    <span class="text-brandBlue mr-2">•</span>
+                    <span>API/SDK 支持第三方课件、测评、SaaS 工具快速集成。</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-brandBlue mr-2">•</span>
+                    <span>提供设备认证、协议适配与测试套件，保障体验一致。</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-brandBlue mr-2">•</span>
+                    <span>合作伙伴按销量支付 3%~5% 接口费 + 数据分成。</span>
+                  </li>
                 </ul>
               </div>
             </div>
           </div>
           <div class="glass-card p-8 bg-brandGray">
-            <h3 class="text-2xl font-semibold text-slate-900 mb-4">核心能力矩阵</h3>
+            <h3 class="text-2xl font-bold text-slate-900 mb-6">核心能力矩阵</h3>
             <div class="grid sm:grid-cols-2 gap-4">
-              <div class="rounded-3xl p-6 bg-white border border-slate-200">
+              <div class="stat-card rounded-3xl p-6 bg-white border border-slate-200">
                 <p class="text-xs text-slate-400">设备互联</p>
-                <p class="text-3xl font-semibold text-brandBlue mt-2">+40</p>
+                <p class="text-3xl font-bold text-brandBlue mt-2">+40</p>
                 <p class="text-sm text-slate-500">类 AI 终端统一纳管</p>
               </div>
-              <div class="rounded-3xl p-6 bg-white border border-slate-200">
+              <div class="stat-card rounded-3xl p-6 bg-white border border-slate-200">
                 <p class="text-xs text-slate-400">数据资产</p>
-                <p class="text-3xl font-semibold text-brandBlue mt-2">3</p>
+                <p class="text-3xl font-bold text-brandBlue mt-2">3</p>
                 <p class="text-sm text-slate-500">大数据闭环</p>
               </div>
-              <div class="rounded-3xl p-6 bg-white border border-slate-200">
+              <div class="stat-card rounded-3xl p-6 bg-white border border-slate-200">
                 <p class="text-xs text-slate-400">开放接口</p>
-                <p class="text-3xl font-semibold text-brandBlue mt-2">100+</p>
+                <p class="text-3xl font-bold text-brandBlue mt-2">100+</p>
                 <p class="text-sm text-slate-500">API & SDK 组件</p>
               </div>
-              <div class="rounded-3xl p-6 bg-gradient-to-br from-brandBlue to-brandBlueLight text-white">
+              <div class="stat-card rounded-3xl p-6 bg-gradient-to-br from-brandBlue to-brandBlueLight text-white">
                 <p class="text-xs text-white/80">价值共享</p>
-                <p class="text-2xl font-semibold mt-2">伙伴共赢</p>
+                <p class="text-2xl font-bold mt-2">伙伴共赢</p>
                 <p class="text-sm text-white/90">平台赋能、伙伴共建、价值共享。</p>
               </div>
             </div>
@@ -186,35 +270,64 @@
         </div>
       </section>
 
+      <!-- Architecture Image - Full Width -->
+      <div class="bg-white pb-20">
+        <div class="max-w-5xl mx-auto px-8">
+          <div class="rounded-3xl overflow-hidden shadow-2xl">
+            <img
+              src="https://student-1320907290.cos.ap-guangzhou.myqcloud.com/system.png"
+              alt="EdAI OS 架构图"
+              class="w-full h-auto object-cover"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </div>
+
       <section id="circle" class="bg-brandGray py-20">
         <div class="max-w-6xl mx-auto px-5">
           <div class="text-center mb-12">
-            <p class="text-xs uppercase tracking-[0.4em] text-slate-400">三大生态圈层</p>
-            <h2 class="text-3xl font-semibold text-slate-900">从校园到产业，构建 AI 教育服务网络</h2>
-            <p class="text-slate-600 mt-4">硬件设备圈、内容服务圈、产业伙伴圈联动，形成“校园场景—伙伴能力—数据闭环”循环。</p>
+            <p class="text-xs uppercase tracking-[0.4em] text-slate-400 mb-3">Three Ecosystem Circles</p>
+            <h2 class="text-3xl font-bold text-slate-900 section-title">三大生态圈层</h2>
+            <p class="text-slate-600 mt-6 max-w-2xl mx-auto">硬件设备圈、内容服务圈、产业伙伴圈联动，形成"校园场景—伙伴能力—数据闭环"循环。</p>
           </div>
           <div class="glass-card p-8 bg-white">
             <div class="flex flex-wrap gap-3 mb-8" id="circleTabs">
-              <button class="circle-btn active-tab px-4 py-2 rounded-full border border-slate-200 text-sm font-medium" data-target="hardware">硬件设备圈</button>
-              <button class="circle-btn px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-600" data-target="content">内容服务圈</button>
-              <button class="circle-btn px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-600" data-target="industry">产业伙伴圈</button>
+              <button class="circle-btn active-tab px-4 py-2 rounded-full border border-slate-200 text-sm font-medium transition-all duration-300" data-target="hardware">硬件设备圈</button>
+              <button class="circle-btn px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-600 transition-all duration-300" data-target="content">内容服务圈</button>
+              <button class="circle-btn px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-600 transition-all duration-300" data-target="industry">产业伙伴圈</button>
             </div>
             <div id="circlePanels" class="space-y-8">
               <div data-panel="hardware">
                 <div class="grid lg:grid-cols-2 gap-6">
                   <div class="rounded-3xl p-6 border border-slate-200 bg-white">
-                    <h3 class="text-2xl font-semibold text-slate-900 mb-3">核心硬件 · 学智自营</h3>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-3">核心硬件 · 学智自营</h3>
                     <ul class="text-sm text-slate-600 space-y-2">
-                      <li>· 智能教学中枢（AI 备课屏、课堂互动终端）作为校园入口。</li>
-                      <li>· 标杆 AI 实验室套件（编程机器人、虚拟仿真设备）打造“学智标准”。</li>
+                      <li class="flex items-start">
+                        <span class="text-brandBlue mr-2">•</span>
+                        <span>智能教学中枢（AI 备课屏、课堂互动终端）作为校园入口。</span>
+                      </li>
+                      <li class="flex items-start">
+                        <span class="text-brandBlue mr-2">•</span>
+                        <span>标杆 AI 实验室套件（编程机器人、虚拟仿真设备）打造"学智标准"。</span>
+                      </li>
                     </ul>
                   </div>
                   <div class="rounded-3xl p-6 border border-slate-200 bg-white">
-                    <h3 class="text-2xl font-semibold text-slate-900 mb-3">生态硬件 · 合作/投资</h3>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-3">生态硬件 · 合作/投资</h3>
                     <ul class="text-sm text-slate-600 space-y-2">
-                      <li>· 泛教学设备：智能课桌、AI 安防机器人、巡检无人机等按标准接入。</li>
-                      <li>· 家庭端延伸：AI 学习手环、家庭编程设备实现家校联动。</li>
-                      <li>· 协同模式：EdAI OS 认证 + 供应链/渠道，合作方按销量支付 3%~5% 接口费 + 数据分成。</li>
+                      <li class="flex items-start">
+                        <span class="text-brandBlue mr-2">•</span>
+                        <span>泛教学设备：智能课桌、AI 安防机器人、巡检无人机等按标准接入。</span>
+                      </li>
+                      <li class="flex items-start">
+                        <span class="text-brandBlue mr-2">•</span>
+                        <span>家庭端延伸：AI 学习手环、家庭编程设备实现家校联动。</span>
+                      </li>
+                      <li class="flex items-start">
+                        <span class="text-brandBlue mr-2">•</span>
+                        <span>协同模式：EdAI OS 认证 + 供应链/渠道，合作方按销量支付 3%~5% 接口费 + 数据分成。</span>
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -222,18 +335,33 @@
               <div data-panel="content" class="hidden">
                 <div class="grid lg:grid-cols-2 gap-6">
                   <div class="rounded-3xl p-6 border border-slate-200 bg-white">
-                    <h3 class="text-2xl font-semibold text-slate-900 mb-3">核心内容 · 学智方法论</h3>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-3">核心内容 · 学智方法论</h3>
                     <ul class="text-sm text-slate-600 space-y-2">
-                      <li>· K12 AI 课程体系、实验室运营手册构建准入标准。</li>
-                      <li>· 数据驱动服务：学生 AI 能力测评、教师培训体系形成差异化壁垒。</li>
+                      <li class="flex items-start">
+                        <span class="text-brandBlue mr-2">•</span>
+                        <span>K12 AI 课程体系、实验室运营手册构建准入标准。</span>
+                      </li>
+                      <li class="flex items-start">
+                        <span class="text-brandBlue mr-2">•</span>
+                        <span>数据驱动服务：学生 AI 能力测评、教师培训体系形成差异化壁垒。</span>
+                      </li>
                     </ul>
                   </div>
                   <div class="rounded-3xl p-6 border border-slate-200 bg-white">
-                    <h3 class="text-2xl font-semibold text-slate-900 mb-3">生态内容 · 第三方引入</h3>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-3">生态内容 · 第三方引入</h3>
                     <ul class="text-sm text-slate-600 space-y-2">
-                      <li>· 联合出版社、教培机构共建 AI 适配教材与竞赛内容。</li>
-                      <li>· 接入 AI 作业批改、智能排课、设备运维 SaaS，统一在 EdAI OS 内体验。</li>
-                      <li>· 平台分成 15%~20%，优质内容进入“学智优选库”共享推广。</li>
+                      <li class="flex items-start">
+                        <span class="text-brandBlue mr-2">•</span>
+                        <span>联合出版社、教培机构共建 AI 适配教材与竞赛内容。</span>
+                      </li>
+                      <li class="flex items-start">
+                        <span class="text-brandBlue mr-2">•</span>
+                        <span>接入 AI 作业批改、智能排课、设备运维 SaaS，统一在 EdAI OS 内体验。</span>
+                      </li>
+                      <li class="flex items-start">
+                        <span class="text-brandBlue mr-2">•</span>
+                        <span>平台分成 15%~20%，优质内容进入"学智优选库"共享推广。</span>
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -241,15 +369,15 @@
               <div data-panel="industry" class="hidden">
                 <div class="grid lg:grid-cols-3 gap-6">
                   <div class="rounded-3xl p-6 border border-slate-200 bg-white">
-                    <h3 class="text-2xl font-semibold text-slate-900 mb-3">落地服务商</h3>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-3">落地服务商</h3>
                     <p class="text-sm text-slate-600">联动区域教育装备商、系统集成商负责安装与实施，项目实施费 10%~15%。</p>
                   </div>
                   <div class="rounded-3xl p-6 border border-slate-200 bg-white">
-                    <h3 class="text-2xl font-semibold text-slate-900 mb-3">科研机构</h3>
-                    <p class="text-sm text-slate-600">与川大、电子科大等共建“教育 AI 联合实验室”，共享算法成果与数据资源。</p>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-3">科研机构</h3>
+                    <p class="text-sm text-slate-600">与川大、电子科大等共建"教育 AI 联合实验室"，共享算法成果与数据资源。</p>
                   </div>
                   <div class="rounded-3xl p-6 border border-slate-200 bg-white">
-                    <h3 class="text-2xl font-semibold text-slate-900 mb-3">政策对接方</h3>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-3">政策对接方</h3>
                     <p class="text-sm text-slate-600">与教育局、基金会协同，将生态产品纳入政府采购目录，获得示范区准入。</p>
                   </div>
                 </div>
@@ -262,37 +390,37 @@
       <section id="strategy" class="py-20">
         <div class="max-w-6xl mx-auto px-5 grid lg:grid-cols-2 gap-12 items-start">
           <div>
-            <p class="text-xs uppercase tracking-[0.4em] text-slate-400 mb-4">运营策略</p>
-            <h2 class="text-3xl font-semibold text-slate-900 mb-6">复制“小米式规模效应”：入口抢占 + 伙伴赋能</h2>
+            <p class="text-xs uppercase tracking-[0.4em] text-slate-400 mb-3">Operation Strategy</p>
+            <h2 class="text-3xl font-bold text-slate-900 mb-6">复制"小米式规模效应"<br><span class="text-brandBlue">入口抢占 + 伙伴赋能</span></h2>
             <div class="glass-card p-6" id="strategyCard">
               <p class="text-xs text-brandBlue uppercase tracking-[0.4em]">入口策略</p>
-              <h3 class="text-2xl font-semibold mt-2" data-title>学智 AI 实验室爆款套装</h3>
-              <p class="text-slate-600 mt-3" data-content>以低于市场价 30% 的“硬件微利 + 服务盈利”模式进入标杆校，打造 1 个核心平台 + 100 所标杆校 + 1000 所普及校的阶梯方案。</p>
+              <h3 class="text-2xl font-bold mt-2" data-title>学智 AI 实验室爆款套装</h3>
+              <p class="text-slate-600 mt-3" data-content>以低于市场价 30% 的"硬件微利 + 服务盈利"模式进入标杆校，打造 1 个核心平台 + 100 所标杆校 + 1000 所普及校的阶梯方案。</p>
             </div>
             <div class="flex flex-wrap gap-3 mt-6">
-              <button class="strategy-btn active-tab px-4 py-2 rounded-full border border-slate-200 text-sm font-medium" data-index="0">入口策略</button>
-              <button class="strategy-btn px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-600" data-index="1">供应链赋能</button>
-              <button class="strategy-btn px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-600" data-index="2">数据赋能</button>
-              <button class="strategy-btn px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-600" data-index="3">渠道赋能</button>
+              <button class="strategy-btn active-tab px-4 py-2 rounded-full border border-slate-200 text-sm font-medium transition-all duration-300" data-index="0">入口策略</button>
+              <button class="strategy-btn px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-600 transition-all duration-300" data-index="1">供应链赋能</button>
+              <button class="strategy-btn px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-600 transition-all duration-300" data-index="2">数据赋能</button>
+              <button class="strategy-btn px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-600 transition-all duration-300" data-index="3">渠道赋能</button>
             </div>
           </div>
           <div class="glass-card p-8 bg-brandGray">
-            <p class="text-sm text-slate-500">伙伴价值曲线</p>
-            <div class="grid sm:grid-cols-2 gap-6 mt-6">
-              <div class="rounded-3xl p-6 bg-white border border-slate-100">
-                <h3 class="text-3xl font-semibold text-brandBlue">-15%</h3>
+            <p class="text-sm text-slate-500 mb-6">伙伴价值曲线</p>
+            <div class="grid sm:grid-cols-2 gap-6">
+              <div class="stat-card rounded-3xl p-6 bg-white border border-slate-100">
+                <h3 class="text-3xl font-bold text-brandBlue">-15%</h3>
                 <p class="text-sm text-slate-600 mt-2">整合供应链资源，联合采购 AI 芯片等核心部件，成本最多降低 15%。</p>
               </div>
-              <div class="rounded-3xl p-6 bg-white border border-slate-100">
-                <h3 class="text-3xl font-semibold text-brandBlue">数据共创</h3>
+              <div class="stat-card rounded-3xl p-6 bg-white border border-slate-100">
+                <h3 class="text-3xl font-bold text-brandBlue">数据共创</h3>
                 <p class="text-sm text-slate-600 mt-2">开放脱敏学习数据，帮助伙伴洞察学生偏好与设备使用情况。</p>
               </div>
-              <div class="rounded-3xl p-6 bg-white border border-slate-100">
-                <h3 class="text-3xl font-semibold text-brandBlue">渠道共享</h3>
-                <p class="text-sm text-slate-600 mt-2">全国合作校网络 + “学智认证”，缩短伙伴市场培育周期。</p>
+              <div class="stat-card rounded-3xl p-6 bg-white border border-slate-100">
+                <h3 class="text-3xl font-bold text-brandBlue">渠道共享</h3>
+                <p class="text-sm text-slate-600 mt-2">全国合作校网络 + "学智认证"，缩短伙伴市场培育周期。</p>
               </div>
-              <div class="rounded-3xl p-6 bg-gradient-to-br from-brandBlue to-brandBlueLight text-white">
-                <h3 class="text-3xl font-semibold">生态壁垒</h3>
+              <div class="stat-card rounded-3xl p-6 bg-gradient-to-br from-brandBlue to-brandBlueLight text-white">
+                <h3 class="text-3xl font-bold">生态壁垒</h3>
                 <p class="text-sm text-white/90 mt-2">极简入口、用户粘性与伙伴赋能共同构成生态护城河。</p>
               </div>
             </div>
@@ -303,30 +431,42 @@
       <section id="partners" class="bg-brandGray py-20">
         <div class="max-w-6xl mx-auto px-5">
           <div class="text-center mb-12">
-            <p class="text-xs uppercase tracking-[0.4em] text-slate-400">价值共建</p>
-            <h2 class="text-3xl font-semibold text-slate-900">五类生态伙伴 · 价值协同</h2>
+            <p class="text-xs uppercase tracking-[0.4em] text-slate-400 mb-3">Value Co-creation</p>
+            <h2 class="text-3xl font-bold text-slate-900 section-title">五类生态伙伴 · 价值协同</h2>
           </div>
           <div class="grid lg:grid-cols-5 gap-4">
-            <div class="rounded-3xl p-5 bg-white border border-slate-200 text-center">
+            <div class="stat-card rounded-3xl p-5 bg-white border border-slate-200 text-center">
               <p class="text-sm text-slate-500">设备伙伴</p>
-              <h3 class="text-xl font-semibold text-slate-900 mt-2">接口收益 3%~5%</h3>
+              <h3 class="text-xl font-bold text-slate-900 mt-2">接口收益 3%~5%</h3>
             </div>
-            <div class="rounded-3xl p-5 bg-white border border-slate-200 text-center">
+            <div class="stat-card rounded-3xl p-5 bg-white border border-slate-200 text-center">
               <p class="text-sm text-slate-500">内容伙伴</p>
-              <h3 class="text-xl font-semibold text-slate-900 mt-2">服务费 15%~20%</h3>
+              <h3 class="text-xl font-bold text-slate-900 mt-2">服务费 15%~20%</h3>
             </div>
-            <div class="rounded-3xl p-5 bg-white border border-slate-200 text-center">
+            <div class="stat-card rounded-3xl p-5 bg-white border border-slate-200 text-center">
               <p class="text-sm text-slate-500">落地服务商</p>
-              <h3 class="text-xl font-semibold text-slate-900 mt-2">实施费 10%~15%</h3>
+              <h3 class="text-xl font-bold text-slate-900 mt-2">实施费 10%~15%</h3>
             </div>
-            <div class="rounded-3xl p-5 bg-white border border-slate-200 text-center">
+            <div class="stat-card rounded-3xl p-5 bg-white border border-slate-200 text-center">
               <p class="text-sm text-slate-500">科研机构</p>
-              <h3 class="text-xl font-semibold text-slate-900 mt-2">算法共研 · 数据支持</h3>
+              <h3 class="text-xl font-bold text-slate-900 mt-2">算法共研 · 数据支持</h3>
             </div>
-            <div class="rounded-3xl p-5 bg-white border border-slate-200 text-center">
+            <div class="stat-card rounded-3xl p-5 bg-white border border-slate-200 text-center">
               <p class="text-sm text-slate-500">政策合作</p>
-              <h3 class="text-xl font-semibold text-slate-900 mt-2">示范区准入</h3>
+              <h3 class="text-xl font-bold text-slate-900 mt-2">示范区准入</h3>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="bg-gradient-to-br from-brandBlue to-brandBlueLight py-16">
+        <div class="max-w-4xl mx-auto px-5 text-center">
+          <h2 class="text-3xl font-bold text-white mb-4">加入学智生态，共创教育未来</h2>
+          <p class="text-white/90 text-lg mb-8">我们期待与各类伙伴合作，共同打造开放、共享、共赢的教育 AI 生态系统</p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <button class="px-8 py-3 rounded-full bg-white text-brandBlue font-semibold shadow-lg hover:shadow-xl transition">立即加入</button>
+            <button class="px-8 py-3 rounded-full border-2 border-white text-white font-semibold hover:bg-white hover:text-brandBlue transition">了解更多</button>
           </div>
         </div>
       </section>

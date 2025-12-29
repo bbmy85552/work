@@ -407,21 +407,21 @@ const CustomerManagement = () => {
               }
               break
             case 'usage_stats':
-              setPolicyProgress('政策信息生成完成')
+              setPolicyProgress('政策信息检索完成')
               break
             case 'completed':
-              setPolicyProgress('政策信息生成完成')
+              setPolicyProgress('政策信息检索完成')
               break
             default:
           }
         },
         onComplete: () => {
           setIsPolicyGenerating(false)
-          message.success('政策信息生成成功')
+          message.success('政策信息检索成功')
         },
         onError: (error) => {
-          console.error('生成政策信息失败:', error)
-          message.error(`生成失败: ${error.message || '未知错误'}`)
+          console.error('检索政策信息失败:', error)
+          message.error(`检索失败: ${error.message || '未知错误'}`)
           setIsPolicyGenerating(false)
         }
       })
@@ -429,7 +429,7 @@ const CustomerManagement = () => {
       if (error?.errorFields) {
         return
       }
-      console.error('生成政策信息失败:', error)
+      console.error('检索政策信息失败:', error)
       message.error('生成失败，请稍后重试')
       setIsPolicyGenerating(false)
     }
@@ -886,7 +886,7 @@ const CustomerManagement = () => {
                   loading={isPolicyGenerating}
                   style={{ background: APPLE_BLUE }}
                 >
-                  生成政策信息
+                  检索政策信息
                 </Button>
                 {policyProgress && (
                   <span style={{ color: '#86868b' }}>{policyProgress}</span>

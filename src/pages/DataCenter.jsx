@@ -5,7 +5,7 @@ const { Text } = Typography
 const { Option } = Select
 
 import dataCenterData from '../mock/dataCenterData.js';
-import schoolData from '../mock/schoolData.js';
+import customerData from '../mock/customerData.js';
 import deliveryData from '../mock/deliveryData.js';
 import DataVisualizationDashboard from './components/DataVisualizationDashboard';
 
@@ -16,12 +16,12 @@ const DataCenter = () => {
   
   // 筛选数据函数
   const filterData = () => {
-    // 获取所有合作学校
-    let filteredSchools = schoolData.cooperationSchools;
-    
+    // 获取所有合作客户
+    let filteredSchools = customerData.cooperationCustomers;
+
     // 根据教育阶段筛选
     if (selectedEducationStage !== '全部') {
-      filteredSchools = filteredSchools.filter(school => 
+      filteredSchools = filteredSchools.filter(school =>
         school.schoolType === selectedEducationStage
       );
     }

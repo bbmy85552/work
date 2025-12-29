@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import { Card, Table, Typography, Button, Input, Select, Space, Tabs, Modal, Form, Checkbox } from 'antd'
 import { SearchOutlined, PlusOutlined, EditOutlined } from '@ant-design/icons'
-import schoolData from '../mock/schoolData'
+import customerData from '../mock/customerData'
 
 const { Title } = Typography
 const { Search } = Input
 const { Option } = Select
 // Tabs组件不再需要解构TabPane
 
-// 学校类型选项
+// 客户行业类型选项（三大板块）
+const customerIndustryTypes = [
+  { label: '学校', value: '学校' },
+  { label: '文旅', value: '文旅' },
+  { label: '政府+人工智能', value: '政府+人工智能' }
+]
+
+// 学校类型选项（当选择学校时显示）
 const schoolTypes = [
   { label: '幼儿园', value: '幼儿园' },
   { label: '小学', value: '小学' },
@@ -16,6 +23,25 @@ const schoolTypes = [
   { label: '高中', value: '高中' },
   { label: '职校', value: '职校' },
   { label: '大学', value: '大学' }
+]
+
+// 文旅类型选项（当选择文旅时显示）
+const culturalTourismTypes = [
+  { label: '博物馆', value: '博物馆' },
+  { label: '科技馆', value: '科技馆' },
+  { label: '主题公园', value: '主题公园' },
+  { label: '文化中心', value: '文化中心' },
+  { label: '旅游景区', value: '旅游景区' },
+  { label: '文创园区', value: '文创园区' }
+]
+
+// 政府类型选项（当选择政府+AI时显示）
+const governmentTypes = [
+  { label: '政府部门', value: '政府部门' },
+  { label: '事业单位', value: '事业单位' },
+  { label: '科创园区', value: '科创园区' },
+  { label: 'AI创新中心', value: 'AI创新中心' },
+  { label: '智慧城市项目', value: '智慧城市项目' }
 ]
 
 // 合作项目类型选项
@@ -26,45 +52,48 @@ const projectTypes = [
   { label: '定制方案', value: '定制方案' }
 ]
 
-// 从mock数据中获取学校数据
-const { allSchools, cooperationSchools } = schoolData
+// 从mock数据中获取客户数据
+const { allSchools, cooperationSchools } = customerData
 
-const SchoolManagement = () => {
-  const [activeTab, setActiveTab] = useState('1') // 1: 全部学校, 2: 合作学校
+const CustomerManagement = () => {
+  const [activeTab, setActiveTab] = useState('1') // 1: 全部客户, 2: 合作客户
   const [searchText, setSearchText] = useState('')
   const [selectedRegion, setSelectedRegion] = useState('')
+  const [selectedIndustryType, setSelectedIndustryType] = useState('') // 新增：行业类型筛选
   const [selectedSchoolType, setSelectedSchoolType] = useState('')
   const [selectedProjectType, setSelectedProjectType] = useState('')
-  const [filteredAllSchools, setFilteredAllSchools] = useState([])
-  const [filteredCooperationSchools, setFilteredCooperationSchools] = useState([])
+  const [filteredAllCustomers, setFilteredAllCustomers] = useState([])
+  const [filteredCooperationCustomers, setFilteredCooperationCustomers] = useState([])
 
   // 处理数据格式，统一字段名
-  const processedAllSchools = allSchools.map(school => ({
-    id: school.id,
-    name: school.schoolName,
-    contact: school.contactPerson,
-    phone: school.contactPhone,
-    salesman: school.salesman,
-    region: school.region,
-    customerType: school.customerType,
-    dockingStatus: school.status,
-    schoolType: school.schoolType || getRandomSchoolType(), // 默认为随机学校类型
-    isCooperation: school.isCooperation !== undefined ? school.isCooperation : false
+  const processedAllCustomers = allSchools.map(customer => ({
+    id: customer.id,
+    name: customer.schoolName,
+    contact: customer.contactPerson,
+    phone: customer.contactPhone,
+    salesman: customer.salesman,
+    region: customer.region,
+    customerType: customer.customerType,
+    dockingStatus: customer.status,
+    industryType: customer.industryType || '学校', // 新增：行业类型
+    schoolType: customer.schoolType || getRandomSchoolType(),
+    isCooperation: customer.isCooperation !== undefined ? customer.isCooperation : false
   }))
 
-  // 处理合作学校数据
-  const processedCooperationSchools = cooperationSchools.map(school => ({
-    id: school.id,
-    name: school.schoolName,
-    contact: school.contactPerson,
-    phone: school.contactPhone,
-    salesman: school.salesman,
-    region: school.region,
-    customerType: school.customerType,
-    dockingStatus: school.status,
-    schoolType: school.schoolType || getRandomSchoolType(), // 默认为随机学校类型
-    cooperationProjects: school.cooperationProjects || getRandomProjects(), // 默认为随机合作项目
-    cooperationAmount: school.cooperationAmount || 0
+  // 处理合作客户数据
+  const processedCooperationCustomers = cooperationSchools.map(customer => ({
+    id: customer.id,
+    name: customer.schoolName,
+    contact: customer.contactPerson,
+    phone: customer.contactPhone,
+    salesman: customer.salesman,
+    region: customer.region,
+    customerType: customer.customerType,
+    dockingStatus: customer.status,
+    industryType: customer.industryType || '学校', // 新增：行业类型
+    schoolType: customer.schoolType || getRandomSchoolType(),
+    cooperationProjects: customer.cooperationProjects || getRandomProjects(),
+    cooperationAmount: customer.cooperationAmount || 0
   }))
 
   // 随机获取合作项目
@@ -93,12 +122,12 @@ const SchoolManagement = () => {
   // 初始化过滤后的数据
   React.useEffect(() => {
     // 获取所有区域选项
-    const allRegions = [...new Set([...allSchools, ...cooperationSchools].map(school => school.region))]
+    const allRegions = [...new Set([...allSchools, ...cooperationSchools].map(customer => customer.region))]
     setRegions(allRegions)
-    
+
     // 初始化数据
-    setFilteredAllSchools(processedAllSchools)
-    setFilteredCooperationSchools(processedCooperationSchools)
+    setFilteredAllCustomers(processedAllCustomers)
+    setFilteredCooperationCustomers(processedCooperationCustomers)
   }, [])
 
   // 搜索功能
@@ -110,72 +139,86 @@ const SchoolManagement = () => {
   // 区域筛选
   const handleRegionChange = (value) => {
     setSelectedRegion(value)
-    filterData(searchText, value, selectedSchoolType)
+    filterData(searchText, value, selectedIndustryType, selectedSchoolType)
   }
 
-  // 学校类型筛选
+  // 行业类型筛选（新增）
+  const handleIndustryTypeChange = (value) => {
+    setSelectedIndustryType(value)
+    filterData(searchText, selectedRegion, value, selectedSchoolType)
+  }
+
+  // 学校/细分类型筛选
   const handleSchoolTypeChange = (value) => {
     setSelectedSchoolType(value)
-    filterData(searchText, selectedRegion, value, selectedProjectType)
+    filterData(searchText, selectedRegion, selectedIndustryType, value, selectedProjectType)
   }
 
   // 合作项目类型筛选
   const handleProjectTypeChange = (value) => {
     setSelectedProjectType(value)
-    filterData(searchText, selectedRegion, selectedSchoolType, value)
+    filterData(searchText, selectedRegion, selectedIndustryType, selectedSchoolType, value)
   }
 
   // 综合筛选数据
-  const filterData = (search, region, schoolType, projectType) => {
-    // 筛选全部学校
-    let allSchoolsData = [...processedAllSchools]
-    
-    if (search) {
-      allSchoolsData = allSchoolsData.filter(school => 
-        school.name.includes(search) || 
-        school.contact.includes(search) ||
-        school.salesman.includes(search) ||
-        school.id.includes(search)
-      )
-    }
-    
-    if (region) {
-      allSchoolsData = allSchoolsData.filter(school => school.region === region)
-    }
-    
-    if (schoolType) {
-      allSchoolsData = allSchoolsData.filter(school => school.schoolType === schoolType)
-    }
-    
-    setFilteredAllSchools(allSchoolsData)
+  const filterData = (search, region, industryType, schoolType, projectType) => {
+    // 筛选全部客户
+    let allCustomersData = [...processedAllCustomers]
 
-    // 筛选合作学校
-    let cooperationSchoolsData = [...processedCooperationSchools]
-    
     if (search) {
-      cooperationSchoolsData = cooperationSchoolsData.filter(school => 
-        school.name.includes(search) || 
-        school.contact.includes(search) ||
-        school.salesman.includes(search) ||
-        school.id.includes(search)
+      allCustomersData = allCustomersData.filter(customer =>
+        customer.name.includes(search) ||
+        customer.contact.includes(search) ||
+        customer.salesman.includes(search) ||
+        customer.id.includes(search)
       )
     }
-    
+
     if (region) {
-      cooperationSchoolsData = cooperationSchoolsData.filter(school => school.region === region)
+      allCustomersData = allCustomersData.filter(customer => customer.region === region)
     }
-    
+
+    if (industryType) {
+      allCustomersData = allCustomersData.filter(customer => customer.industryType === industryType)
+    }
+
     if (schoolType) {
-      cooperationSchoolsData = cooperationSchoolsData.filter(school => school.schoolType === schoolType)
+      allCustomersData = allCustomersData.filter(customer => customer.schoolType === schoolType)
     }
-    
-    if (projectType) {
-      cooperationSchoolsData = cooperationSchoolsData.filter(school => 
-        school.cooperationProjects.includes(projectType)
+
+    setFilteredAllCustomers(allCustomersData)
+
+    // 筛选合作客户
+    let cooperationCustomersData = [...processedCooperationCustomers]
+
+    if (search) {
+      cooperationCustomersData = cooperationCustomersData.filter(customer =>
+        customer.name.includes(search) ||
+        customer.contact.includes(search) ||
+        customer.salesman.includes(search) ||
+        customer.id.includes(search)
       )
     }
-    
-    setFilteredCooperationSchools(cooperationSchoolsData)
+
+    if (region) {
+      cooperationCustomersData = cooperationCustomersData.filter(customer => customer.region === region)
+    }
+
+    if (industryType) {
+      cooperationCustomersData = cooperationCustomersData.filter(customer => customer.industryType === industryType)
+    }
+
+    if (schoolType) {
+      cooperationCustomersData = cooperationCustomersData.filter(customer => customer.schoolType === schoolType)
+    }
+
+    if (projectType) {
+      cooperationCustomersData = cooperationCustomersData.filter(customer =>
+        customer.cooperationProjects.includes(projectType)
+      )
+    }
+
+    setFilteredCooperationCustomers(cooperationCustomersData)
   }
   
   // 打开添加/编辑模态框
@@ -252,16 +295,17 @@ const SchoolManagement = () => {
     })
   }
 
-  // 全部学校的列配置
-  const allSchoolColumns = [
-    { title: '学校ID', dataIndex: 'id', key: 'id' },
-    { title: '学校名称', dataIndex: 'name', key: 'name' },
-    { title: '学校类型', dataIndex: 'schoolType', key: 'schoolType' },
+  // 全部客户的列配置
+  const allCustomerColumns = [
+    { title: '客户ID', dataIndex: 'id', key: 'id' },
+    { title: '客户名称', dataIndex: 'name', key: 'name' },
+    { title: '行业类型', dataIndex: 'industryType', key: 'industryType' },
+    { title: '细分类型', dataIndex: 'schoolType', key: 'schoolType' },
     { title: '联系人', dataIndex: 'contact', key: 'contact' },
     { title: '联系电话', dataIndex: 'phone', key: 'phone' },
     { title: '业务员', dataIndex: 'salesman', key: 'salesman' },
     { title: '区域', dataIndex: 'region', key: 'region' },
-    { title: '学校类型', dataIndex: 'customerType', key: 'customerType' },
+    { title: '客户等级', dataIndex: 'customerType', key: 'customerType' },
     { title: '对接情况', dataIndex: 'dockingStatus', key: 'dockingStatus' },
     {
       title: '操作',
@@ -282,11 +326,12 @@ const SchoolManagement = () => {
     '定制方案': { backgroundColor: '#fff7e6', color: '#fa8c16' }
   }
 
-  // 合作学校的列配置（增加合作项目和合作金额）
-  const cooperationSchoolColumns = [
-    { title: '学校ID', dataIndex: 'id', key: 'id' },
-    { title: '学校名称', dataIndex: 'name', key: 'name' },
-    { title: '学校类型', dataIndex: 'schoolType', key: 'schoolType' },
+  // 合作客户的列配置（增加合作项目和合作金额）
+  const cooperationCustomerColumns = [
+    { title: '客户ID', dataIndex: 'id', key: 'id' },
+    { title: '客户名称', dataIndex: 'name', key: 'name' },
+    { title: '行业类型', dataIndex: 'industryType', key: 'industryType' },
+    { title: '细分类型', dataIndex: 'schoolType', key: 'schoolType' },
     { title: '联系人', dataIndex: 'contact', key: 'contact' },
     { title: '联系电话', dataIndex: 'phone', key: 'phone' },
     { title: '业务员', dataIndex: 'salesman', key: 'salesman' },
@@ -334,14 +379,14 @@ const SchoolManagement = () => {
 
   return (
     <div>
-      <Title level={2}>学校管理</Title>
-      
+      <Title level={2}>客户管理</Title>
+
       {/* 搜索和筛选区域 */}
       <Card className="mb-4">
         <Space wrap>
           <Space.Compact style={{ width: 400 }}>
             <Input
-              placeholder="搜索学校名称、联系人、业务员或ID"
+              placeholder="搜索客户名称、联系人、业务员或ID"
               allowClear
               onChange={(e) => handleSearch(e.target.value)}
             />
@@ -358,7 +403,17 @@ const SchoolManagement = () => {
             ))}
           </Select>
           <Select
-            placeholder="学校类型"
+            placeholder="行业类型"
+            allowClear
+            style={{ width: 150 }}
+            onChange={handleIndustryTypeChange}
+          >
+            {customerIndustryTypes.map(type => (
+              <Option key={type.value} value={type.value}>{type.label}</Option>
+            ))}
+          </Select>
+          <Select
+            placeholder="细分类型"
             allowClear
             style={{ width: 120 }}
             onChange={handleSchoolTypeChange}
@@ -380,12 +435,12 @@ const SchoolManagement = () => {
             </Select>
           )}
           <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal()}>
-            添加学校
+            添加客户
           </Button>
-          
-          {/* 添加/编辑学校模态框 */}
+
+          {/* 添加/编辑客户模态框 */}
           <Modal
-            title={editingSchool ? '编辑学校信息' : '添加新学校'}
+            title={editingSchool ? '编辑客户信息' : '添加新客户'}
             open={isModalVisible}
             onOk={handleSubmit}
             onCancel={handleCancel}
@@ -406,19 +461,31 @@ const SchoolManagement = () => {
               }}
             >
               <Form.Item
-                label="学校名称"
+                label="客户名称"
                 name="schoolName"
-                rules={[{ required: true, message: '请输入学校名称' }]}
+                rules={[{ required: true, message: '请输入客户名称' }]}
               >
-                <Input placeholder="请输入学校名称" />
+                <Input placeholder="请输入客户名称" />
               </Form.Item>
-              
+
               <Form.Item
-                label="学校类型"
-                name="schoolType"
-                rules={[{ required: true, message: '请选择学校类型' }]}
+                label="行业类型"
+                name="industryType"
+                rules={[{ required: true, message: '请选择行业类型' }]}
               >
-                <Select placeholder="请选择学校类型">
+                <Select placeholder="请选择行业类型">
+                  {customerIndustryTypes.map(type => (
+                    <Option key={type.value} value={type.value}>{type.label}</Option>
+                  ))}
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="细分类型"
+                name="schoolType"
+                rules={[{ required: true, message: '请选择细分类型' }]}
+              >
+                <Select placeholder="请选择细分类型">
                   {schoolTypes.map(type => (
                     <Option key={type.value} value={type.value}>{type.label}</Option>
                   ))}
@@ -485,11 +552,11 @@ const SchoolManagement = () => {
               </Form.Item>
               
               <Form.Item
-                label="是否合作学校"
+                label="是否合作客户"
                 name="isCooperation"
                 valuePropName="checked"
               >
-                <Checkbox>是合作学校</Checkbox>
+                <Checkbox>是合作客户</Checkbox>
               </Form.Item>
               
               {form.getFieldValue('isCooperation') && (
@@ -527,11 +594,11 @@ const SchoolManagement = () => {
         items={[
           {
             key: '1',
-            label: '全部学校',
+            label: '全部客户',
             children: (
-              <Table 
-                columns={allSchoolColumns} 
-                dataSource={filteredAllSchools} 
+              <Table
+                columns={allCustomerColumns}
+                dataSource={filteredAllCustomers} 
                 rowKey="id"
                 pagination={{ pageSize: 10 }}
                 scroll={{ x: 'max-content' }}
@@ -540,11 +607,11 @@ const SchoolManagement = () => {
           },
           {
             key: '2',
-            label: '合作学校',
+            label: '合作客户',
             children: (
-              <Table 
-                columns={cooperationSchoolColumns} 
-                dataSource={filteredCooperationSchools} 
+              <Table
+                columns={cooperationCustomerColumns}
+                dataSource={filteredCooperationCustomers}
                 rowKey="id"
                 pagination={{ pageSize: 10 }}
                 scroll={{ x: 'max-content' }}
@@ -557,4 +624,4 @@ const SchoolManagement = () => {
   )
 }
 
-export default SchoolManagement
+export default CustomerManagement

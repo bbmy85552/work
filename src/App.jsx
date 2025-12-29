@@ -4,7 +4,7 @@ import { Layout, Menu, Avatar } from 'antd'
 import { PieChartOutlined, BookOutlined, ShopOutlined, BoxPlotOutlined, TeamOutlined, DollarOutlined, UserOutlined, BellOutlined, SettingOutlined, SearchOutlined, SolutionOutlined, AppstoreOutlined, ExperimentOutlined } from '@ant-design/icons'
 import './App.css'
 import DataCenter from './pages/DataCenter.jsx'
-import SchoolManagement from './pages/SchoolManagement'
+import CustomerManagement from './pages/CustomerManagement'
 import OrderCenter from './pages/OrderCenter'
 import DeliveryTracking from './pages/DeliveryTracking'
 import SupplierManagement from './pages/SupplierManagement'
@@ -65,9 +65,9 @@ function AdminLayout() {
       ]
     },
     {
-      key: '/school',
+      key: '/customer',
       icon: <BookOutlined />,
-      label: '学校管理'
+      label: '客户管理'
     },
     {
       key: '/order',
@@ -234,7 +234,7 @@ function App() {
           <Route path="/" element={<DataCenter />} />
           <Route path="/dashboard" element={<DataCenter />} />
           <Route path="/bi-cockpit" element={<BICockpit />} />
-          <Route path="/school" element={<SchoolManagement />} />
+          <Route path="/customer" element={<CustomerManagement />} />
           <Route path="/order" element={<OrderCenter />} />
           <Route path="/delivery" element={<DeliveryTracking />} />
           <Route path="/supplier" element={<SupplierManagement />} />

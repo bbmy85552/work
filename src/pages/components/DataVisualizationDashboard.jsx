@@ -6,7 +6,7 @@ import {
   Cell, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar
 } from 'recharts';
 import dataCenterData from '../../mock/dataCenterData.js';
-import schoolData from '../../mock/schoolData.js';
+import customerData from '../../mock/customerData.js';
 import deliveryData from '../../mock/deliveryData.js';
 
 const { Title, Text } = Typography;
@@ -27,7 +27,7 @@ const COLORS = {
 const DataVisualizationDashboard = () => {
   const [selectedRegion, setSelectedRegion] = useState('全部');
   const [selectedCustomerType, setSelectedCustomerType] = useState('全部');
-  const [filteredSchools, setFilteredSchools] = useState(schoolData.allSchools);
+  const [filteredSchools, setFilteredSchools] = useState(customerData.allCustomers);
   const [customerTypeDistribution, setCustomerTypeDistribution] = useState([]);
   const [regionDistribution, setRegionDistribution] = useState([]);
   const [schoolTypeDistribution, setSchoolTypeDistribution] = useState([]);
@@ -172,13 +172,13 @@ const DataVisualizationDashboard = () => {
   // 获取所有地区选项（增强空值检查）
   const getRegionOptions = () => {
     try {
-      if (!schoolData || !schoolData.allSchools || !Array.isArray(schoolData.allSchools)) {
-        console.warn('学校数据结构异常');
+      if (!customerData || !customerData.allCustomers || !Array.isArray(customerData.allCustomers)) {
+        console.warn('客户数据结构异常');
         return [{ label: '全部', value: '全部' }];
       }
-      const regions = [...new Set(schoolData.allSchools
-        .filter(school => school && school.region)
-        .map(school => school.region))];
+      const regions = [...new Set(customerData.allCustomers
+        .filter(customer => customer && customer.region)
+        .map(customer => customer.region))];
       return [{ label: '全部', value: '全部' }, ...regions.map(region => ({ label: region, value: region }))];
     } catch (error) {
       console.error('获取地区选项失败:', error);

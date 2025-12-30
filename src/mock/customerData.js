@@ -14,7 +14,9 @@ const allCustomers = [
     status: '已对接',
     isCooperation: true,
     industryType: '学校',
-    schoolType: '初中'
+    schoolType: '初中',
+    cooperationProjects: ['硬件设备', '软件系统'],
+    cooperationAmount: 500000
   },
   {
     id: 'SCH002',
@@ -26,7 +28,9 @@ const allCustomers = [
     customerType: '示范学校',
     status: '已对接',
     isCooperation: true,
-    schoolType: '初中'
+    schoolType: '初中',
+    cooperationProjects: ['解决方案'],
+    cooperationAmount: 350000
   },
   {
     id: 'SCH003',
@@ -39,7 +43,9 @@ const allCustomers = [
     status: '已对接',
     isCooperation: true,
     industryType: '学校',
-    schoolType: '小学'
+    schoolType: '小学',
+    cooperationProjects: ['硬件设备'],
+    cooperationAmount: 200000
   },
   {
     id: 'SCH004',
@@ -52,7 +58,9 @@ const allCustomers = [
     status: '已对接',
     isCooperation: true,
     industryType: '学校',
-    schoolType: '初中'
+    schoolType: '初中',
+    cooperationProjects: ['定制方案', '软件系统'],
+    cooperationAmount: 780000
   },
   {
     id: 'SCH005',
@@ -65,7 +73,9 @@ const allCustomers = [
     status: '已对接',
     isCooperation: true,
     industryType: '学校',
-    schoolType: '小学'
+    schoolType: '小学',
+    cooperationProjects: ['软件系统', '解决方案', '定制方案'],
+    cooperationAmount: 680000
   },
   {
     id: 'SCH006',
@@ -78,7 +88,9 @@ const allCustomers = [
     status: '已对接',
     isCooperation: true,
     industryType: '学校',
-    schoolType: '初中'
+    schoolType: '初中',
+    cooperationProjects: ['硬件设备', '解决方案', '定制方案'],
+    cooperationAmount: 950000
   },
   {
     id: 'SCH007',
@@ -91,7 +103,9 @@ const allCustomers = [
     status: '待对接',
     isCooperation: false,
     industryType: '学校',
-    schoolType: '小学'
+    schoolType: '小学',
+    cooperationProjects: [],
+    cooperationAmount: 0
   },
   {
     id: 'SCH008',
@@ -104,7 +118,9 @@ const allCustomers = [
     status: '待对接',
     isCooperation: false,
     industryType: '学校',
-    schoolType: '初中'
+    schoolType: '初中',
+    cooperationProjects: [],
+    cooperationAmount: 0
   },
   {
     id: 'SCH009',
@@ -117,7 +133,9 @@ const allCustomers = [
     status: '待对接',
     isCooperation: false,
     industryType: '学校',
-    schoolType: '初中'
+    schoolType: '初中',
+    cooperationProjects: [],
+    cooperationAmount: 0
   },
   {
     id: 'SCH010',
@@ -130,7 +148,9 @@ const allCustomers = [
     status: '沟通中',
     isCooperation: false,
     industryType: '学校',
-    schoolType: '初中'
+    schoolType: '初中',
+    cooperationProjects: [],
+    cooperationAmount: 0
   },
   {
     id: 'SCH011',
@@ -143,7 +163,9 @@ const allCustomers = [
     status: '沟通中',
     isCooperation: false,
     industryType: '学校',
-    schoolType: '初中'
+    schoolType: '初中',
+    cooperationProjects: [],
+    cooperationAmount: 0
   },
   {
     id: 'SCH012',
@@ -156,7 +178,9 @@ const allCustomers = [
     status: '沟通中',
     isCooperation: false,
     industryType: '学校',
-    schoolType: '初中'
+    schoolType: '初中',
+    cooperationProjects: [],
+    cooperationAmount: 0
   },
   {
     id: 'SCH013',
@@ -169,7 +193,9 @@ const allCustomers = [
     status: '已对接',
     isCooperation: true,
     industryType: '学校',
-    schoolType: '大学'
+    schoolType: '大学',
+    cooperationProjects: ['AI教学平台', '智能硬件'],
+    cooperationAmount: 1200000
   },
   {
     id: 'SCH014',
@@ -182,7 +208,9 @@ const allCustomers = [
     status: '已对接',
     isCooperation: true,
     industryType: '学校',
-    schoolType: '幼儿园'
+    schoolType: '幼儿园',
+    cooperationProjects: ['儿童智能设备'],
+    cooperationAmount: 150000
   },
 
   // ===== 文旅板块 =====
@@ -197,7 +225,9 @@ const allCustomers = [
     status: '已对接',
     isCooperation: true,
     industryType: '文旅',
-    schoolType: '博物馆'
+    schoolType: '博物馆',
+    cooperationProjects: ['AI智能导览系统'],
+    cooperationAmount: 1200000
   },
   {
     id: 'CUL002',
@@ -210,7 +240,9 @@ const allCustomers = [
     status: '已对接',
     isCooperation: true,
     industryType: '文旅',
-    schoolType: '科技馆'
+    schoolType: '科技馆',
+    cooperationProjects: ['智慧场馆解决方案'],
+    cooperationAmount: 800000
   },
   {
     id: 'CUL003',
@@ -223,7 +255,9 @@ const allCustomers = [
     status: '已对接',
     isCooperation: true,
     industryType: '文旅',
-    schoolType: '主题公园'
+    schoolType: '主题公园',
+    cooperationProjects: ['互动展示系统', '票务管理系统'],
+    cooperationAmount: 450000
   },
   {
     id: 'CUL004',
@@ -236,7 +270,9 @@ const allCustomers = [
     status: '已对接',
     isCooperation: true,
     industryType: '文旅',
-    schoolType: '旅游景区'
+    schoolType: '旅游景区',
+    cooperationProjects: ['AR导览', '智能监控'],
+    cooperationAmount: 650000
   },
   {
     id: 'CUL005',
@@ -249,7 +285,9 @@ const allCustomers = [
     status: '待对接',
     isCooperation: false,
     industryType: '文旅',
-    schoolType: '文化中心'
+    schoolType: '文化中心',
+    cooperationProjects: [],
+    cooperationAmount: 0
   },
   {
     id: 'CUL006',
@@ -262,7 +300,9 @@ const allCustomers = [
     status: '沟通中',
     isCooperation: false,
     industryType: '文旅',
-    schoolType: '文创园区'
+    schoolType: '文创园区',
+    cooperationProjects: [],
+    cooperationAmount: 0
   },
   {
     id: 'CUL007',
@@ -275,7 +315,9 @@ const allCustomers = [
     status: '已对接',
     isCooperation: true,
     industryType: '文旅',
-    schoolType: '博物馆'
+    schoolType: '博物馆',
+    cooperationProjects: ['智能展陈系统'],
+    cooperationAmount: 550000
   },
   {
     id: 'CUL008',
@@ -288,7 +330,9 @@ const allCustomers = [
     status: '沟通中',
     isCooperation: false,
     industryType: '文旅',
-    schoolType: '博物馆'
+    schoolType: '博物馆',
+    cooperationProjects: [],
+    cooperationAmount: 0
   },
   {
     id: 'CUL009',
@@ -301,7 +345,9 @@ const allCustomers = [
     status: '待对接',
     isCooperation: false,
     industryType: '文旅',
-    schoolType: '旅游景区'
+    schoolType: '旅游景区',
+    cooperationProjects: [],
+    cooperationAmount: 0
   },
   {
     id: 'CUL010',
@@ -314,7 +360,9 @@ const allCustomers = [
     status: '沟通中',
     isCooperation: false,
     industryType: '文旅',
-    schoolType: '主题公园'
+    schoolType: '主题公园',
+    cooperationProjects: [],
+    cooperationAmount: 0
   },
   {
     id: 'CUL011',
@@ -327,7 +375,9 @@ const allCustomers = [
     status: '待对接',
     isCooperation: false,
     industryType: '文旅',
-    schoolType: '旅游景区'
+    schoolType: '旅游景区',
+    cooperationProjects: [],
+    cooperationAmount: 0
   },
   {
     id: 'CUL012',
@@ -340,7 +390,9 @@ const allCustomers = [
     status: '已对接',
     isCooperation: true,
     industryType: '文旅',
-    schoolType: '主题公园'
+    schoolType: '主题公园',
+    cooperationProjects: ['智能解说系统'],
+    cooperationAmount: 320000
   },
 
   // ===== 政府+人工智能板块 =====
@@ -355,7 +407,9 @@ const allCustomers = [
     status: '已对接',
     isCooperation: true,
     industryType: '政府+人工智能',
-    schoolType: '政府部门'
+    schoolType: '政府部门',
+    cooperationProjects: ['AI政务助手', '智能办公系统'],
+    cooperationAmount: 1500000
   },
   {
     id: 'GOV002',
@@ -368,7 +422,9 @@ const allCustomers = [
     status: '已对接',
     isCooperation: true,
     industryType: '政府+人工智能',
-    schoolType: '科创园区'
+    schoolType: '科创园区',
+    cooperationProjects: ['智慧园区管理平台', 'AI监控系统'],
+    cooperationAmount: 2000000
   },
   {
     id: 'GOV003',
@@ -381,7 +437,9 @@ const allCustomers = [
     status: '已对接',
     isCooperation: true,
     industryType: '政府+人工智能',
-    schoolType: 'AI创新中心'
+    schoolType: 'AI创新中心',
+    cooperationProjects: ['AI算法平台', '智能硬件设备'],
+    cooperationAmount: 1800000
   },
   {
     id: 'GOV004',
@@ -394,7 +452,9 @@ const allCustomers = [
     status: '沟通中',
     isCooperation: false,
     industryType: '政府+人工智能',
-    schoolType: '智慧城市项目'
+    schoolType: '智慧城市项目',
+    cooperationProjects: [],
+    cooperationAmount: 0
   },
   {
     id: 'GOV005',
@@ -407,7 +467,9 @@ const allCustomers = [
     status: '待对接',
     isCooperation: false,
     industryType: '政府+人工智能',
-    schoolType: '事业单位'
+    schoolType: '事业单位',
+    cooperationProjects: [],
+    cooperationAmount: 0
   },
   {
     id: 'GOV006',
@@ -420,7 +482,9 @@ const allCustomers = [
     status: '沟通中',
     isCooperation: false,
     industryType: '政府+人工智能',
-    schoolType: '政府部门'
+    schoolType: '政府部门',
+    cooperationProjects: [],
+    cooperationAmount: 0
   }
 ]
 

@@ -51,19 +51,9 @@ function AdminLayout() {
   // 导航菜单项
   const menuItems = [
     {
-      key: '/',
+      key: '/bi-cockpit',
       icon: <PieChartOutlined />,
-      label: '大数据中心',
-      children: [
-        {
-          key: '/dashboard',
-          label: '数据中心分析',
-        },
-        {
-          key: '/bi-cockpit',
-          label: 'BI数据驾驶舱',
-        }
-      ]
+      label: '大数据中心'
     },
     {
       key: '/customer',
@@ -247,13 +237,12 @@ function App() {
     <Routes>
       <Route
         path="/login"
-        element={authed ? <Navigate to="/dashboard" replace /> : <Login />}
+        element={authed ? <Navigate to="/bi-cockpit" replace /> : <Login />}
       />
 
       <Route element={<RequireAuth />}>
         <Route element={<AdminLayout />}>
-          <Route path="/" element={<DataCenter />} />
-          <Route path="/dashboard" element={<DataCenter />} />
+          <Route path="/" element={<BICockpit />} />
           <Route path="/bi-cockpit" element={<BICockpit />} />
           <Route path="/customer" element={<CustomerManagement />} />
           <Route path="/order" element={<OrderCenter />} />
@@ -276,7 +265,7 @@ function App() {
         </Route>
       </Route>
 
-      <Route path="*" element={<Navigate to={authed ? '/dashboard' : '/login'} replace />} />
+      <Route path="*" element={<Navigate to={authed ? '/bi-cockpit' : '/login'} replace />} />
     </Routes>
   )
 }

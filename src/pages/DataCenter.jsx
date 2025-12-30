@@ -7,7 +7,6 @@ const { Option } = Select
 import dataCenterData from '../mock/dataCenterData.js';
 import customerData from '../mock/customerData.js';
 import deliveryData from '../mock/deliveryData.js';
-import DataVisualizationDashboard from './components/DataVisualizationDashboard';
 
 const DataCenter = () => {
   const [selectedEducationStage, setSelectedEducationStage] = useState('全部')
@@ -208,11 +207,6 @@ const DataCenter = () => {
             </Card>
           </Col>
         </Row>
-      </div>
-      
-      {/* 高级数据可视化大屏部分 */}
-      <div style={{ marginTop: '40px', paddingTop: '20px', borderTop: '1px solid #f0f0f0' }}>
-        <DataVisualizationDashboard />
       </div>
     </div>
   )

@@ -32,6 +32,7 @@ export const generateEffectImages = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'text/event-stream',
         },
         body: JSON.stringify({
           prompt,
@@ -43,6 +44,11 @@ export const generateEffectImages = ({
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // 检查响应体是否存在
+      if (!response.body) {
+        throw new Error('Response body is empty or null');
       }
 
       const reader = response.body.getReader();
@@ -89,6 +95,11 @@ export const generateEffectImages = ({
       if (error.name === 'AbortError') {
         console.log('请求已取消');
       } else {
+        console.error('图片生成请求失败:', error);
+        // 添加更详细的错误信息
+        if (error.message.includes('Response body')) {
+          console.error('响应体为空，可能是后端未正确返回流式数据或连接被提前关闭');
+        }
         onError(error);
       }
     }
@@ -138,12 +149,20 @@ export const generateEffectImagesWithFiles = ({
 
       const response = await fetch(API_ENDPOINTS.IMAGE_GENERATION.GENERATE_WITH_FILES, {
         method: 'POST',
+        headers: {
+          'Accept': 'text/event-stream',
+        },
         body: formData,
         signal: controller.signal,
       });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // 检查响应体是否存在
+      if (!response.body) {
+        throw new Error('Response body is empty or null');
       }
 
       const reader = response.body.getReader();
@@ -190,6 +209,11 @@ export const generateEffectImagesWithFiles = ({
       if (error.name === 'AbortError') {
         console.log('请求已取消');
       } else {
+        console.error('图片生成请求失败:', error);
+        // 添加更详细的错误信息
+        if (error.message.includes('Response body')) {
+          console.error('响应体为空，可能是后端未正确返回流式数据或连接被提前关闭');
+        }
         onError(error);
       }
     }

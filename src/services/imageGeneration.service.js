@@ -99,3 +99,104 @@ export const generateEffectImages = ({
   // 返回取消函数
   return () => controller.abort();
 };
+
+/**
+ * 流式生成效果图（支持文件上传）
+ * @param {Object} params - 请求参数
+ * @param {string} params.prompt - 提示词
+ * @param {File[]} params.images - 图片文件数组（可选）
+ * @param {number} params.max_images - 生成图片数量
+ * @param {string} params.size - 图片尺寸 (2K, 1080p, 720p等)
+ * @param {Function} onMessage - 接收消息的回调函数 (data) => void
+ * @param {Function} onComplete - 完成时的回调函数 (result) => void
+ * @param {Function} onError - 错误时的回调函数 (error) => void
+ * @returns {Function} 取消请求的函数
+ */
+export const generateEffectImagesWithFiles = ({
+  prompt,
+  images = [],
+  max_images = 2,
+  size = '2K',
+  onMessage,
+  onComplete,
+  onError,
+}) => {
+  const controller = new AbortController();
+
+  const fetchStream = async () => {
+    try {
+      // 创建 FormData
+      const formData = new FormData();
+      formData.append('prompt', prompt);
+      formData.append('max_images', max_images.toString());
+      formData.append('size', size);
+
+      // 添加图片文件（如果有）
+      for (const image of images) {
+        formData.append('images', image);
+      }
+
+      const response = await fetch(API_ENDPOINTS.IMAGE_GENERATION.GENERATE_WITH_FILES, {
+        method: 'POST',
+        body: formData,
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) {
+          break;
+        }
+
+        // 解码数据并添加到缓冲区
+        buffer += decoder.decode(value, { stream: true });
+
+        // 按行处理数据
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || ''; // 保留未完成的行
+
+        for (const line of lines) {
+          if (line.trim() === '') continue;
+
+          // 解析 SSE 格式数据: data: {...}
+          if (line.startsWith('data: ')) {
+            const jsonStr = line.substring(6).trim();
+
+            try {
+              const data = JSON.parse(jsonStr);
+              onMessage(data);
+
+              // 检查是否完成
+              if (data.type === 'completed') {
+                onComplete(data);
+                return;
+              }
+            } catch (parseError) {
+              console.error('解析 SSE 数据失败:', parseError, jsonStr);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        console.log('请求已取消');
+      } else {
+        onError(error);
+      }
+    }
+  };
+
+  fetchStream();
+
+  // 返回取消函数
+  return () => controller.abort();
+};

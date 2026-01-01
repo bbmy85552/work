@@ -44,6 +44,7 @@ export const API_ENDPOINTS = {
   // 图片生成相关
   IMAGE_GENERATION: {
     GENERATE: buildEndpoint('/image-generation/generate'), // 生成效果图
+    GENERATE_WITH_FILES: buildEndpoint('/image-generation/generate-with-files'), // 生成效果图（支持文件上传）
   },
   // 政策搜索相关
   POLICY_SEARCH: {

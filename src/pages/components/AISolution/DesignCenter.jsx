@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, message, Space, InputNumber, Card } from 'antd';
-import { ArrowRightOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, UploadOutlined } from '@ant-design/icons';
 import { HashLoader } from 'react-spinners';
 import { useNavigate } from 'react-router-dom';
 import { updateWallDesignTask } from '../../../services/wallDesign.service';
@@ -19,6 +19,8 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
   const [wallHeight, setWallHeight] = useState(3);
   const [imageCount, setImageCount] = useState(4); // 生成图片数量
   const [isGeneratingImages, setIsGeneratingImages] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState([]); // 上传的文件
+  const [generationMode, setGenerationMode] = useState('text'); // 'text' 或 'upload'
 
   // 检查是否从缓存恢复的方案 - 需要在useEffect之前声明
   const [isFromCache, setIsFromCache] = useState(false);
@@ -324,6 +326,144 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
 
       generateEffectImages({
         prompt,
+        max_images: imageCount,
+        size: '2K',
+        onMessage: (data) => {
+          console.log('收到消息:', data.type, data);
+          if (data.type === 'image_generated') {
+            images.push({
+              url: data.data.url,
+              size: data.data.size
+            });
+            console.log('添加图片:', images.length, images);
+            // 实时更新图片列表
+            updateSolutionData?.({
+              generatedImages: [...images],
+              wallDimensions: { width: wallWidth, height: wallHeight }
+            });
+            message.success(`第${data.data.image_index + 1}张效果图生成成功！`);
+          }
+        },
+        onComplete: (result) => {
+          console.log('生成完成:', result);
+          setIsGeneratingImages(false);
+          updateSolutionData?.({ isGeneratingImages: false });
+          message.success('所有效果图生成完成！');
+        },
+        onError: (error) => {
+          console.error('生成效果图失败:', error);
+          setIsGeneratingImages(false);
+          updateSolutionData?.({ isGeneratingImages: false });
+          message.error(error.message || '生成效果图失败，请稍后重试');
+        },
+      });
+    } catch (error) {
+      console.error('生成效果图失败:', error);
+      setIsGeneratingImages(false);
+      updateSolutionData?.({ isGeneratingImages: false });
+      message.error(error.message || '生成效果图失败，请稍后重试');
+    }
+  };
+
+  // 处理文件选择
+  const handleFileSelect = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    // 验证文件类型
+    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+    const invalidFiles = files.filter(file => !validTypes.includes(file.type));
+
+    if (invalidFiles.length > 0) {
+      message.error('请选择 JPG、PNG 或 WebP 格式的图片');
+      return;
+    }
+
+    setUploadedFiles(files);
+    setGenerationMode('upload'); // 自动切换到上传模式
+    message.success(`已选择 ${files.length} 张图片`);
+  };
+
+  // 生成效果图（带上传）
+  const handleGenerateImagesWithUpload = async () => {
+    if (!proposal || !proposal.sections) {
+      message.error('请先生成方案');
+      return;
+    }
+
+    if (uploadedFiles.length === 0) {
+      message.error('请先选择要上传的参考图片');
+      return;
+    }
+
+    // 获取 "🏫 校园空间" 和 "💡 传统中式风格空间设计的理念解读" 的内容
+    const campusSpaceSection = proposal.sections.find(s => s.title.includes('校园空间'));
+    const designConceptSection = proposal.sections.find(s => s.title.includes('理念解读'));
+
+    if (!campusSpaceSection || !designConceptSection) {
+      message.error('方案数据不完整，请重新生成方案');
+      return;
+    }
+
+    // 构建prompt - 不包含墙面长宽信息
+    const campusContent = campusSpaceSection.items?.map(item => `${item.subtitle}：${stripHtmlTags(item.content)}`).join('\n') || '';
+    const designContent = designConceptSection.items?.map(item => `${item.subtitle}：${stripHtmlTags(item.content)}`).join('\n') || '';
+
+    const prompt = `校园空间：${campusContent}\n\n传统中式风格空间设计的理念解读\n${designContent}\n\n根据以上的信息，对学校的一面墙进行设计。要求：
+1. 横向16:9的超宽幅画面，展现墙面的全景视角
+2. 现实风格的真实照片级渲染，正面视角展示科技墙
+3. 画面中包含学生与科技墙互动的场景：有2-3名学生在墙面操作触摸屏、观看数字内容或使用互动设备
+4. 学生动作自然，展现专注学习的状态
+5. 光线柔和明亮，体现智慧教育空间的现代感
+6. 不要做成走廊视角，专注于墙面本身的设计和互动体验
+生成${imageCount}张不同角度和互动场景的效果图`;
+
+    console.log('开始生成效果图（带上传），prompt长度:', prompt.length);
+    console.log('最终prompt（纯文本）:', prompt);
+    console.log('上传的文件数量:', uploadedFiles.length);
+    setIsGeneratingImages(true);
+
+    // 清除旧的图片缓存，并立即同步设置isGeneratingImages状态
+    try {
+      const savedData = JSON.parse(localStorage.getItem('currentAISolution') || '{}');
+      const cleanedData = {
+        ...savedData,
+        generatedImages: [],
+        selectedImage: null,
+        selectedImageIndex: null,
+        isGeneratingImages: true, // 立即设置生成状态
+        wallDimensions: { width: wallWidth, height: wallHeight }
+      };
+      localStorage.setItem('currentAISolution', JSON.stringify(cleanedData));
+      console.log('已清除旧的图片缓存并设置生成状态');
+    } catch (error) {
+      console.error('清除缓存失败:', error);
+    }
+
+    // 更新state
+    updateSolutionData?.({
+      generatedImages: [],
+      wallDimensions: { width: wallWidth, height: wallHeight },
+      isGeneratingImages: true,
+      selectedImage: null,
+      selectedImageIndex: null,
+      imageCount: imageCount // 保存图片数量
+    });
+    console.log('已初始化数据，准备跳转');
+
+    // 立即跳转到步骤3（效果图生成页面）
+    navigate('/ai-solution?step=3', { replace: true });
+    console.log('已触发跳转到step=3');
+
+    // 初始化图片数组
+    const images = [];
+
+    try {
+      const { generateEffectImagesWithFiles } = await import('../../../services/imageGeneration.service');
+
+      generateEffectImagesWithFiles({
+        prompt,
+        images: uploadedFiles,
         max_images: imageCount,
         size: '2K',
         onMessage: (data) => {
@@ -732,14 +872,15 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
               borderRadius: '15px'
             }}
           >
+            {/* 顶部操作栏 */}
             <div style={{
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: '20px'
+              marginBottom: '24px',
+              paddingBottom: '20px',
+              borderBottom: '2px solid rgba(148, 163, 184, 0.3)'
             }}>
-              {/* 左侧：返回和保存按钮 */}
               <Space>
                 <Button
                   size="large"
@@ -761,103 +902,333 @@ const DesignCenter = ({ onPrev, onNext, solutionData, updateSolutionData }) => {
                   保存方案
                 </Button>
               </Space>
+            </div>
 
-              {/* 中间：墙尺寸输入框和图片数量选择器 */}
+            {/* 生成模式选择区域 */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.8)',
+              borderRadius: '15px',
+              padding: '24px',
+              border: '2px solid rgba(59, 130, 246, 0.15)'
+            }}>
               <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '20px',
-                flex: 1,
-                justifyContent: 'center',
-                flexWrap: 'wrap'
+                textAlign: 'center',
+                marginBottom: '24px'
               }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
+                <h3 style={{
+                  fontSize: '18px',
+                  color: '#1e3a8a',
+                  fontWeight: 700,
+                  marginBottom: '8px'
                 }}>
-                  <span style={{
-                    fontSize: '16px',
-                    fontWeight: 600,
-                    color: '#1e3a8a'
-                  }}>
-                    墙宽度：
-                  </span>
-                  <InputNumber
-                    value={wallWidth}
-                    onChange={(value) => setWallWidth(value || 8)}
-                    min={1}
-                    max={50}
-                    step={0.1}
-                    style={{ width: '80px' }}
-                    disabled={isGeneratingImages}
-                  />
-                  <span style={{ fontSize: '14px', color: '#64748b' }}>米</span>
-                </div>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
+                  🎨 选择生成方式
+                </h3>
+                <p style={{
+                  fontSize: '14px',
+                  color: '#64748b',
+                  margin: 0
                 }}>
-                  <span style={{
-                    fontSize: '16px',
-                    fontWeight: 600,
-                    color: '#1e3a8a'
-                  }}>
-                    墙高度：
-                  </span>
-                  <InputNumber
-                    value={wallHeight}
-                    onChange={(value) => setWallHeight(value || 3)}
-                    min={1}
-                    max={20}
-                    step={0.1}
-                    style={{ width: '80px' }}
-                    disabled={isGeneratingImages}
-                  />
-                  <span style={{ fontSize: '14px', color: '#64748b' }}>米</span>
-                </div>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}>
-                  <span style={{
-                    fontSize: '16px',
-                    fontWeight: 600,
-                    color: '#1e3a8a'
-                  }}>
-                    图片数量：
-                  </span>
-                  <InputNumber
-                    value={imageCount}
-                    onChange={(value) => setImageCount(value || 2)}
-                    min={1}
-                    max={6}
-                    step={1}
-                    style={{ width: '80px' }}
-                    disabled={isGeneratingImages}
-                  />
-                  <span style={{ fontSize: '14px', color: '#64748b' }}>张</span>
-                </div>
+                  选择一种方式生成效果图
+                </p>
               </div>
 
-              {/* 右侧：生成效果图按钮 */}
-              <Button
-                type="primary"
-                size="large"
-                onClick={handleGenerateImages}
-                loading={isGeneratingImages}
-                disabled={!proposal}
-                style={{
-                  background: 'linear-gradient(135deg, #1e3a8a, #3b82f6)',
-                  border: 'none',
-                  borderRadius: '8px',
-                  minWidth: '160px'
-                }}
-              >
-                {isGeneratingImages ? '生成中...' : '生成效果图'}
-              </Button>
+              {/* 模式切换按钮 */}
+              <div style={{
+                display: 'flex',
+                gap: '16px',
+                marginBottom: '24px',
+                justifyContent: 'center'
+              }}>
+                <Button
+                  size="large"
+                  type={generationMode === 'text' ? 'primary' : 'default'}
+                  onClick={() => {
+                    setGenerationMode('text');
+                    setUploadedFiles([]);
+                  }}
+                  disabled={isGeneratingImages}
+                  style={{
+                    borderRadius: '12px',
+                    minWidth: '200px',
+                    height: '60px',
+                    background: generationMode === 'text'
+                      ? 'linear-gradient(135deg, #1e3a8a, #3b82f6)'
+                      : undefined,
+                    border: generationMode === 'text'
+                      ? 'none'
+                      : '2px solid rgba(59, 130, 246, 0.3)'
+                  }}
+                >
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '4px' }}>
+                      文本生成
+                    </div>
+                    <div style={{ fontSize: '12px', opacity: 0.85 }}>
+                      设置墙面参数生成
+                    </div>
+                  </div>
+                </Button>
+
+                <Button
+                  size="large"
+                  type={generationMode === 'upload' ? 'primary' : 'default'}
+                  onClick={() => setGenerationMode('upload')}
+                  disabled={isGeneratingImages}
+                  style={{
+                    borderRadius: '12px',
+                    minWidth: '200px',
+                    height: '60px',
+                    background: generationMode === 'upload'
+                      ? 'linear-gradient(135deg, #1e3a8a, #3b82f6)'
+                      : undefined,
+                    border: generationMode === 'upload'
+                      ? 'none'
+                      : '2px solid rgba(59, 130, 246, 0.3)'
+                  }}
+                >
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '4px' }}>
+                      上传图片生成
+                    </div>
+                    <div style={{ fontSize: '12px', opacity: 0.85 }}>
+                      基于参考图生成
+                    </div>
+                  </div>
+                </Button>
+              </div>
+
+              {/* 文本生成模式：显示墙面参数 */}
+              {generationMode === 'text' && (
+                <div style={{
+                  background: 'linear-gradient(135deg, #eff6ff, #dbeafe)',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  border: '2px solid #3b82f6'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '24px',
+                    flexWrap: 'wrap'
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}>
+                      <span style={{
+                        fontSize: '16px',
+                        fontWeight: 600,
+                        color: '#1e3a8a'
+                      }}>
+                        墙宽度：
+                      </span>
+                      <InputNumber
+                        value={wallWidth}
+                        onChange={(value) => setWallWidth(value || 8)}
+                        min={1}
+                        max={50}
+                        step={0.1}
+                        style={{ width: '100px' }}
+                        disabled={isGeneratingImages}
+                      />
+                      <span style={{ fontSize: '14px', color: '#64748b' }}>米</span>
+                    </div>
+
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}>
+                      <span style={{
+                        fontSize: '16px',
+                        fontWeight: 600,
+                        color: '#1e3a8a'
+                      }}>
+                        墙高度：
+                      </span>
+                      <InputNumber
+                        value={wallHeight}
+                        onChange={(value) => setWallHeight(value || 3)}
+                        min={1}
+                        max={20}
+                        step={0.1}
+                        style={{ width: '100px' }}
+                        disabled={isGeneratingImages}
+                      />
+                      <span style={{ fontSize: '14px', color: '#64748b' }}>米</span>
+                    </div>
+
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}>
+                      <span style={{
+                        fontSize: '16px',
+                        fontWeight: 600,
+                        color: '#1e3a8a'
+                      }}>
+                        图片数量：
+                      </span>
+                      <InputNumber
+                        value={imageCount}
+                        onChange={(value) => setImageCount(value || 2)}
+                        min={1}
+                        max={6}
+                        step={1}
+                        style={{ width: '100px' }}
+                        disabled={isGeneratingImages}
+                      />
+                      <span style={{ fontSize: '14px', color: '#64748b' }}>张</span>
+                    </div>
+
+                    <Button
+                      type="primary"
+                      size="large"
+                      onClick={handleGenerateImages}
+                      loading={isGeneratingImages}
+                      disabled={!proposal}
+                      style={{
+                        background: 'linear-gradient(135deg, #1e3a8a, #3b82f6)',
+                        border: 'none',
+                        borderRadius: '8px',
+                        minWidth: '160px',
+                        height: '48px'
+                      }}
+                    >
+                      {isGeneratingImages ? '生成中...' : '开始生成'}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* 上传图片模式：显示文件选择 */}
+              {generationMode === 'upload' && (
+                <div style={{
+                  background: 'linear-gradient(135deg, #eff6ff, #dbeafe)',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  border: '2px solid #3b82f6'
+                }}>
+                  <input
+                    type="file"
+                    id="image-upload-input"
+                    style={{ display: 'none' }}
+                    accept="image/jpeg,image/png,image/jpg,image/webp"
+                    multiple
+                    onChange={handleFileSelect}
+                    disabled={isGeneratingImages}
+                  />
+
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '24px',
+                    flexWrap: 'wrap'
+                  }}>
+                    {uploadedFiles.length === 0 && (
+                      <>
+                        <div style={{
+                          fontSize: '15px',
+                          color: '#1e3a8a',
+                          fontWeight: 600
+                        }}>
+                          📁 请上传参考图片（支持 JPG、PNG、WebP 格式）
+                        </div>
+
+                        <Button
+                          size="large"
+                          icon={<UploadOutlined />}
+                          onClick={() => document.getElementById('image-upload-input').click()}
+                          disabled={isGeneratingImages}
+                          style={{
+                            borderRadius: '8px',
+                            minWidth: '160px',
+                            height: '48px',
+                            background: 'linear-gradient(135deg, #1e3a8a, #3b82f6)',
+                            border: 'none',
+                            color: 'white'
+                          }}
+                        >
+                          选择图片
+                        </Button>
+                      </>
+                    )}
+
+                    {uploadedFiles.length > 0 && (
+                      <>
+                        <div style={{
+                          fontSize: '15px',
+                          color: '#1e3a8a',
+                          fontWeight: 600,
+                          background: 'rgba(255, 255, 255, 0.7)',
+                          padding: '12px 20px',
+                          borderRadius: '8px'
+                        }}>
+                          ✅ 已选择 {uploadedFiles.length} 张参考图
+                          <span style={{
+                            marginLeft: '12px',
+                            fontSize: '13px',
+                            color: '#2563eb',
+                            cursor: 'pointer',
+                            textDecoration: 'underline'
+                          }} onClick={(e) => {
+                            e.stopPropagation();
+                            setUploadedFiles([]);
+                            message.info('已清除选择');
+                          }}>
+                            重新选择
+                          </span>
+                        </div>
+
+                        <div style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px'
+                        }}>
+                          <span style={{
+                            fontSize: '16px',
+                            fontWeight: 600,
+                            color: '#1e3a8a'
+                          }}>
+                            生成数量：
+                          </span>
+                          <InputNumber
+                            value={imageCount}
+                            onChange={(value) => setImageCount(value || 2)}
+                            min={1}
+                            max={6}
+                            step={1}
+                            style={{ width: '100px' }}
+                            disabled={isGeneratingImages}
+                          />
+                          <span style={{ fontSize: '14px', color: '#64748b' }}>张</span>
+                        </div>
+
+                        <Button
+                          type="primary"
+                          size="large"
+                          onClick={handleGenerateImagesWithUpload}
+                          loading={isGeneratingImages}
+                          disabled={!proposal}
+                          style={{
+                            background: 'linear-gradient(135deg, #1e3a8a, #3b82f6)',
+                            border: 'none',
+                            borderRadius: '8px',
+                            minWidth: '160px',
+                            height: '48px'
+                          }}
+                        >
+                          {isGeneratingImages ? '生成中...' : '开始生成'}
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </Card>
         </div>

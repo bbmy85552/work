@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'xuezhi-ai-frontend',
       script: 'pnpm',
-      args: 'preview',
+      args: 'start',
       cwd: '/home/ubuntu/frontend_demo',
       instances: 1,
       autorestart: true,

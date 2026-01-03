@@ -1,0 +1,847 @@
+AKA URL 查找报告
+生成时间: 2026/1/2 00:30:45
+项目路径: /Users/2dqy003/Projects/xuezhiai/frontend
+
+统计信息:
+- 总文件数: 14
+- 总 URL 数: 188
+- 唯一 URL 数: 50
+
+=== 按文件分组 ===
+
+文件: /Users/2dqy003/Projects/xuezhiai/frontend/dist/static/product-library/final_gallery.html
+   找到 26 个 URL:
+
+   第 159 行:
+   URL: https://aka.doubaocdn.com/s/Z0h91vjxpI
+   内容: <img src="https://aka.doubaocdn.com/s/Z0h91vjxpI"
+
+   第 174 行:
+   URL: https://aka.doubaocdn.com/s/g8U01vjxpH
+   内容: <img src="https://aka.doubaocdn.com/s/g8U01vjxpH"
+
+   第 189 行:
+   URL: https://aka.doubaocdn.com/s/1Ouj1vjxpI
+   内容: <img src="https://aka.doubaocdn.com/s/1Ouj1vjxpI"
+
+   第 213 行:
+   URL: https://aka.doubaocdn.com/s/8RSk1vjxsu
+   内容: <img src="https://aka.doubaocdn.com/s/8RSk1vjxsu"
+
+   第 228 行:
+   URL: https://aka.doubaocdn.com/s/e1nF1vjxpI
+   内容: <img src="https://aka.doubaocdn.com/s/e1nF1vjxpI"
+
+   第 243 行:
+   URL: https://aka.doubaocdn.com/s/IhD01vjxsu
+   内容: <img src="https://aka.doubaocdn.com/s/IhD01vjxsu"
+
+   第 267 行:
+   URL: https://aka.doubaocdn.com/s/Ytop1vjxsu
+   内容: <img src="https://aka.doubaocdn.com/s/Ytop1vjxsu"
+
+   第 282 行:
+   URL: https://aka.doubaocdn.com/s/Uy161vjxsv
+   内容: <img src="https://aka.doubaocdn.com/s/Uy161vjxsv"
+
+   第 306 行:
+   URL: https://aka.doubaocdn.com/s/pTfj1vjxsu
+   内容: <img src="https://aka.doubaocdn.com/s/pTfj1vjxsu"
+
+   第 321 行:
+   URL: https://aka.doubaocdn.com/s/f5531vjxpK
+   内容: <img src="https://aka.doubaocdn.com/s/f5531vjxpK"
+
+   第 336 行:
+   URL: https://aka.doubaocdn.com/s/5Ebr1vjxsv
+   内容: <img src="https://aka.doubaocdn.com/s/5Ebr1vjxsv"
+
+   第 360 行:
+   URL: https://aka.doubaocdn.com/s/2nJ91vjxpI
+   内容: <img src="https://aka.doubaocdn.com/s/2nJ91vjxpI"
+
+   第 375 行:
+   URL: https://aka.doubaocdn.com/s/XeTd1vjxkH
+   内容: <img src="https://aka.doubaocdn.com/s/XeTd1vjxkH"
+
+   第 411 行:
+   URL: https://aka.doubaocdn.com/s/is371vkcnz
+   内容: <img src="https://aka.doubaocdn.com/s/is371vkcnz"
+
+   第 426 行:
+   URL: https://aka.doubaocdn.com/s/GUgR1vkcno
+   内容: <img src="https://aka.doubaocdn.com/s/GUgR1vkcno"
+
+   第 441 行:
+   URL: https://aka.doubaocdn.com/s/w7m81vkcsz
+   内容: <img src="https://aka.doubaocdn.com/s/w7m81vkcsz"
+
+   第 456 行:
+   URL: https://aka.doubaocdn.com/s/bnnk1vkcsy
+   内容: <img src="https://aka.doubaocdn.com/s/bnnk1vkcsy"
+
+   第 482 行:
+   URL: https://aka.doubaocdn.com/s/paxw1vkcnq
+   内容: <img src="https://aka.doubaocdn.com/s/paxw1vkcnq"
+
+   第 497 行:
+   URL: https://aka.doubaocdn.com/s/L7gu1vkcnq
+   内容: <img src="https://aka.doubaocdn.com/s/L7gu1vkcnq"
+
+   第 512 行:
+   URL: https://aka.doubaocdn.com/s/DWVb1vkcsz
+   内容: <img src="https://aka.doubaocdn.com/s/DWVb1vkcsz"
+
+   第 527 行:
+   URL: https://aka.doubaocdn.com/s/qM301vkct0
+   内容: <img src="https://aka.doubaocdn.com/s/qM301vkct0"
+
+   第 553 行:
+   URL: https://aka.doubaocdn.com/s/Tx351vkcnv
+   内容: <img src="https://aka.doubaocdn.com/s/Tx351vkcnv"
+
+   第 568 行:
+   URL: https://aka.doubaocdn.com/s/TEKW1vkcnp
+   内容: <img src="https://aka.doubaocdn.com/s/TEKW1vkcnp"
+
+   第 583 行:
+   URL: https://aka.doubaocdn.com/s/RDyR1vkcsz
+   内容: <img src="https://aka.doubaocdn.com/s/RDyR1vkcsz"
+
+   第 598 行:
+   URL: https://aka.doubaocdn.com/s/8WXG1vkcsz
+   内容: <img src="https://aka.doubaocdn.com/s/8WXG1vkcsz"
+
+   第 624 行:
+   URL: https://aka.doubaocdn.com/s/Sy6m1vkctK
+   内容: <img src="https://aka.doubaocdn.com/s/Sy6m1vkctK"
+
+
+================================================================================
+
+文件: /Users/2dqy003/Projects/xuezhiai/frontend/dist/static/talent/design_team.html
+   找到 6 个 URL:
+
+   第 224 行:
+   URL: https://aka.doubaocdn.com/s/xQNJ1vkhSK
+   内容: <img src="https://aka.doubaocdn.com/s/xQNJ1vkhSK" alt="陈雨晴" class="w-full h-64 object-cover">
+
+   第 264 行:
+   URL: https://aka.doubaocdn.com/s/HxGO1vkhSK
+   内容: <img src="https://aka.doubaocdn.com/s/HxGO1vkhSK" alt="李明远" class="w-full h-64 object-cover">
+
+   第 304 行:
+   URL: https://aka.doubaocdn.com/s/yhVU1vkhSJ
+   内容: <img src="https://aka.doubaocdn.com/s/yhVU1vkhSJ" alt="王浩宇" class="w-full h-64 object-cover">
+
+   第 344 行:
+   URL: https://aka.doubaocdn.com/s/rNwq1vkhSL
+   内容: <img src="https://aka.doubaocdn.com/s/rNwq1vkhSL" alt="张雅琪" class="w-full h-64 object-cover">
+
+   第 384 行:
+   URL: https://aka.doubaocdn.com/s/0ctx1vkhSK
+   内容: <img src="https://aka.doubaocdn.com/s/0ctx1vkhSK" alt="刘建国" class="w-full h-64 object-cover">
+
+   第 424 行:
+   URL: https://aka.doubaocdn.com/s/jsBn1vkhSJ
+   内容: <img src="https://aka.doubaocdn.com/s/jsBn1vkhSJ" alt="赵敏" class="w-full h-64 object-cover">
+
+
+================================================================================
+
+文件: /Users/2dqy003/Projects/xuezhiai/frontend/dist/static/talent/construction_team.html
+   找到 6 个 URL:
+
+   第 225 行:
+   URL: https://aka.doubaocdn.com/s/njid1vkhVG
+   内容: <img src="https://aka.doubaocdn.com/s/njid1vkhVG" alt="陈建" class="w-full h-64 object-cover">
+
+   第 265 行:
+   URL: https://aka.doubaocdn.com/s/pduo1vkhVG
+   内容: <img src="https://aka.doubaocdn.com/s/pduo1vkhVG" alt="林静" class="w-full h-64 object-cover">
+
+   第 305 行:
+   URL: https://aka.doubaocdn.com/s/gSI31vkhVG
+   内容: <img src="https://aka.doubaocdn.com/s/gSI31vkhVG" alt="王雅" class="w-full h-64 object-cover">
+
+   第 345 行:
+   URL: https://aka.doubaocdn.com/s/o0FZ1vkhVF
+   内容: <img src="https://aka.doubaocdn.com/s/o0FZ1vkhVF" alt="刘强" class="w-full h-64 object-cover">
+
+   第 385 行:
+   URL: https://aka.doubaocdn.com/s/esjp1vkhVG
+   内容: <img src="https://aka.doubaocdn.com/s/esjp1vkhVG" alt="赵明" class="w-full h-64 object-cover">
+
+   第 425 行:
+   URL: https://aka.doubaocdn.com/s/40al1vkhVH
+   内容: <img src="https://aka.doubaocdn.com/s/40al1vkhVH" alt="孙丽" class="w-full h-64 object-cover">
+
+
+================================================================================
+
+文件: /Users/2dqy003/Projects/xuezhiai/frontend/dist/static/talent/engineer_team.html
+   找到 6 个 URL:
+
+   第 215 行:
+   URL: https://aka.doubaocdn.com/s/aPpx1vkgzi
+   内容: <img src="https://aka.doubaocdn.com/s/aPpx1vkgzi" alt="张明" class="w-full h-64 object-cover">
+
+   第 255 行:
+   URL: https://aka.doubaocdn.com/s/gUwu1vkgzi
+   内容: <img src="https://aka.doubaocdn.com/s/gUwu1vkgzi" alt="李婷" class="w-full h-64 object-cover">
+
+   第 295 行:
+   URL: https://aka.doubaocdn.com/s/EotV1vkgzj
+   内容: <img src="https://aka.doubaocdn.com/s/EotV1vkgzj" alt="王强" class="w-full h-64 object-cover">
+
+   第 335 行:
+   URL: https://aka.doubaocdn.com/s/xeUl1vkgzi
+   内容: <img src="https://aka.doubaocdn.com/s/xeUl1vkgzi" alt="陈静" class="w-full h-64 object-cover">
+
+   第 375 行:
+   URL: https://aka.doubaocdn.com/s/qNir1vkgzj
+   内容: <img src="https://aka.doubaocdn.com/s/qNir1vkgzj" alt="刘阳" class="w-full h-64 object-cover">
+
+   第 415 行:
+   URL: https://aka.doubaocdn.com/s/WIOD1vkgzi
+   内容: <img src="https://aka.doubaocdn.com/s/WIOD1vkgzi" alt="赵琳" class="w-full h-64 object-cover">
+
+
+================================================================================
+
+文件: /Users/2dqy003/Projects/xuezhiai/frontend/dist/static/talent/education_experts.html
+   找到 6 个 URL:
+
+   第 224 行:
+   URL: https://aka.doubaocdn.com/s/SGVh1vkhPO
+   内容: <img src="https://aka.doubaocdn.com/s/SGVh1vkhPO" alt="林小雨" class="w-full h-64 object-cover">
+
+   第 263 行:
+   URL: https://aka.doubaocdn.com/s/6k4w1vkhPO
+   内容: <img src="https://aka.doubaocdn.com/s/6k4w1vkhPO" alt="陈教授" class="w-full h-64 object-cover">
+
+   第 302 行:
+   URL: https://aka.doubaocdn.com/s/OYnc1vkhPO
+   内容: <img src="https://aka.doubaocdn.com/s/OYnc1vkhPO" alt="王博士" class="w-full h-64 object-cover">
+
+   第 341 行:
+   URL: https://aka.doubaocdn.com/s/YThE1vkhPN
+   内容: <img src="https://aka.doubaocdn.com/s/YThE1vkhPN" alt="张教授" class="w-full h-64 object-cover">
+
+   第 380 行:
+   URL: https://aka.doubaocdn.com/s/PvWH1vkhPN
+   内容: <img src="https://aka.doubaocdn.com/s/PvWH1vkhPN" alt="李教授" class="w-full h-64 object-cover">
+
+   第 419 行:
+   URL: https://aka.doubaocdn.com/s/kUyu1vkhPO
+   内容: <img src="https://aka.doubaocdn.com/s/kUyu1vkhPO" alt="刘教授" class="w-full h-64 object-cover">
+
+
+================================================================================
+
+文件: /Users/2dqy003/Projects/xuezhiai/frontend/dist/static/talent/integrated_apple_style.html
+   找到 6 个 URL:
+
+   第 502 行:
+   URL: https://aka.doubaocdn.com/s/aPpx1vkgzi
+   内容: <img src="https://aka.doubaocdn.com/s/aPpx1vkgzi" alt="张明" class="w-full h-64 object-cover">
+
+   第 542 行:
+   URL: https://aka.doubaocdn.com/s/gUwu1vkgzi
+   内容: <img src="https://aka.doubaocdn.com/s/gUwu1vkgzi" alt="李婷" class="w-full h-64 object-cover">
+
+   第 582 行:
+   URL: https://aka.doubaocdn.com/s/EotV1vkgzj
+   内容: <img src="https://aka.doubaocdn.com/s/EotV1vkgzj" alt="王强" class="w-full h-64 object-cover">
+
+   第 622 行:
+   URL: https://aka.doubaocdn.com/s/xeUl1vkgzi
+   内容: <img src="https://aka.doubaocdn.com/s/xeUl1vkgzi" alt="陈静" class="w-full h-64 object-cover">
+
+   第 662 行:
+   URL: https://aka.doubaocdn.com/s/qNir1vkgzj
+   内容: <img src="https://aka.doubaocdn.com/s/qNir1vkgzj" alt="刘阳" class="w-full h-64 object-cover">
+
+   第 702 行:
+   URL: https://aka.doubaocdn.com/s/WIOD1vkgzi
+   内容: <img src="https://aka.doubaocdn.com/s/WIOD1vkgzi" alt="赵琳" class="w-full h-64 object-cover">
+
+
+================================================================================
+
+文件: /Users/2dqy003/Projects/xuezhiai/frontend/aka-url-reports/replace-urls.js
+   找到 50 个 URL:
+
+   第 6 行:
+   URL: https://aka.doubaocdn.com/s/0ctx1vkhSK
+   内容: "https://aka.doubaocdn.com/s/0ctx1vkhSK": "",
+
+   第 7 行:
+   URL: https://aka.doubaocdn.com/s/1Ouj1vjxpI
+   内容: "https://aka.doubaocdn.com/s/1Ouj1vjxpI": "",
+
+   第 8 行:
+   URL: https://aka.doubaocdn.com/s/2nJ91vjxpI
+   内容: "https://aka.doubaocdn.com/s/2nJ91vjxpI": "",
+
+   第 9 行:
+   URL: https://aka.doubaocdn.com/s/40al1vkhVH
+   内容: "https://aka.doubaocdn.com/s/40al1vkhVH": "",
+
+   第 10 行:
+   URL: https://aka.doubaocdn.com/s/5Ebr1vjxsv
+   内容: "https://aka.doubaocdn.com/s/5Ebr1vjxsv": "",
+
+   第 11 行:
+   URL: https://aka.doubaocdn.com/s/6k4w1vkhPO
+   内容: "https://aka.doubaocdn.com/s/6k4w1vkhPO": "",
+
+   第 12 行:
+   URL: https://aka.doubaocdn.com/s/8RSk1vjxsu
+   内容: "https://aka.doubaocdn.com/s/8RSk1vjxsu": "",
+
+   第 13 行:
+   URL: https://aka.doubaocdn.com/s/8WXG1vkcsz
+   内容: "https://aka.doubaocdn.com/s/8WXG1vkcsz": "",
+
+   第 14 行:
+   URL: https://aka.doubaocdn.com/s/DWVb1vkcsz
+   内容: "https://aka.doubaocdn.com/s/DWVb1vkcsz": "",
+
+   第 15 行:
+   URL: https://aka.doubaocdn.com/s/EotV1vkgzj
+   内容: "https://aka.doubaocdn.com/s/EotV1vkgzj": "",
+
+   第 16 行:
+   URL: https://aka.doubaocdn.com/s/GUgR1vkcno
+   内容: "https://aka.doubaocdn.com/s/GUgR1vkcno": "",
+
+   第 17 行:
+   URL: https://aka.doubaocdn.com/s/HxGO1vkhSK
+   内容: "https://aka.doubaocdn.com/s/HxGO1vkhSK": "",
+
+   第 18 行:
+   URL: https://aka.doubaocdn.com/s/IhD01vjxsu
+   内容: "https://aka.doubaocdn.com/s/IhD01vjxsu": "",
+
+   第 19 行:
+   URL: https://aka.doubaocdn.com/s/L7gu1vkcnq
+   内容: "https://aka.doubaocdn.com/s/L7gu1vkcnq": "",
+
+   第 20 行:
+   URL: https://aka.doubaocdn.com/s/OYnc1vkhPO
+   内容: "https://aka.doubaocdn.com/s/OYnc1vkhPO": "",
+
+   第 21 行:
+   URL: https://aka.doubaocdn.com/s/PvWH1vkhPN
+   内容: "https://aka.doubaocdn.com/s/PvWH1vkhPN": "",
+
+   第 22 行:
+   URL: https://aka.doubaocdn.com/s/RDyR1vkcsz
+   内容: "https://aka.doubaocdn.com/s/RDyR1vkcsz": "",
+
+   第 23 行:
+   URL: https://aka.doubaocdn.com/s/SGVh1vkhPO
+   内容: "https://aka.doubaocdn.com/s/SGVh1vkhPO": "",
+
+   第 24 行:
+   URL: https://aka.doubaocdn.com/s/Sy6m1vkctK
+   内容: "https://aka.doubaocdn.com/s/Sy6m1vkctK": "",
+
+   第 25 行:
+   URL: https://aka.doubaocdn.com/s/TEKW1vkcnp
+   内容: "https://aka.doubaocdn.com/s/TEKW1vkcnp": "",
+
+   第 26 行:
+   URL: https://aka.doubaocdn.com/s/Tx351vkcnv
+   内容: "https://aka.doubaocdn.com/s/Tx351vkcnv": "",
+
+   第 27 行:
+   URL: https://aka.doubaocdn.com/s/Uy161vjxsv
+   内容: "https://aka.doubaocdn.com/s/Uy161vjxsv": "",
+
+   第 28 行:
+   URL: https://aka.doubaocdn.com/s/WIOD1vkgzi
+   内容: "https://aka.doubaocdn.com/s/WIOD1vkgzi": "",
+
+   第 29 行:
+   URL: https://aka.doubaocdn.com/s/XeTd1vjxkH
+   内容: "https://aka.doubaocdn.com/s/XeTd1vjxkH": "",
+
+   第 30 行:
+   URL: https://aka.doubaocdn.com/s/YThE1vkhPN
+   内容: "https://aka.doubaocdn.com/s/YThE1vkhPN": "",
+
+   第 31 行:
+   URL: https://aka.doubaocdn.com/s/Ytop1vjxsu
+   内容: "https://aka.doubaocdn.com/s/Ytop1vjxsu": "",
+
+   第 32 行:
+   URL: https://aka.doubaocdn.com/s/Z0h91vjxpI
+   内容: "https://aka.doubaocdn.com/s/Z0h91vjxpI": "",
+
+   第 33 行:
+   URL: https://aka.doubaocdn.com/s/aPpx1vkgzi
+   内容: "https://aka.doubaocdn.com/s/aPpx1vkgzi": "",
+
+   第 34 行:
+   URL: https://aka.doubaocdn.com/s/bnnk1vkcsy
+   内容: "https://aka.doubaocdn.com/s/bnnk1vkcsy": "",
+
+   第 35 行:
+   URL: https://aka.doubaocdn.com/s/e1nF1vjxpI
+   内容: "https://aka.doubaocdn.com/s/e1nF1vjxpI": "",
+
+   第 36 行:
+   URL: https://aka.doubaocdn.com/s/esjp1vkhVG
+   内容: "https://aka.doubaocdn.com/s/esjp1vkhVG": "",
+
+   第 37 行:
+   URL: https://aka.doubaocdn.com/s/f5531vjxpK
+   内容: "https://aka.doubaocdn.com/s/f5531vjxpK": "",
+
+   第 38 行:
+   URL: https://aka.doubaocdn.com/s/g8U01vjxpH
+   内容: "https://aka.doubaocdn.com/s/g8U01vjxpH": "",
+
+   第 39 行:
+   URL: https://aka.doubaocdn.com/s/gSI31vkhVG
+   内容: "https://aka.doubaocdn.com/s/gSI31vkhVG": "",
+
+   第 40 行:
+   URL: https://aka.doubaocdn.com/s/gUwu1vkgzi
+   内容: "https://aka.doubaocdn.com/s/gUwu1vkgzi": "",
+
+   第 41 行:
+   URL: https://aka.doubaocdn.com/s/is371vkcnz
+   内容: "https://aka.doubaocdn.com/s/is371vkcnz": "",
+
+   第 42 行:
+   URL: https://aka.doubaocdn.com/s/jsBn1vkhSJ
+   内容: "https://aka.doubaocdn.com/s/jsBn1vkhSJ": "",
+
+   第 43 行:
+   URL: https://aka.doubaocdn.com/s/kUyu1vkhPO
+   内容: "https://aka.doubaocdn.com/s/kUyu1vkhPO": "",
+
+   第 44 行:
+   URL: https://aka.doubaocdn.com/s/njid1vkhVG
+   内容: "https://aka.doubaocdn.com/s/njid1vkhVG": "",
+
+   第 45 行:
+   URL: https://aka.doubaocdn.com/s/o0FZ1vkhVF
+   内容: "https://aka.doubaocdn.com/s/o0FZ1vkhVF": "",
+
+   第 46 行:
+   URL: https://aka.doubaocdn.com/s/pTfj1vjxsu
+   内容: "https://aka.doubaocdn.com/s/pTfj1vjxsu": "",
+
+   第 47 行:
+   URL: https://aka.doubaocdn.com/s/paxw1vkcnq
+   内容: "https://aka.doubaocdn.com/s/paxw1vkcnq": "",
+
+   第 48 行:
+   URL: https://aka.doubaocdn.com/s/pduo1vkhVG
+   内容: "https://aka.doubaocdn.com/s/pduo1vkhVG": "",
+
+   第 49 行:
+   URL: https://aka.doubaocdn.com/s/qM301vkct0
+   内容: "https://aka.doubaocdn.com/s/qM301vkct0": "",
+
+   第 50 行:
+   URL: https://aka.doubaocdn.com/s/qNir1vkgzj
+   内容: "https://aka.doubaocdn.com/s/qNir1vkgzj": "",
+
+   第 51 行:
+   URL: https://aka.doubaocdn.com/s/rNwq1vkhSL
+   内容: "https://aka.doubaocdn.com/s/rNwq1vkhSL": "",
+
+   第 52 行:
+   URL: https://aka.doubaocdn.com/s/w7m81vkcsz
+   内容: "https://aka.doubaocdn.com/s/w7m81vkcsz": "",
+
+   第 53 行:
+   URL: https://aka.doubaocdn.com/s/xQNJ1vkhSK
+   内容: "https://aka.doubaocdn.com/s/xQNJ1vkhSK": "",
+
+   第 54 行:
+   URL: https://aka.doubaocdn.com/s/xeUl1vkgzi
+   内容: "https://aka.doubaocdn.com/s/xeUl1vkgzi": "",
+
+   第 55 行:
+   URL: https://aka.doubaocdn.com/s/yhVU1vkhSJ
+   内容: "https://aka.doubaocdn.com/s/yhVU1vkhSJ": ""
+
+
+================================================================================
+
+文件: /Users/2dqy003/Projects/xuezhiai/frontend/public/static/product-library/final_gallery.html
+   找到 26 个 URL:
+
+   第 159 行:
+   URL: https://aka.doubaocdn.com/s/Z0h91vjxpI
+   内容: <img src="https://aka.doubaocdn.com/s/Z0h91vjxpI"
+
+   第 174 行:
+   URL: https://aka.doubaocdn.com/s/g8U01vjxpH
+   内容: <img src="https://aka.doubaocdn.com/s/g8U01vjxpH"
+
+   第 189 行:
+   URL: https://aka.doubaocdn.com/s/1Ouj1vjxpI
+   内容: <img src="https://aka.doubaocdn.com/s/1Ouj1vjxpI"
+
+   第 213 行:
+   URL: https://aka.doubaocdn.com/s/8RSk1vjxsu
+   内容: <img src="https://aka.doubaocdn.com/s/8RSk1vjxsu"
+
+   第 228 行:
+   URL: https://aka.doubaocdn.com/s/e1nF1vjxpI
+   内容: <img src="https://aka.doubaocdn.com/s/e1nF1vjxpI"
+
+   第 243 行:
+   URL: https://aka.doubaocdn.com/s/IhD01vjxsu
+   内容: <img src="https://aka.doubaocdn.com/s/IhD01vjxsu"
+
+   第 267 行:
+   URL: https://aka.doubaocdn.com/s/Ytop1vjxsu
+   内容: <img src="https://aka.doubaocdn.com/s/Ytop1vjxsu"
+
+   第 282 行:
+   URL: https://aka.doubaocdn.com/s/Uy161vjxsv
+   内容: <img src="https://aka.doubaocdn.com/s/Uy161vjxsv"
+
+   第 306 行:
+   URL: https://aka.doubaocdn.com/s/pTfj1vjxsu
+   内容: <img src="https://aka.doubaocdn.com/s/pTfj1vjxsu"
+
+   第 321 行:
+   URL: https://aka.doubaocdn.com/s/f5531vjxpK
+   内容: <img src="https://aka.doubaocdn.com/s/f5531vjxpK"
+
+   第 336 行:
+   URL: https://aka.doubaocdn.com/s/5Ebr1vjxsv
+   内容: <img src="https://aka.doubaocdn.com/s/5Ebr1vjxsv"
+
+   第 360 行:
+   URL: https://aka.doubaocdn.com/s/2nJ91vjxpI
+   内容: <img src="https://aka.doubaocdn.com/s/2nJ91vjxpI"
+
+   第 375 行:
+   URL: https://aka.doubaocdn.com/s/XeTd1vjxkH
+   内容: <img src="https://aka.doubaocdn.com/s/XeTd1vjxkH"
+
+   第 411 行:
+   URL: https://aka.doubaocdn.com/s/is371vkcnz
+   内容: <img src="https://aka.doubaocdn.com/s/is371vkcnz"
+
+   第 426 行:
+   URL: https://aka.doubaocdn.com/s/GUgR1vkcno
+   内容: <img src="https://aka.doubaocdn.com/s/GUgR1vkcno"
+
+   第 441 行:
+   URL: https://aka.doubaocdn.com/s/w7m81vkcsz
+   内容: <img src="https://aka.doubaocdn.com/s/w7m81vkcsz"
+
+   第 456 行:
+   URL: https://aka.doubaocdn.com/s/bnnk1vkcsy
+   内容: <img src="https://aka.doubaocdn.com/s/bnnk1vkcsy"
+
+   第 482 行:
+   URL: https://aka.doubaocdn.com/s/paxw1vkcnq
+   内容: <img src="https://aka.doubaocdn.com/s/paxw1vkcnq"
+
+   第 497 行:
+   URL: https://aka.doubaocdn.com/s/L7gu1vkcnq
+   内容: <img src="https://aka.doubaocdn.com/s/L7gu1vkcnq"
+
+   第 512 行:
+   URL: https://aka.doubaocdn.com/s/DWVb1vkcsz
+   内容: <img src="https://aka.doubaocdn.com/s/DWVb1vkcsz"
+
+   第 527 行:
+   URL: https://aka.doubaocdn.com/s/qM301vkct0
+   内容: <img src="https://aka.doubaocdn.com/s/qM301vkct0"
+
+   第 553 行:
+   URL: https://aka.doubaocdn.com/s/Tx351vkcnv
+   内容: <img src="https://aka.doubaocdn.com/s/Tx351vkcnv"
+
+   第 568 行:
+   URL: https://aka.doubaocdn.com/s/TEKW1vkcnp
+   内容: <img src="https://aka.doubaocdn.com/s/TEKW1vkcnp"
+
+   第 583 行:
+   URL: https://aka.doubaocdn.com/s/RDyR1vkcsz
+   内容: <img src="https://aka.doubaocdn.com/s/RDyR1vkcsz"
+
+   第 598 行:
+   URL: https://aka.doubaocdn.com/s/8WXG1vkcsz
+   内容: <img src="https://aka.doubaocdn.com/s/8WXG1vkcsz"
+
+   第 624 行:
+   URL: https://aka.doubaocdn.com/s/Sy6m1vkctK
+   内容: <img src="https://aka.doubaocdn.com/s/Sy6m1vkctK"
+
+
+================================================================================
+
+文件: /Users/2dqy003/Projects/xuezhiai/frontend/public/static/talent/design_team.html
+   找到 6 个 URL:
+
+   第 224 行:
+   URL: https://aka.doubaocdn.com/s/xQNJ1vkhSK
+   内容: <img src="https://aka.doubaocdn.com/s/xQNJ1vkhSK" alt="陈雨晴" class="w-full h-64 object-cover">
+
+   第 264 行:
+   URL: https://aka.doubaocdn.com/s/HxGO1vkhSK
+   内容: <img src="https://aka.doubaocdn.com/s/HxGO1vkhSK" alt="李明远" class="w-full h-64 object-cover">
+
+   第 304 行:
+   URL: https://aka.doubaocdn.com/s/yhVU1vkhSJ
+   内容: <img src="https://aka.doubaocdn.com/s/yhVU1vkhSJ" alt="王浩宇" class="w-full h-64 object-cover">
+
+   第 344 行:
+   URL: https://aka.doubaocdn.com/s/rNwq1vkhSL
+   内容: <img src="https://aka.doubaocdn.com/s/rNwq1vkhSL" alt="张雅琪" class="w-full h-64 object-cover">
+
+   第 384 行:
+   URL: https://aka.doubaocdn.com/s/0ctx1vkhSK
+   内容: <img src="https://aka.doubaocdn.com/s/0ctx1vkhSK" alt="刘建国" class="w-full h-64 object-cover">
+
+   第 424 行:
+   URL: https://aka.doubaocdn.com/s/jsBn1vkhSJ
+   内容: <img src="https://aka.doubaocdn.com/s/jsBn1vkhSJ" alt="赵敏" class="w-full h-64 object-cover">
+
+
+================================================================================
+
+文件: /Users/2dqy003/Projects/xuezhiai/frontend/public/static/talent/construction_team.html
+   找到 6 个 URL:
+
+   第 225 行:
+   URL: https://aka.doubaocdn.com/s/njid1vkhVG
+   内容: <img src="https://aka.doubaocdn.com/s/njid1vkhVG" alt="陈建" class="w-full h-64 object-cover">
+
+   第 265 行:
+   URL: https://aka.doubaocdn.com/s/pduo1vkhVG
+   内容: <img src="https://aka.doubaocdn.com/s/pduo1vkhVG" alt="林静" class="w-full h-64 object-cover">
+
+   第 305 行:
+   URL: https://aka.doubaocdn.com/s/gSI31vkhVG
+   内容: <img src="https://aka.doubaocdn.com/s/gSI31vkhVG" alt="王雅" class="w-full h-64 object-cover">
+
+   第 345 行:
+   URL: https://aka.doubaocdn.com/s/o0FZ1vkhVF
+   内容: <img src="https://aka.doubaocdn.com/s/o0FZ1vkhVF" alt="刘强" class="w-full h-64 object-cover">
+
+   第 385 行:
+   URL: https://aka.doubaocdn.com/s/esjp1vkhVG
+   内容: <img src="https://aka.doubaocdn.com/s/esjp1vkhVG" alt="赵明" class="w-full h-64 object-cover">
+
+   第 425 行:
+   URL: https://aka.doubaocdn.com/s/40al1vkhVH
+   内容: <img src="https://aka.doubaocdn.com/s/40al1vkhVH" alt="孙丽" class="w-full h-64 object-cover">
+
+
+================================================================================
+
+文件: /Users/2dqy003/Projects/xuezhiai/frontend/public/static/talent/engineer_team.html
+   找到 6 个 URL:
+
+   第 215 行:
+   URL: https://aka.doubaocdn.com/s/aPpx1vkgzi
+   内容: <img src="https://aka.doubaocdn.com/s/aPpx1vkgzi" alt="张明" class="w-full h-64 object-cover">
+
+   第 255 行:
+   URL: https://aka.doubaocdn.com/s/gUwu1vkgzi
+   内容: <img src="https://aka.doubaocdn.com/s/gUwu1vkgzi" alt="李婷" class="w-full h-64 object-cover">
+
+   第 295 行:
+   URL: https://aka.doubaocdn.com/s/EotV1vkgzj
+   内容: <img src="https://aka.doubaocdn.com/s/EotV1vkgzj" alt="王强" class="w-full h-64 object-cover">
+
+   第 335 行:
+   URL: https://aka.doubaocdn.com/s/xeUl1vkgzi
+   内容: <img src="https://aka.doubaocdn.com/s/xeUl1vkgzi" alt="陈静" class="w-full h-64 object-cover">
+
+   第 375 行:
+   URL: https://aka.doubaocdn.com/s/qNir1vkgzj
+   内容: <img src="https://aka.doubaocdn.com/s/qNir1vkgzj" alt="刘阳" class="w-full h-64 object-cover">
+
+   第 415 行:
+   URL: https://aka.doubaocdn.com/s/WIOD1vkgzi
+   内容: <img src="https://aka.doubaocdn.com/s/WIOD1vkgzi" alt="赵琳" class="w-full h-64 object-cover">
+
+
+================================================================================
+
+文件: /Users/2dqy003/Projects/xuezhiai/frontend/public/static/talent/education_experts.html
+   找到 6 个 URL:
+
+   第 224 行:
+   URL: https://aka.doubaocdn.com/s/SGVh1vkhPO
+   内容: <img src="https://aka.doubaocdn.com/s/SGVh1vkhPO" alt="林小雨" class="w-full h-64 object-cover">
+
+   第 263 行:
+   URL: https://aka.doubaocdn.com/s/6k4w1vkhPO
+   内容: <img src="https://aka.doubaocdn.com/s/6k4w1vkhPO" alt="陈教授" class="w-full h-64 object-cover">
+
+   第 302 行:
+   URL: https://aka.doubaocdn.com/s/OYnc1vkhPO
+   内容: <img src="https://aka.doubaocdn.com/s/OYnc1vkhPO" alt="王博士" class="w-full h-64 object-cover">
+
+   第 341 行:
+   URL: https://aka.doubaocdn.com/s/YThE1vkhPN
+   内容: <img src="https://aka.doubaocdn.com/s/YThE1vkhPN" alt="张教授" class="w-full h-64 object-cover">
+
+   第 380 行:
+   URL: https://aka.doubaocdn.com/s/PvWH1vkhPN
+   内容: <img src="https://aka.doubaocdn.com/s/PvWH1vkhPN" alt="李教授" class="w-full h-64 object-cover">
+
+   第 419 行:
+   URL: https://aka.doubaocdn.com/s/kUyu1vkhPO
+   内容: <img src="https://aka.doubaocdn.com/s/kUyu1vkhPO" alt="刘教授" class="w-full h-64 object-cover">
+
+
+================================================================================
+
+文件: /Users/2dqy003/Projects/xuezhiai/frontend/public/static/talent/integrated_apple_style.html
+   找到 6 个 URL:
+
+   第 502 行:
+   URL: https://aka.doubaocdn.com/s/aPpx1vkgzi
+   内容: <img src="https://aka.doubaocdn.com/s/aPpx1vkgzi" alt="张明" class="w-full h-64 object-cover">
+
+   第 542 行:
+   URL: https://aka.doubaocdn.com/s/gUwu1vkgzi
+   内容: <img src="https://aka.doubaocdn.com/s/gUwu1vkgzi" alt="李婷" class="w-full h-64 object-cover">
+
+   第 582 行:
+   URL: https://aka.doubaocdn.com/s/EotV1vkgzj
+   内容: <img src="https://aka.doubaocdn.com/s/EotV1vkgzj" alt="王强" class="w-full h-64 object-cover">
+
+   第 622 行:
+   URL: https://aka.doubaocdn.com/s/xeUl1vkgzi
+   内容: <img src="https://aka.doubaocdn.com/s/xeUl1vkgzi" alt="陈静" class="w-full h-64 object-cover">
+
+   第 662 行:
+   URL: https://aka.doubaocdn.com/s/qNir1vkgzj
+   内容: <img src="https://aka.doubaocdn.com/s/qNir1vkgzj" alt="刘阳" class="w-full h-64 object-cover">
+
+   第 702 行:
+   URL: https://aka.doubaocdn.com/s/WIOD1vkgzi
+   内容: <img src="https://aka.doubaocdn.com/s/WIOD1vkgzi" alt="赵琳" class="w-full h-64 object-cover">
+
+
+================================================================================
+
+文件: /Users/2dqy003/Projects/xuezhiai/frontend/src/pages/ProductGallery.jsx
+   找到 26 个 URL:
+
+   第 138 行:
+   URL: https://aka.doubaocdn.com/s/Z0h91vjxpI
+   内容: src="https://aka.doubaocdn.com/s/Z0h91vjxpI"
+
+   第 155 行:
+   URL: https://aka.doubaocdn.com/s/g8U01vjxpH
+   内容: src="https://aka.doubaocdn.com/s/g8U01vjxpH"
+
+   第 172 行:
+   URL: https://aka.doubaocdn.com/s/1Ouj1vjxpI
+   内容: src="https://aka.doubaocdn.com/s/1Ouj1vjxpI"
+
+   第 198 行:
+   URL: https://aka.doubaocdn.com/s/8RSk1vjxsu
+   内容: src="https://aka.doubaocdn.com/s/8RSk1vjxsu"
+
+   第 215 行:
+   URL: https://aka.doubaocdn.com/s/e1nF1vjxpI
+   内容: src="https://aka.doubaocdn.com/s/e1nF1vjxpI"
+
+   第 232 行:
+   URL: https://aka.doubaocdn.com/s/IhD01vjxsu
+   内容: src="https://aka.doubaocdn.com/s/IhD01vjxsu"
+
+   第 258 行:
+   URL: https://aka.doubaocdn.com/s/Ytop1vjxsu
+   内容: src="https://aka.doubaocdn.com/s/Ytop1vjxsu"
+
+   第 275 行:
+   URL: https://aka.doubaocdn.com/s/Uy161vjxsv
+   内容: src="https://aka.doubaocdn.com/s/Uy161vjxsv"
+
+   第 301 行:
+   URL: https://aka.doubaocdn.com/s/pTfj1vjxsu
+   内容: src="https://aka.doubaocdn.com/s/pTfj1vjxsu"
+
+   第 318 行:
+   URL: https://aka.doubaocdn.com/s/f5531vjxpK
+   内容: src="https://aka.doubaocdn.com/s/f5531vjxpK"
+
+   第 335 行:
+   URL: https://aka.doubaocdn.com/s/5Ebr1vjxsv
+   内容: src="https://aka.doubaocdn.com/s/5Ebr1vjxsv"
+
+   第 361 行:
+   URL: https://aka.doubaocdn.com/s/2nJ91vjxpI
+   内容: src="https://aka.doubaocdn.com/s/2nJ91vjxpI"
+
+   第 378 行:
+   URL: https://aka.doubaocdn.com/s/XeTd1vjxkH
+   内容: src="https://aka.doubaocdn.com/s/XeTd1vjxkH"
+
+   第 416 行:
+   URL: https://aka.doubaocdn.com/s/is371vkcnz
+   内容: src="https://aka.doubaocdn.com/s/is371vkcnz"
+
+   第 433 行:
+   URL: https://aka.doubaocdn.com/s/GUgR1vkcno
+   内容: src="https://aka.doubaocdn.com/s/GUgR1vkcno"
+
+   第 450 行:
+   URL: https://aka.doubaocdn.com/s/w7m81vkcsz
+   内容: src="https://aka.doubaocdn.com/s/w7m81vkcsz"
+
+   第 467 行:
+   URL: https://aka.doubaocdn.com/s/bnnk1vkcsy
+   内容: src="https://aka.doubaocdn.com/s/bnnk1vkcsy"
+
+   第 495 行:
+   URL: https://aka.doubaocdn.com/s/paxw1vkcnq
+   内容: src="https://aka.doubaocdn.com/s/paxw1vkcnq"
+
+   第 512 行:
+   URL: https://aka.doubaocdn.com/s/L7gu1vkcnq
+   内容: src="https://aka.doubaocdn.com/s/L7gu1vkcnq"
+
+   第 529 行:
+   URL: https://aka.doubaocdn.com/s/DWVb1vkcsz
+   内容: src="https://aka.doubaocdn.com/s/DWVb1vkcsz"
+
+   第 546 行:
+   URL: https://aka.doubaocdn.com/s/qM301vkct0
+   内容: src="https://aka.doubaocdn.com/s/qM301vkct0"
+
+   第 574 行:
+   URL: https://aka.doubaocdn.com/s/Tx351vkcnv
+   内容: src="https://aka.doubaocdn.com/s/Tx351vkcnv"
+
+   第 591 行:
+   URL: https://aka.doubaocdn.com/s/TEKW1vkcnp
+   内容: src="https://aka.doubaocdn.com/s/TEKW1vkcnp"
+
+   第 608 行:
+   URL: https://aka.doubaocdn.com/s/RDyR1vkcsz
+   内容: src="https://aka.doubaocdn.com/s/RDyR1vkcsz"
+
+   第 625 行:
+   URL: https://aka.doubaocdn.com/s/8WXG1vkcsz
+   内容: src="https://aka.doubaocdn.com/s/8WXG1vkcsz"
+
+   第 653 行:
+   URL: https://aka.doubaocdn.com/s/Sy6m1vkctK
+   内容: src="https://aka.doubaocdn.com/s/Sy6m1vkctK"
+
+
+================================================================================
+

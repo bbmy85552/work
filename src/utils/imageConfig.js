@@ -6,7 +6,7 @@
 // 图片 CDN 基础 URL
 // 生产环境建议使用 CDN（如阿里云 OSS、腾讯云 COS、AWS S3 等）
 // 开发环境可以使用本地路径或空字符串
-const IMAGE_CDN_BASE_URL = import.meta.env.VITE_IMAGE_CDN_BASE_URL || '';
+const IMAGE_CDN_BASE_URL = process.env.NEXT_PUBLIC_IMAGE_CDN_BASE_URL || '';
 
 // 本地图片基础路径（当不使用 CDN 时）
 const LOCAL_IMAGE_BASE_PATH = '/campus-buildings';

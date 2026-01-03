@@ -1,39 +1,36 @@
 /**
- * API 配置文件
- * 集中管理所有 API endpoints
+ * 外部后端 API 配置文件
+ * 集中管理所有外部后端的 API endpoints（AI 生成、搜索等）
+ *
+ * 架构说明：
+ * - /api/* → Next.js API Routes (登录、学校数据等)
+ * - /backend-api/* → 外部后端服务器 (AI 生成、搜索等)
  */
 
-// 先定义常量，避免模块初始化顺序问题
-const API_VERSION = 'v1';
-const API_PREFIX = import.meta.env.VITE_API_PREFIX || '/api';
-const API_HOST = import.meta.env.VITE_API_BASE_URL || '';
-const BASE_URL = `${API_HOST}${API_PREFIX}`;
+// API 版本
+const API_VERSION = process.env.NEXT_PUBLIC_API_VERSION || 'v1'
+
+// 外部后端 API 基础路径（通过 Next.js rewrites 代理到后端服务器）
+const BACKEND_API_BASE = '/backend-api'
 
 export const API_CONFIG = {
-  // 基础 URL
-  BASE_URL: BASE_URL,
-  API_PREFIX: API_PREFIX,
-
-  // API 版本
-  API_VERSION: API_VERSION,
-
-  // 超时时间（毫秒）
-  TIMEOUT: 60000,
-};
+  BASE_URL: BACKEND_API_BASE,
+  API_VERSION,
+  TIMEOUT: 60000
+}
 
 /**
- * 构建 API endpoint
+ * 构建外部后端 API endpoint
  * @param {string} path - API 路径
  * @returns {string} 完整的 API URL
  */
 const buildEndpoint = (path) => {
-  const normalizedBase = BASE_URL.replace(/\/+$/, '');
-  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-  return `${normalizedBase}/${API_VERSION}${normalizedPath}`;
-};
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`
+  return `${BACKEND_API_BASE}/${API_VERSION}${normalizedPath}`
+}
 
 /**
- * API Endpoints
+ * 外部后端 API Endpoints
  */
 export const API_ENDPOINTS = {
   // 科技墙设计相关
@@ -50,6 +47,6 @@ export const API_ENDPOINTS = {
   POLICY_SEARCH: {
     GENERATE: buildEndpoint('/policy-search/generate'), // 生成政策搜索结果
   },
-};
+}
 
-export default API_CONFIG;
+export default API_CONFIG

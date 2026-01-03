@@ -1,8 +1,3 @@
-const isProd = process.env.NODE_ENV === 'production'
-const backendApiProxyTarget =
-  process.env.BACKEND_API_PROXY_TARGET ||
-  (isProd ? process.env.BACKEND_API_PROXY_TARGET_PROD : process.env.BACKEND_API_PROXY_TARGET_DEV)
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -10,16 +5,9 @@ const nextConfig = {
     domains: ['localhost', '150.158.153.243']
   },
   async rewrites() {
-    // 代理外部后端 API (AI 生成、搜索等功能)
-    if (!backendApiProxyTarget) return []
-
-    const normalizedTarget = backendApiProxyTarget.replace(/\/$/, '')
-    return [
-      {
-        source: '/backend-api/:path*',
-        destination: `${normalizedTarget}/api/:path*`
-      }
-    ]
+    // 禁用 rewrites，使用 API Route 代理（支持流式响应）
+    // 所有 /backend-api/* 请求由 src/app/backend-api/[...path]/route.js 处理
+    return []
   }
 }
 
